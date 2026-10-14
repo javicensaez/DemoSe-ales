@@ -14,6 +14,7 @@
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
     ></script>
     <script src="convolucion.js" defer></script>
+    <script src="projector-mode.js" defer></script>
   </head>
   <body class="demo-page">
     <header class="site-header">
@@ -26,6 +27,7 @@
       <nav class="site-nav demo-nav" aria-label="Navegación principal">
         <a class="nav-link" href="index.html#inicio">Inicio</a>
         <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
       </nav>
     </header>
 
@@ -41,7 +43,7 @@
       </section>
 
       <section class="convolution-formula plot-card" aria-label="Definición de la convolución">
-        <span id="convolution-definition">\(y(t)=x(t)*h(t)=\displaystyle\int_{-\infty}^{t}x(\tau)\,h(t-\tau)\,\mathrm{d}\tau\)</span>
+        <span id="convolution-definition">\(y(t)=x(t)*h(t)=\displaystyle\int_{-\infty}^{\infty}x(\tau)\,h(t-\tau)\,\mathrm{d}\tau\)</span>
         <p id="convolution-definition-note">Como h(t) es causal, la integral puede terminar en t. El área coloreada representa el valor aproximado de la integral.</p>
       </section>
 
@@ -54,7 +56,7 @@
                 <option value="delta-0">Delta δ(t), centrada en 0</option>
                 <option value="delta-1">Delta δ(t − 1), desplazada a 1</option>
                 <option value="step">Escalón u(t)</option>
-                <option value="rect">Pulso positivo [0, 1]</option>
+                <option value="rect" selected>Pulso positivo [0, 1]</option>
                 <option value="positive-left-pulse">Pulso positivo [−1, 0)</option>
                 <option value="negative-pulse">Pulso negativo [0, 1)</option>
                 <option value="bipolar-pulse">Pulso bipolar: +1 en [−1, 0), −1 en [0, 1)</option>
@@ -76,7 +78,7 @@
               <select id="h-signal">
                 <option value="delta-0">Delta δ(t), centrada en 0</option>
                 <option value="delta-1">Delta δ(t − 1), desplazada a 1</option>
-                <option value="rect">Pulso positivo [0, 1]</option>
+                <option value="rect" selected>Pulso positivo [0, 1]</option>
                 <option value="positive-left-pulse">Pulso positivo [−1, 0)</option>
                 <option value="negative-pulse">Pulso negativo [0, 1)</option>
                 <option value="bipolar-pulse">Pulso bipolar: +1 en [−1, 0), −1 en [0, 1)</option>
@@ -118,7 +120,7 @@
           <svg class="time-plot convolution-plot" id="result-plot" viewBox="0 0 800 300" role="img"></svg>
           <p class="convolution-result" aria-live="polite">
             Para t = <strong id="result-time">0</strong>,
-            <span id="convolution-result-formula">\(y(t)\approx\int_{-\infty}^{t}x(\tau)h(t-\tau)\,\mathrm{d}\tau=\)</span>
+            <span id="convolution-result-formula">\(y(t)\approx\int_{-\infty}^{\infty}x(\tau)h(t-\tau)\,\mathrm{d}\tau=\)</span>
             <strong id="result-value">0</strong>.
           </p>
         </article>

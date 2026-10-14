@@ -1694,6 +1694,46 @@ h2 {
     max-width: 1080px;
   }
 
+  .projector-mode {
+    color-scheme: light;
+    color: #10253a;
+    --background: #fff;
+    --foreground: #10253a;
+    --surface: #fff;
+    --muted: #334e63;
+    --line: #879cab;
+    --accent: #123f70;
+    --accent-fg: #fff;
+    --wave: #075f9e;
+    --answer: #123f70;
+    --highlight: #075f9e;
+    --grid-minor: rgb(16 55 88 / 9%);
+    --grid-major: rgb(16 55 88 / 22%);
+    --axis: rgb(16 37 58 / 68%);
+  }
+
+  .projector-toggle {
+    min-height: 36px;
+    padding: 7px 10px;
+    border: 1px solid var(--accent);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+    font: 600 11px/1.3 var(--font-mono);
+    white-space: nowrap;
+  }
+
+  .projector-toggle[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  .projector-toggle:focus-visible {
+    outline: 3px solid var(--wave);
+    outline-offset: 3px;
+  }
+
   .discrete-formula {
     display: flex;
     align-items: center;
@@ -2777,6 +2817,20 @@ h2 {
 
     .demo-nav .nav-link {
       padding: 8px 0;
+    }
+
+    .demo-nav {
+      gap: 10px;
+    }
+
+    .demo-nav .nav-link:first-child {
+      display: none;
+    }
+
+    .projector-toggle {
+      min-height: 32px;
+      padding: 5px 6px;
+      font-size: 9px;
     }
 
     .signal-controls {

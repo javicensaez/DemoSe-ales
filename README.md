@@ -8,6 +8,8 @@ No se necesita instalar dependencias ni compilar el proyecto. Abre `index.html` 
 
 Las páginas también pueden servirse desde cualquier servidor de archivos estáticos. MathJax se carga desde jsDelivr en las páginas que muestran ecuaciones.
 
+El botón **Modo proyector**, disponible en la navegación de la página principal y de todas las demos, activa una paleta clara de alto contraste. La preferencia se conserva al navegar entre páginas.
+
 ## Demos
 
 - **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, la sinc, ondas periódicas y la exponencial compleja.

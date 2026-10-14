@@ -103,7 +103,7 @@ function updateConvolutionFormula(hSignal) {
   if (formulaMode === displayedFormulaMode) return;
 
   window.MathJax.typesetClear([convolutionDefinition, convolutionResultFormula]);
-  const upperLimit = hSignal.causal ? "t" : "\\infty";
+  const upperLimit = "\\infty";
   convolutionDefinition.innerHTML =
     `\\(y(t)=x(t)*h(t)=\\displaystyle\\int_{-\\infty}^{${upperLimit}}x(\\tau)\\,h(t-\\tau)\\,\\mathrm{d}\\tau\\)`;
   convolutionResultFormula.innerHTML =
@@ -203,8 +203,10 @@ function chartMarkup({
     const points = [];
     for (let index = 0; index < sampleCount; index += 1) {
       const time = xRange[0] + ((xRange[1] - xRange[0]) * index) / (sampleCount - 1);
+      if (curve.until !== undefined && time > curve.until) break;
       points.push([x(time), y(curve.value(time))]);
     }
+    if (points.length === 0) continue;
     const path = points
       .map(([pointX, pointY], index) =>
         `${index === 0 ? "M" : "L"}${pointX.toFixed(2)},${pointY.toFixed(2)}`,
@@ -392,8 +394,8 @@ function render() {
     : "";
 
   resultPlot.innerHTML = chartMarkup({
-    curves: [{ value: resultCurve, color: curveColors.result }],
-    impulses: currentConvolution.impulseAt === undefined
+    curves: [{ value: resultCurve, color: curveColors.result, until: time }],
+    impulses: currentConvolution.impulseAt === undefined || currentConvolution.impulseAt > time
       ? []
       : [{
           time: currentConvolution.impulseAt,
