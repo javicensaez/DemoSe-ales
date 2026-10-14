@@ -1798,6 +1798,13 @@ h2 {
     gap: 7px;
   }
 
+  .convolution-impulse-note {
+    margin: 4px 0 8px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
   .convolution-swatch {
     width: 18px;
     height: 3px;
@@ -1831,6 +1838,502 @@ h2 {
     color: var(--accent);
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+
+  .sampling-main {
+    max-width: 1320px;
+  }
+
+  .sampling-controls {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.8fr) repeat(2, minmax(230px, 1fr));
+    align-items: end;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+
+  .sampling-controls > label,
+  .sampling-range > span {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .sampling-controls select {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--background);
+    color: var(--foreground);
+    font: 12px/1.4 "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  }
+
+  .sampling-range > span {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .sampling-range output {
+    flex: none;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sampling-range input {
+    width: 100%;
+    margin: 5px 0 0;
+    accent-color: var(--accent);
+  }
+
+  .sampling-status {
+    margin-bottom: 14px;
+    border-left: 4px solid var(--wave);
+  }
+
+  .sampling-status.is-nyquist-safe {
+    border-left-color: #24825d;
+  }
+
+  .sampling-status.is-aliasing {
+    border-left-color: #d97706;
+  }
+
+  .sampling-status p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .sampling-status p:first-child {
+    margin-bottom: 3px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .sampling-formula {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-width: 0;
+    margin-bottom: 16px;
+    color: var(--accent);
+    font-size: 15px;
+  }
+
+  .sampling-formula > span {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .sampling-formula p {
+    max-width: 420px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .sampling-plots {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sampling-plot-card {
+    min-width: 0;
+  }
+
+  .sampling-plot {
+    width: 100%;
+    aspect-ratio: 800 / 320;
+  }
+
+  .sampling-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    margin: 2px 0 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .sampling-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .sampling-swatch {
+    width: 18px;
+    height: 3px;
+    flex: none;
+    border-radius: 2px;
+  }
+
+  .sampling-original-swatch {
+    background: #164b8c;
+  }
+
+  .sampling-samples-swatch {
+    height: 2px;
+    background: #d97706;
+  }
+
+  .sampling-reconstruction-swatch {
+    background: #1479bd;
+  }
+
+  .sampling-reference-swatch {
+    background: repeating-linear-gradient(to right, #164b8c 0 6px, transparent 6px 10px);
+  }
+
+  .sampling-explanation {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .fourier-main {
+    max-width: 1320px;
+  }
+
+  .fourier-controls,
+  .fourier-game-controls {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) repeat(2, minmax(180px, 1fr));
+    align-items: end;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .fourier-controls > label,
+  .fourier-range > span,
+  .fourier-game-controls > label,
+  .fourier-difficulty > span {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .fourier-controls select,
+  .fourier-game-controls select,
+  .fourier-a0-input input,
+  .fourier-answer-table input {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--background);
+    color: var(--foreground);
+    font: 13px/1.4 "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  }
+
+  .fourier-range > span {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .fourier-range output {
+    flex: none;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fourier-range input {
+    width: 100%;
+    margin: 5px 0 0;
+    accent-color: var(--accent);
+  }
+
+  .fourier-formula,
+  .fourier-convention {
+    color: var(--accent);
+    font-size: 15px;
+  }
+
+  .fourier-formula {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-width: 0;
+    margin-bottom: 14px;
+  }
+
+  .fourier-formula > span {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .fourier-formula p {
+    max-width: 360px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .fourier-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 20px;
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .fourier-status strong {
+    color: var(--accent);
+  }
+
+  .fourier-panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .fourier-chart-card {
+    min-width: 0;
+  }
+
+  .fourier-chart-card:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .fourier-plot {
+    width: 100%;
+    aspect-ratio: 800 / 320;
+  }
+
+  .fourier-spectrum {
+    width: 100%;
+    aspect-ratio: 800 / 190;
+  }
+
+  .fourier-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    margin: 2px 0 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .fourier-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .fourier-swatch {
+    width: 18px;
+    height: 3px;
+    flex: none;
+    border-radius: 2px;
+  }
+
+  .fourier-target-swatch {
+    background: repeating-linear-gradient(to right, #164b8c 0 6px, transparent 6px 10px);
+  }
+
+  .fourier-sum-swatch {
+    background: #d97706;
+  }
+
+  .fourier-table-wrap {
+    max-width: 100%;
+    overflow: auto;
+  }
+
+  .fourier-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--foreground);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .fourier-table th,
+  .fourier-table td {
+    min-width: 68px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fourier-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    color: var(--muted);
+  }
+
+  .fourier-table th:first-child,
+  .fourier-table td:first-child {
+    text-align: center;
+  }
+
+  .fourier-game-controls {
+    grid-template-columns: minmax(200px, 1fr) minmax(280px, 1.3fr) auto;
+  }
+
+  .fourier-difficulty > div,
+  .fourier-mode-controls,
+  .fourier-game-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .fourier-difficulty button,
+  .fourier-mode-controls button,
+  .game-button {
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--ink);
+    font: 600 12px/1.3 "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+    cursor: pointer;
+  }
+
+  .fourier-difficulty button[aria-pressed="true"],
+  .fourier-mode-controls button[aria-pressed="true"],
+  .primary-game-button {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .fourier-difficulty button:focus-visible,
+  .fourier-mode-controls button:focus-visible,
+  .game-button:focus-visible {
+    outline: 3px solid #80b9e0;
+    outline-offset: 2px;
+  }
+
+  .fourier-game-layout {
+    display: grid;
+    grid-template-columns: minmax(380px, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+    gap: 16px;
+  }
+
+  .fourier-answer-card,
+  .fourier-game-plot-card {
+    min-width: 0;
+  }
+
+  .fourier-convention,
+  .fourier-entry-note,
+  .fourier-input-help {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .fourier-a0-input {
+    display: block;
+    max-width: 240px;
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .fourier-a0-input input {
+    display: block;
+    margin-top: 7px;
+  }
+
+  .fourier-mode-controls {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .fourier-mode-controls button {
+    min-height: 32px;
+    padding: 6px 10px;
+  }
+
+  .fourier-answer-table td {
+    min-width: 110px;
+    padding: 4px 7px;
+  }
+
+  .fourier-answer-table input {
+    min-width: 90px;
+    min-height: 34px;
+    padding: 5px 7px;
+    text-align: right;
+  }
+
+  .fourier-input-help code {
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .fourier-game-actions {
+    margin-bottom: 9px;
+  }
+
+  .fourier-feedback,
+  .fourier-hint,
+  .fourier-score {
+    margin: 8px 0;
+    color: var(--accent);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .fourier-hint,
+  .fourier-solution {
+    padding: 10px 12px;
+    border-left: 3px solid var(--wave);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+
+  .fourier-solution {
+    max-height: 220px;
+    overflow: auto;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .fourier-solution p {
+    margin: 4px 0;
+  }
+
+  .fourier-solution strong {
+    color: var(--accent);
   }
 
   @media (max-width: 760px) {
@@ -1895,6 +2398,26 @@ h2 {
       grid-template-columns: 1fr;
     }
 
+    .sampling-controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .sampling-controls > label:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .fourier-game-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .fourier-game-controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .fourier-difficulty {
+      grid-column: 1 / -1;
+    }
+
   }
 
   @media (max-width: 520px) {
@@ -1945,6 +2468,53 @@ h2 {
 
     .convolution-input-row {
       grid-template-columns: 1fr;
+    }
+
+    .sampling-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .sampling-controls > label:first-child {
+      grid-column: auto;
+    }
+
+    .sampling-formula {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fourier-controls,
+    .fourier-game-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .fourier-controls > label:first-child,
+    .fourier-difficulty {
+      grid-column: auto;
+    }
+
+    .fourier-formula {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fourier-panels {
+      grid-template-columns: 1fr;
+    }
+
+    .fourier-chart-card:first-child {
+      grid-column: auto;
+    }
+
+    .fourier-game-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fourier-table th,
+    .fourier-table td {
+      padding-inline: 6px;
     }
 
     .convolution-formula {

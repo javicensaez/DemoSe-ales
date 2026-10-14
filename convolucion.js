@@ -10,6 +10,20 @@ const curveColors = {
 };
 
 const signalOptions = {
+  "delta-0": {
+    name: "Delta δ(t), centrada en 0",
+    value: () => 0,
+    max: 1,
+    causal: true,
+    impulseAt: 0,
+  },
+  "delta-1": {
+    name: "Delta δ(t − 1), desplazada a 1",
+    value: () => 0,
+    max: 1,
+    causal: true,
+    impulseAt: 1,
+  },
   step: {
     name: "Escalón u(t)",
     value: (time) => (time >= 0 ? 1 : 0),
@@ -81,6 +95,7 @@ const xOriginalPlot = document.querySelector("#x-original-plot");
 const hOriginalPlot = document.querySelector("#h-original-plot");
 const overlapPlot = document.querySelector("#overlap-plot");
 const resultPlot = document.querySelector("#result-plot");
+const impulseNote = document.querySelector("#convolution-impulse-note");
 let displayedFormulaMode = null;
 
 function updateConvolutionFormula(hSignal) {
@@ -108,6 +123,19 @@ function integrateProduct(xSignal, hSignal, time) {
     integral += xSignal.value(tau) * hSignal.value(time - tau) * step;
   }
   return integral;
+}
+
+function convolutionAt(xSignal, hSignal, time) {
+  if (xSignal.impulseAt !== undefined && hSignal.impulseAt !== undefined) {
+    return { impulseAt: xSignal.impulseAt + hSignal.impulseAt, value: 0 };
+  }
+  if (xSignal.impulseAt !== undefined) {
+    return { value: hSignal.value(time - xSignal.impulseAt) };
+  }
+  if (hSignal.impulseAt !== undefined) {
+    return { value: xSignal.value(time - hSignal.impulseAt) };
+  }
+  return { value: integrateProduct(xSignal, hSignal, time) };
 }
 
 function formatNumber(value) {
@@ -144,6 +172,7 @@ function chartMarkup({
   yTicks,
   markerX = null,
   fillCurveIndex = null,
+  impulses = [],
 }) {
   const width = 800;
   const height = 300;
@@ -188,6 +217,20 @@ function chartMarkup({
     parts.push(`<path d="${path}" fill="none" stroke="${curve.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />`);
   }
 
+  for (const impulse of impulses) {
+    if (impulse.time < xRange[0] || impulse.time > xRange[1]) continue;
+    const impulseX = x(impulse.time);
+    const baselineY = y(0);
+    const tipY = y(impulse.weight);
+    const arrowDirection = impulse.weight >= 0 ? 1 : -1;
+    const arrowTipY = tipY + arrowDirection * 9;
+    parts.push(`
+      <line x1="${impulseX}" y1="${baselineY}" x2="${impulseX}" y2="${arrowTipY}" stroke="${impulse.color}" stroke-width="3" />
+      <path d="M${impulseX - 6},${arrowTipY - arrowDirection * 8} L${impulseX},${tipY} L${impulseX + 6},${arrowTipY - arrowDirection * 8}" fill="none" stroke="${impulse.color}" stroke-width="2" />
+      <text class="plot-annotation" x="${impulseX + 9}" y="${tipY - 5}">${impulse.label}</text>
+    `);
+  }
+
   if (markerX !== null && markerX >= xRange[0] && markerX <= xRange[1]) {
     parts.push(`<line x1="${x(markerX)}" y1="${margin.top}" x2="${x(markerX)}" y2="${height - margin.bottom}" stroke="${curveColors.marker}" stroke-width="2" stroke-dasharray="6 5" />`);
   }
@@ -206,7 +249,45 @@ function render() {
   const time = Number(timeSlider.value);
   const shiftedH = (tau) => hSignal.value(time - tau);
   const product = (tau) => xSignal.value(tau) * shiftedH(tau);
-  const currentValue = integrateProduct(xSignal, hSignal, time);
+  const currentConvolution = convolutionAt(xSignal, hSignal, time);
+  const currentValue = currentConvolution.value;
+  const bothImpulses =
+    xSignal.impulseAt !== undefined && hSignal.impulseAt !== undefined;
+  const overlapImpulses = [];
+  const productImpulses = [];
+
+  if (xSignal.impulseAt !== undefined) {
+    overlapImpulses.push({
+      time: xSignal.impulseAt,
+      weight: 1,
+      color: curveColors.x,
+      label: "δ",
+    });
+    if (hSignal.impulseAt === undefined) {
+      productImpulses.push({
+        time: xSignal.impulseAt,
+        weight: hSignal.value(time - xSignal.impulseAt),
+        color: curveColors.product,
+        label: "producto",
+      });
+    }
+  }
+  if (hSignal.impulseAt !== undefined) {
+    overlapImpulses.push({
+      time: time - hSignal.impulseAt,
+      weight: 1,
+      color: curveColors.h,
+      label: "δ",
+    });
+    if (xSignal.impulseAt === undefined) {
+      productImpulses.push({
+        time: time - hSignal.impulseAt,
+        weight: xSignal.value(time - hSignal.impulseAt),
+        color: curveColors.product,
+        label: "producto",
+      });
+    }
+  }
   const standardTimeTicks = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
   const integrationTimeTicks = [-8, -6, -4, -2, 0, 2, 4, 6, 8];
   const resultSamples = [];
@@ -216,7 +297,7 @@ function render() {
       ((integrationBounds[1] - integrationBounds[0]) * index) / 320;
     resultSamples.push({
       time: sampleTime,
-      value: integrateProduct(xSignal, hSignal, sampleTime),
+      value: convolutionAt(xSignal, hSignal, sampleTime).value,
     });
   }
 
@@ -251,10 +332,17 @@ function render() {
   timeOutput.value = formatNumber(time);
   timeOutput.textContent = formatNumber(time);
   resultTime.textContent = formatNumber(time);
-  resultValue.textContent = formatNumber(currentValue);
+  resultValue.textContent = currentConvolution.impulseAt === undefined
+    ? formatNumber(currentValue)
+    : currentConvolution.impulseAt === 0
+      ? "δ(t)"
+      : `δ(t − ${formatNumber(currentConvolution.impulseAt)})`;
 
   xOriginalPlot.innerHTML = chartMarkup({
     curves: [{ value: xSignal.value, color: curveColors.x }],
+    impulses: xSignal.impulseAt === undefined
+      ? []
+      : [{ time: xSignal.impulseAt, weight: 1, color: curveColors.x, label: "δ" }],
     xLabel: "t",
     yLabel: "x(t)",
     xRange: timeBounds,
@@ -266,6 +354,9 @@ function render() {
 
   hOriginalPlot.innerHTML = chartMarkup({
     curves: [{ value: hSignal.value, color: curveColors.h }],
+    impulses: hSignal.impulseAt === undefined
+      ? []
+      : [{ time: hSignal.impulseAt, weight: 1, color: curveColors.h, label: "δ" }],
     xLabel: "t",
     yLabel: "h(t)",
     xRange: timeBounds,
@@ -279,8 +370,9 @@ function render() {
     curves: [
       { value: xSignal.value, color: curveColors.x },
       { value: shiftedH, color: curveColors.h },
-      { value: product, color: curveColors.product },
+      { value: bothImpulses ? () => 0 : product, color: curveColors.product },
     ],
+    impulses: [...overlapImpulses, ...productImpulses],
     xLabel: "τ",
     yLabel: "amplitud",
     xRange: integrationBounds,
@@ -294,9 +386,21 @@ function render() {
     "aria-label",
     `Señales x de tau, h de t menos tau y su producto superpuestas para t igual a ${formatNumber(time)}`,
   );
+  impulseNote.hidden = !bothImpulses;
+  impulseNote.textContent = bothImpulses
+    ? "El producto de dos deltas ideales no se representa como una función ordinaria; su convolución es otra delta, mostrada en la gráfica de salida."
+    : "";
 
   resultPlot.innerHTML = chartMarkup({
     curves: [{ value: resultCurve, color: curveColors.result }],
+    impulses: currentConvolution.impulseAt === undefined
+      ? []
+      : [{
+          time: currentConvolution.impulseAt,
+          weight: 1,
+          color: curveColors.result,
+          label: "δ",
+        }],
     xLabel: "t",
     yLabel: "y(t)",
     xRange: integrationBounds,
@@ -305,7 +409,12 @@ function render() {
     yTicks: sharedYTicks,
     markerX: time,
   });
-  resultPlot.setAttribute("aria-label", `Convolución y de t; valor actual ${formatNumber(currentValue)}`);
+  resultPlot.setAttribute(
+    "aria-label",
+    currentConvolution.impulseAt === undefined
+      ? `Convolución y de t; valor actual ${formatNumber(currentValue)}`
+      : `Convolución delta unitaria en t igual a ${formatNumber(currentConvolution.impulseAt)}`,
+  );
 }
 
 xSelect.addEventListener("change", render);

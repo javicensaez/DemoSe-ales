@@ -41,6 +41,27 @@ const demos = [
       "Elige x(t) y h(t), desplaza una señal con el deslizador y observa el producto y la integral de convolución.",
     href: "convolucion.html",
   },
+  {
+    category: "Demo · Muestreo",
+    title: "Muestreo y aliasing",
+    description:
+      "Ajusta la frecuencia de muestreo, visualiza las muestras y compara la señal original con su reconstrucción.",
+    href: "muestreo.html",
+  },
+  {
+    category: "Demo · Series de Fourier",
+    title: "Laboratorio de series de Fourier",
+    description:
+      "Explora la síntesis de señales periódicas, sus coeficientes y el espectro al variar el número de armónicos.",
+    href: "series-fourier.html",
+  },
+  {
+    category: "Juego · Series de Fourier",
+    title: "Desafío de Fourier",
+    description:
+      "Calcula coeficientes en forma trigonométrica o módulo/fase, reconstruye señales y comprueba tu puntuación.",
+    href: "juego-fourier.html",
+  },
 ];
 
 const demoGrid = document.querySelector("#demo-grid");

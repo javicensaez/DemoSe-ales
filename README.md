@@ -10,12 +10,15 @@ Las páginas también pueden servirse desde cualquier servidor de archivos está
 
 ## Demos
 
-- **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, ondas periódicas y la exponencial compleja.
+- **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, la sinc, ondas periódicas y la exponencial compleja.
 - **Adivina la expresión** (`juego-expresiones.html`): interpreta una gráfica, escribe la expresión de la señal y comprueba la respuesta.
 - **Transforma la señal** (`juego-transformaciones.html`): practica desplazamientos, inversión temporal y escalado de señales.
 - **Señales pares e impares** (`juego-simetria.html`): predice las componentes par e impar y comprueba la solución.
 - **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): consulta el valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
 - **Convolución paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
+- **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
+- **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
+- **Desafío de Fourier** (`juego-fourier.html`): calcula coeficientes trigonométricos o módulo/fase, reconstruye la señal objetivo y comprueba tu resultado.
 
 ## Estructura
 

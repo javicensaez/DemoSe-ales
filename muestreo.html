@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora el muestreo de señales y observa cómo aparece el aliasing."
+    />
+    <title>Muestreo y aliasing — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="muestreo.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main sampling-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Muestreo</p>
+        <h1>Muestreo <span>y aliasing</span></h1>
+        <p>
+          Elige una señal y compara su frecuencia con la frecuencia de muestreo.
+          Observa las muestras y la señal analógica que se reconstruye a partir de ellas.
+        </p>
+      </section>
+
+      <section class="sampling-controls plot-card" aria-label="Controles de muestreo">
+        <label for="sampling-signal">
+          Señal analógica
+          <select id="sampling-signal">
+            <option value="sine">Seno</option>
+            <option value="cosine">Coseno</option>
+            <option value="two-tone">Suma de dos tonos</option>
+            <option value="square">Rectangular periódica (duty 50 %)</option>
+            <option value="triangle">Triangular periódica</option>
+          </select>
+        </label>
+        <label class="sampling-range" for="signal-frequency">
+          <span>Frecuencia de la señal f₀ <output id="signal-frequency-value" for="signal-frequency"></output></span>
+          <input id="signal-frequency" type="range" min="0.5" max="5" step="0.1" value="2" />
+        </label>
+        <label class="sampling-range" for="sampling-frequency">
+          <span>Frecuencia de muestreo fₛ <output id="sampling-frequency-value" for="sampling-frequency"></output></span>
+          <input id="sampling-frequency" type="range" min="0.5" max="12" step="0.1" value="2.5" />
+        </label>
+      </section>
+
+      <section class="sampling-status plot-card" id="sampling-status" aria-live="polite">
+        <p id="sampling-status-title"></p>
+        <p id="sampling-status-detail"></p>
+      </section>
+
+      <section class="sampling-formula plot-card" aria-label="Muestreo y reconstrucción ideal">
+        <span>\(T_s=\dfrac{1}{f_s},\qquad x_r(t)=\displaystyle\sum_{n=-\infty}^{\infty}x(nT_s)\,\mathrm{sinc}\!\left(\dfrac{t-nT_s}{T_s}\right)\)</span>
+        <p>La reconstrucción se aproxima con una suma finita de funciones sinc. La línea discontinua es la señal original de referencia.</p>
+      </section>
+
+      <section class="sampling-plots" aria-label="Señal muestreada y reconstruida">
+        <article class="plot-card sampling-plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Muestreo</p><h2>Señal analógica y muestras</h2></div>
+            <span class="plot-badge" id="sampling-period"></span>
+          </div>
+          <div class="sampling-legend">
+            <span><i class="sampling-swatch sampling-original-swatch"></i>Señal original x(t)</span>
+            <span><i class="sampling-swatch sampling-samples-swatch"></i>Muestras x(nTₛ)</span>
+          </div>
+          <svg class="time-plot sampling-plot" id="sampled-plot" viewBox="0 0 800 320" role="img" aria-label="Señal original con sus muestras"></svg>
+        </article>
+
+        <article class="plot-card sampling-plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Reconstrucción</p><h2>Señal analógica reconstruida</h2></div>
+            <span class="plot-badge">Interpolación sinc ideal</span>
+          </div>
+          <div class="sampling-legend">
+            <span><i class="sampling-swatch sampling-reconstruction-swatch"></i>Reconstrucción xᵣ(t)</span>
+            <span><i class="sampling-swatch sampling-reference-swatch"></i>Señal original x(t)</span>
+          </div>
+          <svg class="time-plot sampling-plot" id="reconstructed-plot" viewBox="0 0 800 320" role="img" aria-label="Comparación entre la señal original y la reconstruida"></svg>
+          <p class="sampling-explanation" id="reconstruction-description"></p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

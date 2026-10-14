@@ -72,6 +72,22 @@ const signalDefinitions = [
       amplitude * Math.sin(2 * Math.PI * frequency * (time - shift)),
   },
   {
+    id: "sinc",
+    name: "Sinc",
+    symbol: "sinc(t)",
+    equation: "x(t) = A sinc(f(t − t₀)),  sinc(u) = sin(πu) / (πu)",
+    description:
+      "Pulso sinc centrado en t₀. En el centro vale A; sus lóbulos oscilan y decrecen a ambos lados. El parámetro f controla su anchura.",
+    frequency: true,
+    width: false,
+    value: (time, { amplitude, shift, frequency }) => {
+      const argument = frequency * (time - shift);
+      return Math.abs(argument) < 1e-10
+        ? amplitude
+        : amplitude * Math.sin(Math.PI * argument) / (Math.PI * argument);
+    },
+  },
+  {
     id: "complex",
     name: "Exponencial compleja",
     symbol: "eʲᵠ",

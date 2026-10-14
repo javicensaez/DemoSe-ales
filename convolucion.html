@@ -51,6 +51,8 @@
             <label class="convolution-signal-select" for="x-signal">
               Señal x(t)
               <select id="x-signal">
+                <option value="delta-0">Delta δ(t), centrada en 0</option>
+                <option value="delta-1">Delta δ(t − 1), desplazada a 1</option>
                 <option value="step">Escalón u(t)</option>
                 <option value="rect">Pulso positivo [0, 1]</option>
                 <option value="positive-left-pulse">Pulso positivo [−1, 0)</option>
@@ -72,6 +74,8 @@
             <label class="convolution-signal-select" for="h-signal">
               Señal h(t)
               <select id="h-signal">
+                <option value="delta-0">Delta δ(t), centrada en 0</option>
+                <option value="delta-1">Delta δ(t − 1), desplazada a 1</option>
                 <option value="rect">Pulso positivo [0, 1]</option>
                 <option value="positive-left-pulse">Pulso positivo [−1, 0)</option>
                 <option value="negative-pulse">Pulso negativo [0, 1)</option>
@@ -101,6 +105,7 @@
               <span><span class="convolution-swatch h-swatch"></span>h(t − τ)</span>
               <span><span class="convolution-swatch product-swatch"></span>x(τ) · h(t − τ), área sombreada</span>
             </div>
+            <p class="convolution-impulse-note" id="convolution-impulse-note" hidden></p>
             <svg class="time-plot convolution-plot convolution-overlay-plot" id="overlap-plot" viewBox="0 0 800 300" role="img"></svg>
         </article>
 

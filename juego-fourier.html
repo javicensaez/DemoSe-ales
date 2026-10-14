@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Practica el cálculo de coeficientes de Fourier y reconstruye señales periódicas."
+    />
+    <title>Desafío de Fourier — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="fourier-core.js" defer></script>
+    <script src="juego-fourier.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main fourier-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Series de Fourier</p>
+        <h1>Desafío <span>de Fourier</span></h1>
+        <p>
+          Calcula los coeficientes de la señal objetivo, reconstruye su serie y
+          comprueba cuánto se aproxima a la forma de onda original.
+        </p>
+      </section>
+
+      <section class="fourier-game-controls plot-card" aria-label="Configuración del desafío">
+        <label for="challenge-signal">
+          Señal objetivo
+          <select id="challenge-signal">
+            <option value="square">Cuadrada bipolar</option>
+            <option value="triangle">Triangular</option>
+            <option value="sawtooth">Diente de sierra</option>
+            <option value="sine">Seno</option>
+            <option value="cosine">Coseno</option>
+            <option value="pulse">Pulso rectangular (25 %)</option>
+            <option value="rectified">Seno rectificado</option>
+            <option value="composite">Señal compuesta</option>
+          </select>
+        </label>
+        <div class="fourier-difficulty" role="group" aria-label="Número de armónicos">
+          <span>Dificultad · armónico máximo N</span>
+          <div>
+            <button type="button" data-count="3" aria-pressed="false">3</button>
+            <button type="button" data-count="5" aria-pressed="true">5</button>
+            <button type="button" data-count="10" aria-pressed="false">10</button>
+            <button type="button" data-count="20" aria-pressed="false">20</button>
+          </div>
+        </div>
+        <button class="game-button primary-game-button" id="new-challenge" type="button">↻ Nuevo desafío</button>
+      </section>
+
+      <section class="fourier-game-layout">
+        <article class="plot-card fourier-answer-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Paso 1</p><h2>Introduce los coeficientes</h2></div>
+            <span class="plot-badge" id="challenge-summary"></span>
+          </div>
+          <p class="fourier-convention">Usa la convención \(f(t)=a_0/2+\sum_{n=1}^{N}(a_n\cos(n\omega_0t)+b_n\sin(n\omega_0t))\).</p>
+          <label class="fourier-a0-input" for="answer-a0">
+            Coeficiente a₀
+            <input id="answer-a0" type="text" inputmode="decimal" autocomplete="off" placeholder="0" />
+          </label>
+          <div class="fourier-mode-controls" role="group" aria-label="Representación de coeficientes">
+            <span>Armónicos</span>
+            <button id="mode-trig" type="button" aria-pressed="true">aₙ y bₙ</button>
+            <button id="mode-polar" type="button" aria-pressed="false">Aₙ y φₙ</button>
+          </div>
+          <p class="fourier-entry-note" id="fourier-entry-note">Fase en grados; \(a_n=A_n\cos(\varphi_n)\) y \(b_n=-A_n\sin(\varphi_n)\).</p>
+          <div class="fourier-table-wrap fourier-input-table-wrap">
+            <table class="fourier-table fourier-answer-table">
+              <thead id="answer-table-head"></thead>
+              <tbody id="answer-table-body"></tbody>
+            </table>
+          </div>
+          <p class="fourier-input-help">Puedes escribir decimales o expresiones como <code>4/pi</code>, <code>-2/pi^2</code> y <code>sqrt(2)</code>. Deja en cero los coeficientes nulos.</p>
+          <div class="fourier-game-actions">
+            <button class="game-button primary-game-button" id="check-answer" type="button">Comprobar</button>
+            <button class="game-button" id="show-hint" type="button">Pista</button>
+            <button class="game-button" id="show-solution" type="button">Ver solución</button>
+            <button class="game-button" id="next-challenge" type="button" hidden>Siguiente nivel →</button>
+          </div>
+          <p class="fourier-feedback" id="fourier-feedback" aria-live="polite"></p>
+          <p class="fourier-hint" id="fourier-hint" hidden></p>
+          <div class="fourier-solution" id="fourier-solution" hidden></div>
+          <p class="fourier-score" id="fourier-score" aria-live="polite"></p>
+        </article>
+
+        <article class="plot-card fourier-game-plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Paso 2</p><h2>Compara las señales</h2></div>
+            <span class="plot-badge">T = 1 s · dos periodos</span>
+          </div>
+          <div class="fourier-legend">
+            <span><i class="fourier-swatch fourier-target-swatch"></i>Objetivo</span>
+            <span><i class="fourier-swatch fourier-sum-swatch"></i>Tu serie</span>
+          </div>
+          <svg class="time-plot fourier-plot" id="challenge-plot" viewBox="0 0 800 320" role="img" aria-label="Señal objetivo y serie reconstruida"></svg>
+          <p class="fourier-input-help">La puntuación compara tus coeficientes con los exactos hasta N; la suma finita mantiene el error propio del truncamiento.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

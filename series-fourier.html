@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora los coeficientes y la síntesis de señales mediante series de Fourier."
+    />
+    <title>Laboratorio de series de Fourier — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="fourier-core.js" defer></script>
+    <script src="series-fourier.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main fourier-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Análisis de señales</p>
+        <h1>Laboratorio de <span>series de Fourier</span></h1>
+        <p>
+          Elige una señal periódica y observa cómo sus armónicos forman la suma
+          parcial. Explora sus coeficientes, el espectro y el error de aproximación.
+        </p>
+      </section>
+
+      <section class="fourier-controls plot-card" aria-label="Controles de la serie de Fourier">
+        <label for="fourier-signal">
+          Forma de onda
+          <select id="fourier-signal">
+            <option value="square">Cuadrada bipolar</option>
+            <option value="triangle">Triangular</option>
+            <option value="sawtooth">Diente de sierra</option>
+            <option value="sine">Seno</option>
+            <option value="cosine">Coseno</option>
+            <option value="pulse">Tren de pulsos</option>
+            <option value="rectified">Seno rectificado</option>
+            <option value="composite">Señal compuesta</option>
+          </select>
+        </label>
+        <label class="fourier-range" for="fourier-terms">
+          <span>Términos N <output id="fourier-terms-value" for="fourier-terms"></output></span>
+          <input id="fourier-terms" type="range" min="0" max="25" step="1" value="5" />
+        </label>
+        <label class="fourier-range" for="fourier-frequency">
+          <span>Frecuencia fundamental f₀ <output id="fourier-frequency-value" for="fourier-frequency"></output></span>
+          <input id="fourier-frequency" type="range" min="0.5" max="4" step="0.1" value="1" />
+        </label>
+        <label class="fourier-range" id="fourier-duty-control" for="fourier-duty" hidden>
+          <span>Ciclo útil d/T <output id="fourier-duty-value" for="fourier-duty"></output></span>
+          <input id="fourier-duty" type="range" min="0.05" max="0.95" step="0.05" value="0.25" />
+        </label>
+      </section>
+
+      <section class="fourier-formula plot-card" aria-label="Forma trigonométrica de Fourier">
+        <span>\(f(t)=\dfrac{a_0}{2}+\displaystyle\sum_{n=1}^{N}\left[a_n\cos(n\omega_0t)+b_n\sin(n\omega_0t)\right]\)</span>
+        <p>Convención: la componente continua es a₀/2; N es el armónico más alto incluido.</p>
+      </section>
+
+      <section class="fourier-status plot-card" aria-live="polite">
+        <strong id="fourier-error"></strong>
+        <span id="fourier-period"></span>
+      </section>
+
+      <section class="fourier-panels" aria-label="Análisis de la señal">
+        <article class="plot-card fourier-chart-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Síntesis</p><h2>Señal y suma parcial</h2></div>
+            <span class="plot-badge" id="fourier-wave-name"></span>
+          </div>
+          <div class="fourier-legend">
+            <span><i class="fourier-swatch fourier-target-swatch"></i>Señal original</span>
+            <span><i class="fourier-swatch fourier-sum-swatch"></i>Suma parcial Sₙ(t)</span>
+          </div>
+          <svg class="time-plot fourier-plot" id="fourier-wave-plot" viewBox="0 0 800 320" role="img" aria-label="Señal original y suma parcial de Fourier"></svg>
+        </article>
+
+        <article class="plot-card fourier-chart-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Espectro</p><h2>Amplitud de los armónicos</h2></div>
+            <span class="plot-badge">Aₙ = √(aₙ² + bₙ²)</span>
+          </div>
+          <svg class="time-plot fourier-spectrum" id="fourier-spectrum" viewBox="0 0 800 190" role="img" aria-label="Espectro de amplitud de Fourier"></svg>
+        </article>
+
+        <article class="plot-card fourier-chart-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Coeficientes</p><h2>Forma trigonométrica</h2></div>
+            <span class="plot-badge">a₀ / 2 como continua</span>
+          </div>
+          <div class="fourier-table-wrap">
+            <table class="fourier-table">
+              <thead><tr><th>n</th><th>aₙ</th><th>bₙ</th><th>Aₙ</th><th>φₙ (°)</th></tr></thead>
+              <tbody id="fourier-coefficients"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
