@@ -1,0 +1,35 @@
+# Sistemas y señales
+
+Web educativa con demos interactivas para explorar conceptos de sistemas y señales. La interfaz está en español y utiliza una estética azul inspirada en la Universidad de Deusto.
+
+## Cómo abrir la web
+
+No se necesita instalar dependencias ni compilar el proyecto. Abre `index.html` en un navegador para acceder al catálogo y navegar a las demos.
+
+Las páginas también pueden servirse desde cualquier servidor de archivos estáticos. MathJax se carga desde jsDelivr en las páginas que muestran ecuaciones.
+
+## Demos
+
+- **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, ondas periódicas y la exponencial compleja.
+- **Adivina la expresión** (`juego-expresiones.html`): interpreta una gráfica, escribe la expresión de la señal y comprueba la respuesta.
+- **Transforma la señal** (`juego-transformaciones.html`): practica desplazamientos, inversión temporal y escalado de señales.
+- **Señales pares e impares** (`juego-simetria.html`): predice las componentes par e impar y comprueba la solución.
+- **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): consulta el valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
+- **Convolución paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
+
+## Estructura
+
+- Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.
+- `styles.css` contiene los estilos compartidos.
+- `app.js` define las tarjetas que aparecen en el catálogo de `index.html`.
+- `assets/` contiene los recursos estáticos.
+- `AGENTS.md` recoge las pautas de diseño y desarrollo para las demos.
+
+## Añadir una demo
+
+Al crear una demo:
+
+1. Crea su página HTML y, si necesita lógica, un archivo JavaScript propio.
+2. Añádela al catálogo en `app.js`, con categoría, título, descripción y enlace.
+3. Añade una entrada en la sección **Demos** de este README con una descripción breve.
+4. Sigue las convenciones de `AGENTS.md` y valida la página, sus controles y la sintaxis JavaScript.
