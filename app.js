@@ -31,7 +31,7 @@ const demos = [
     category: "Demo · Valores medios y eficaces",
     title: "Potencia y valores de señales periódicas",
     description:
-      "Visualiza cuatro señales periódicas y consulta su valor medio, potencia media, valor eficaz y valor eficaz de alterna.",
+      "Compara cinco señales periódicas y consulta su valor medio, potencia media, valor eficaz y valor eficaz de alterna.",
     href: "potencia-senales-periodicas.html",
   },
   {

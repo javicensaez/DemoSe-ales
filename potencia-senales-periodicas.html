@@ -47,7 +47,7 @@
               <p class="eyebrow">Selecciona una señal</p>
               <h2 id="signal-title">Señal cuadrada x₁(t)</h2>
             </div>
-            <span class="plot-badge">T = 1 ms</span>
+            <span class="plot-badge" id="power-period">T = 1 ms</span>
           </div>
           <div class="power-signal-picker" id="power-signal-picker" role="group" aria-label="Tipo de señal periódica"></div>
           <svg class="time-plot power-plot" id="power-plot" viewBox="0 0 800 360" role="img"></svg>
@@ -56,6 +56,7 @@
             <div data-signal-equation="square-quarter" hidden>\[x_2(t)=\begin{cases}5\,\mathrm{V},&amp;0\le t\bmod T\lt T/4\\1\,\mathrm{V},&amp;T/4\le t\bmod T\lt T\end{cases}\]</div>
             <div data-signal-equation="triangle" hidden>\[x_3(t):\ \text{onda triangular entre }1\,\mathrm{V}\text{ y }5\,\mathrm{V},\quad T=1\,\mathrm{ms}\]</div>
             <div data-signal-equation="cosine" hidden>\[x_4(t)=3+2\cos\!\left(\frac{2\pi t}{T}\right)\,\mathrm{V}\]</div>
+            <div data-signal-equation="asymmetric-ramp" hidden>\[\begin{gathered}q=\frac{t\bmod 3\,\mathrm{ms}}{1\,\mathrm{ms}}\\x_5(t)=\begin{cases}(2-q)\,\mathrm{V},&amp;0\le q&lt;1\\-1\,\mathrm{V},&amp;1\le q&lt;2\\(q-2)\,\mathrm{V},&amp;2\le q&lt;3\end{cases},\quad T=3\,\mathrm{ms}\end{gathered}\]</div>
           </div>
         </article>
 
@@ -114,6 +115,11 @@
             <div data-power-explanation="cosine" hidden>
               \[V_{\mathrm{medio}}=3\,\mathrm{V}\]
               \[\langle v^2\rangle=3^2+\frac{2^2}{2}=11\,\mathrm{V}^2\]
+            </div>
+            <div data-power-explanation="asymmetric-ramp" hidden>
+              \[V_{\mathrm{medio}}=\frac{1}{3}\left(\int_0^1(2-q)\,\mathrm{d}q-1+\int_2^3(q-2)\,\mathrm{d}q\right)=\frac{1}{3}\,\mathrm{V}\]
+              \[\langle v^2\rangle=\frac{1}{3}\left(\int_0^1(2-q)^2\,\mathrm{d}q+1+\int_2^3(q-2)^2\,\mathrm{d}q\right)=\frac{11}{9}\,\mathrm{V}^2\]
+              \[V_{\mathrm{ef,ac}}=\sqrt{\frac{11}{9}-\left(\frac{1}{3}\right)^2}=\frac{\sqrt{10}}{3}\,\mathrm{V}\]
             </div>
             <p id="power-input-error" hidden>
               Introduce una resistencia entre \(0{,}1\,\Omega\) y \(1000\,\Omega\) para calcular la potencia media.

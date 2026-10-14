@@ -1517,7 +1517,7 @@ h2 {
 
   .power-signal-picker {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
     margin-bottom: 12px;
   }
@@ -1643,6 +1643,7 @@ h2 {
   }
 
   .power-explanation {
+    min-width: 0;
     margin: 13px 0 0;
     padding: 10px;
     border-radius: 7px;
@@ -1650,6 +1651,7 @@ h2 {
     color: var(--muted);
     font-size: 12px;
     line-height: 1.5;
+    overflow-x: auto;
   }
 
   .power-explanation .MathJax_Display {

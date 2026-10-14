@@ -14,7 +14,7 @@ Las páginas también pueden servirse desde cualquier servidor de archivos está
 - **Adivina la expresión** (`juego-expresiones.html`): interpreta una gráfica, escribe la expresión de la señal y comprueba la respuesta.
 - **Transforma la señal** (`juego-transformaciones.html`): practica desplazamientos, inversión temporal y escalado de señales.
 - **Señales pares e impares** (`juego-simetria.html`): predice las componentes par e impar y comprueba la solución.
-- **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): consulta el valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
+- **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): compara cinco formas de onda y consulta su valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
 - **Preguntas de sistemas** (`sistemas-preguntas.html`): clasifica diez sistemas por memoria, causalidad, linealidad, invariancia temporal y estabilidad BIBO.
 - **Convolución paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
