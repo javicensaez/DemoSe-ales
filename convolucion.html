@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora paso a paso la convolución de señales continuas."
+    />
+    <title>Convolución paso a paso — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="convolucion.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main convolution-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Operaciones con señales</p>
+        <h1>Convolución <span>paso a paso</span></h1>
+        <p>
+          Elige las dos señales y mueve t. Observa cómo se desplaza h(t − τ),
+          dónde se solapa con x(τ), y cómo cambia el área del producto.
+        </p>
+      </section>
+
+      <section class="convolution-formula plot-card" aria-label="Definición de la convolución">
+        <span id="convolution-definition">\(y(t)=x(t)*h(t)=\displaystyle\int_{-\infty}^{t}x(\tau)\,h(t-\tau)\,\mathrm{d}\tau\)</span>
+        <p id="convolution-definition-note">Como h(t) es causal, la integral puede terminar en t. El área coloreada representa el valor aproximado de la integral.</p>
+      </section>
+
+      <section class="convolution-plots" aria-label="Gráficas de la convolución">
+        <div class="convolution-row convolution-input-row" aria-label="Señales originales">
+          <article class="plot-card convolution-plot-card">
+            <label class="convolution-signal-select" for="x-signal">
+              Señal x(t)
+              <select id="x-signal">
+                <option value="step">Escalón u(t)</option>
+                <option value="rect">Pulso positivo [0, 1]</option>
+                <option value="positive-left-pulse">Pulso positivo [−1, 0)</option>
+                <option value="negative-pulse">Pulso negativo [0, 1)</option>
+                <option value="bipolar-pulse">Pulso bipolar: +1 en [−1, 0), −1 en [0, 1)</option>
+                <option value="centered-pulse">Pulso de anchura 2 centrado en 0</option>
+                <option value="triangle">Triangular centrada</option>
+                <option value="ramp">Rampa causal truncada</option>
+              </select>
+            </label>
+            <div class="plot-heading">
+              <div><p class="eyebrow">Señal original</p><h2>x(t)</h2></div>
+              <span class="plot-badge">entrada</span>
+            </div>
+            <div class="convolution-legend"><span class="convolution-swatch x-swatch"></span>x(t)</div>
+            <svg class="time-plot convolution-plot" id="x-original-plot" viewBox="0 0 800 300" role="img"></svg>
+          </article>
+          <article class="plot-card convolution-plot-card">
+            <label class="convolution-signal-select" for="h-signal">
+              Señal h(t)
+              <select id="h-signal">
+                <option value="rect">Pulso positivo [0, 1]</option>
+                <option value="positive-left-pulse">Pulso positivo [−1, 0)</option>
+                <option value="negative-pulse">Pulso negativo [0, 1)</option>
+                <option value="bipolar-pulse">Pulso bipolar: +1 en [−1, 0), −1 en [0, 1)</option>
+                <option value="centered-pulse">Pulso de anchura 2 centrado en 0</option>
+                <option value="step">Escalón u(t)</option>
+                <option value="triangle">Triangular centrada</option>
+                <option value="exponential">Exponencial causal e⁻ᵗu(t)</option>
+              </select>
+            </label>
+            <div class="plot-heading">
+              <div><p class="eyebrow">Respuesta al impulso</p><h2>h(t)</h2></div>
+              <span class="plot-badge">entrada</span>
+            </div>
+            <div class="convolution-legend"><span class="convolution-swatch h-swatch"></span>h(t)</div>
+            <svg class="time-plot convolution-plot" id="h-original-plot" viewBox="0 0 800 300" role="img"></svg>
+          </article>
+        </div>
+
+        <article class="plot-card convolution-overlap-card" aria-label="Señales superpuestas durante la convolución">
+            <div class="plot-heading">
+              <div><p class="eyebrow">Desplazamiento y solapamiento</p><h2>x(τ), h(t − τ) y x(τ) · h(t − τ)</h2></div>
+              <span class="plot-badge">variable τ · área del producto = y(t)</span>
+            </div>
+            <div class="convolution-legend convolution-overlay-legend">
+              <span><span class="convolution-swatch x-swatch"></span>x(τ)</span>
+              <span><span class="convolution-swatch h-swatch"></span>h(t − τ)</span>
+              <span><span class="convolution-swatch product-swatch"></span>x(τ) · h(t − τ), área sombreada</span>
+            </div>
+            <svg class="time-plot convolution-plot convolution-overlay-plot" id="overlap-plot" viewBox="0 0 800 300" role="img"></svg>
+        </article>
+
+        <article class="plot-card convolution-plot-card convolution-result-row">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Resultado acumulado</p><h2>Convolución y(t)</h2></div>
+            <span class="plot-badge">y(t) = x(t) * h(t)</span>
+          </div>
+          <div class="convolution-legend"><span class="convolution-swatch result-swatch"></span>y(t)</div>
+          <svg class="time-plot convolution-plot" id="result-plot" viewBox="0 0 800 300" role="img"></svg>
+          <p class="convolution-result" aria-live="polite">
+            Para t = <strong id="result-time">0</strong>,
+            <span id="convolution-result-formula">\(y(t)\approx\int_{-\infty}^{t}x(\tau)h(t-\tau)\,\mathrm{d}\tau=\)</span>
+            <strong id="result-value">0</strong>.
+          </p>
+        </article>
+
+        <section class="convolution-slider-card plot-card" aria-label="Control del desplazamiento">
+          <label class="convolution-slider" for="time-slider">
+            <span>Desplazamiento t <output id="time-value" for="time-slider">0</output></span>
+            <input id="time-slider" type="range" min="-8" max="8" step="0.05" value="0" />
+          </label>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

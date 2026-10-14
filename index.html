@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Demos interactivas de sistemas y señales."
+    />
+    <title>Sistemas y señales — demos interactivas</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        <span class="sr-only">Abrir menú</span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Navegación principal">
+        <a class="nav-link is-active" href="#inicio">Inicio</a>
+        <a class="nav-link" href="#demos">Demos</a>
+        <a class="nav-cta" href="#demos">Explorar demos <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Laboratorio interactivo</p>
+          <h1>Entiende las señales.<br /><span>Explora los sistemas.</span></h1>
+          <p class="hero-description">
+            Un espacio para experimentar con conceptos de sistemas y señales
+            mediante demos visuales e interactivas.
+          </p>
+          <a class="primary-button" href="#demos">
+            Explorar demos <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+
+        <div class="signal-art" aria-label="Visualización de una señal sinusoidal">
+          <div class="art-label">SEÑAL / 001</div>
+          <div class="art-axis art-axis-x"></div>
+          <div class="art-axis art-axis-y"></div>
+          <div class="art-tick tick-one"></div>
+          <div class="art-tick tick-two"></div>
+          <div class="art-tick tick-three"></div>
+          <svg viewBox="0 0 540 250" role="img" aria-label="Onda sinusoidal">
+            <path class="wave-glow" d="M0 125 C45 125 45 25 90 25 S135 225 180 225 S225 25 270 25 S315 225 360 225 S405 25 450 25 S495 125 540 125" />
+            <path class="wave-line" d="M0 125 C45 125 45 25 90 25 S135 225 180 225 S225 25 270 25 S315 225 360 225 S405 25 450 25 S495 125 540 125" />
+          </svg>
+          <div class="signal-equation">x(t) = A · sin(ωt + φ)</div>
+          <span class="art-coordinate coordinate-left">−π</span>
+          <span class="art-coordinate coordinate-center">0</span>
+          <span class="art-coordinate coordinate-right">π</span>
+        </div>
+        <div class="hero-index"><span>01</span> / APRENDE HACIENDO</div>
+      </section>
+
+      <section class="demos-section" id="demos">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow section-eyebrow">Tu mesa de trabajo</p>
+            <h2>Explora las demos</h2>
+          </div>
+          <p class="section-note">
+            Cada demo, una forma nueva de ver<br class="desktop-break" />
+            cómo se comportan las señales.
+          </p>
+        </div>
+
+        <div class="demo-grid" id="demo-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand footer-brand" href="#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="#inicio">Volver arriba ↑</a>
+    </footer>
+  </body>
+</html>

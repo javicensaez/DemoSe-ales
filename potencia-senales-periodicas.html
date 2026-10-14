@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Calcula valor medio, potencia media y valores eficaces de señales periódicas."
+    />
+    <title>Potencia y valores de señales periódicas — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="potencia-senales-periodicas.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main power-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Señales periódicas</p>
+        <h1>Potencia y valores <span>de señales periódicas</span></h1>
+        <p>
+          Elige una señal para ver su forma de onda y sus valores característicos
+          calculados sobre un periodo.
+        </p>
+      </section>
+
+      <section class="power-workspace" aria-label="Calculadora de señales periódicas">
+        <article class="plot-card">
+          <div class="plot-heading">
+            <div>
+              <p class="eyebrow">Selecciona una señal</p>
+              <h2 id="signal-title">Señal cuadrada x₁(t)</h2>
+            </div>
+            <span class="plot-badge">T = 1 ms</span>
+          </div>
+          <div class="power-signal-picker" id="power-signal-picker" role="group" aria-label="Tipo de señal periódica"></div>
+          <svg class="time-plot power-plot" id="power-plot" viewBox="0 0 800 360" role="img"></svg>
+          <div class="power-equation math-display" id="signal-equation">
+            <div data-signal-equation="square-half">\[x_1(t)=\begin{cases}5\,\mathrm{V},&amp;0\le t\bmod T\lt T/2\\1\,\mathrm{V},&amp;T/2\le t\bmod T\lt T\end{cases}\]</div>
+            <div data-signal-equation="square-quarter" hidden>\[x_2(t)=\begin{cases}5\,\mathrm{V},&amp;0\le t\bmod T\lt T/4\\1\,\mathrm{V},&amp;T/4\le t\bmod T\lt T\end{cases}\]</div>
+            <div data-signal-equation="triangle" hidden>\[x_3(t):\ \text{onda triangular entre }1\,\mathrm{V}\text{ y }5\,\mathrm{V},\quad T=1\,\mathrm{ms}\]</div>
+            <div data-signal-equation="cosine" hidden>\[x_4(t)=3+2\cos\!\left(\frac{2\pi t}{T}\right)\,\mathrm{V}\]</div>
+          </div>
+        </article>
+
+        <aside class="plot-card power-results">
+          <div class="plot-heading">
+            <div>
+              <p class="eyebrow">Resultados en un periodo</p>
+              <h2>Valores calculados</h2>
+            </div>
+          </div>
+          <label class="power-resistance" for="load-resistance">
+            Resistencia de carga R
+            <span>
+              <input id="load-resistance" type="number" min="0.1" max="1000" step="0.1" value="1" />
+              <span>Ω</span>
+            </span>
+          </label>
+          <div class="power-metrics" aria-live="polite">
+            <article class="power-metric">
+              <span>Valor medio</span>
+              <strong id="mean-value"></strong>
+              <small>V</small>
+            </article>
+            <article class="power-metric">
+              <span>Potencia media</span>
+              <strong id="power-value"></strong>
+              <small>W</small>
+              <div class="power-metric-formula">\(\overline{P}=\frac{\langle v^2\rangle}{R}\)</div>
+            </article>
+            <article class="power-metric">
+              <span>Valor eficaz total</span>
+              <strong id="rms-value"></strong>
+              <small>V</small>
+              <div class="power-metric-formula">\(V_{\mathrm{ef}}=\sqrt{\langle v^2\rangle}\)</div>
+            </article>
+            <article class="power-metric">
+              <span>Valor eficaz de alterna</span>
+              <strong id="ac-rms-value"></strong>
+              <small>V</small>
+              <div class="power-metric-formula">\(V_{\mathrm{ef,ac}}=\sqrt{\langle v^2\rangle-V_{\mathrm{medio}}^2}\)</div>
+            </article>
+          </div>
+          <div class="power-explanation" id="power-explanation">
+            <div data-power-explanation="square-half">
+              \[V_{\mathrm{medio}}=\frac{5+1}{2}=3\,\mathrm{V}\]
+              \[\langle v^2\rangle=\frac{5^2+1^2}{2}=13\,\mathrm{V}^2\]
+            </div>
+            <div data-power-explanation="square-quarter" hidden>
+              \[V_{\mathrm{medio}}=\frac{1}{4}\,5+\frac{3}{4}\,1=2\,\mathrm{V}\]
+              \[\langle v^2\rangle=\frac{1}{4}\,5^2+\frac{3}{4}\,1^2=7\,\mathrm{V}^2\]
+            </div>
+            <div data-power-explanation="triangle" hidden>
+              \[V_{\mathrm{medio}}=\frac{5+1}{2}=3\,\mathrm{V}\]
+              \[\langle v^2\rangle=V_{\mathrm{medio}}^2+\frac{(5-1)^2}{12}=\frac{31}{3}\,\mathrm{V}^2\]
+            </div>
+            <div data-power-explanation="cosine" hidden>
+              \[V_{\mathrm{medio}}=3\,\mathrm{V}\]
+              \[\langle v^2\rangle=3^2+\frac{2^2}{2}=11\,\mathrm{V}^2\]
+            </div>
+            <p id="power-input-error" hidden>
+              Introduce una resistencia entre \(0{,}1\,\Omega\) y \(1000\,\Omega\) para calcular la potencia media.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <aside class="power-note">
+        <strong>Definiciones:</strong>
+        <span>\(V_{\mathrm{medio}}=\frac{1}{T}\int_0^T v(t)\,\mathrm{d}t\)</span>
+        <span>\(\langle v^2\rangle=\frac{1}{T}\int_0^T v^2(t)\,\mathrm{d}t\)</span>
+        <span>\(V_{\mathrm{ef}}=\sqrt{\frac{1}{T}\int_0^T v^2(t)\,\mathrm{d}t}=\sqrt{\langle v^2\rangle}\)</span>
+        <span>\(V_{\mathrm{ef,ac}}=\operatorname{RMS}(v-V_{\mathrm{medio}})\)</span>
+        <p>La potencia se calcula suponiendo una resistencia de carga \(R\). Para \(R=1\,\Omega\), su valor numérico coincide con \(\langle v^2\rangle\) en \(\mathrm{V}^2\).</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

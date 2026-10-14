@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora y modifica señales básicas de sistemas y señales."
+    />
+    <title>Señales básicas — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="senales-basicas.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo 01 · Fundamentos</p>
+        <h1>Señales <span>básicas</span></h1>
+        <p>
+          Cambia de señal y ajusta sus parámetros para observar cómo cambia su
+          representación en el tiempo.
+        </p>
+      </section>
+
+      <div class="signal-workspace">
+        <aside class="signal-controls" aria-label="Controles de la señal">
+          <section class="control-card">
+            <h2>Selecciona una señal</h2>
+            <div class="signal-picker" id="signal-picker" role="group" aria-label="Tipo de señal"></div>
+          </section>
+
+          <section class="control-card parameter-card">
+            <h2>Parámetros</h2>
+            <label class="range-control" for="amplitude">
+              <span>Amplitud <output id="amplitude-value" for="amplitude"></output></span>
+              <input id="amplitude" type="range" min="0.25" max="2" step="0.05" value="1" />
+            </label>
+            <label class="range-control" for="shift">
+              <span>Desplazamiento t₀ <output id="shift-value" for="shift"></output></span>
+              <input id="shift" type="range" min="-1" max="1" step="0.05" value="0" />
+            </label>
+            <label class="range-control" id="frequency-control" for="frequency" hidden>
+              <span>Frecuencia f <output id="frequency-value" for="frequency"></output></span>
+              <input id="frequency" type="range" min="0.5" max="3" step="0.1" value="1" />
+            </label>
+            <label class="range-control" id="width-control" for="width" hidden>
+              <span>Anchura T <output id="width-value" for="width"></output></span>
+              <input id="width" type="range" min="0.2" max="2" step="0.1" value="0.8" />
+            </label>
+            <p class="parameter-note" id="parameter-note"></p>
+          </section>
+        </aside>
+
+        <section class="plot-column" aria-label="Visualización de la señal seleccionada">
+          <article class="plot-card">
+            <div class="plot-heading">
+              <div>
+                <p class="eyebrow">Representación temporal</p>
+                <h2 id="signal-title">Seno</h2>
+              </div>
+              <span class="plot-badge" id="signal-symbol"></span>
+            </div>
+            <p class="signal-equation-display" id="signal-equation"></p>
+            <svg
+              class="time-plot"
+              id="time-plot"
+              viewBox="0 0 800 360"
+              role="img"
+              aria-label="Gráfica temporal de la señal seleccionada"
+            ></svg>
+            <div class="plot-legend" id="plot-legend"></div>
+            <p class="signal-description" id="signal-description" aria-live="polite"></p>
+          </article>
+
+          <article class="plot-card complex-card" id="complex-card" hidden>
+            <div class="plot-heading">
+              <div>
+                <p class="eyebrow">Plano complejo</p>
+                <h2>Recorrido de x(t)</h2>
+              </div>
+              <span class="plot-badge">Re{ x } + j Im{ x }</span>
+            </div>
+            <svg
+              class="complex-plot"
+              id="complex-plot"
+              viewBox="0 0 360 300"
+              role="img"
+              aria-label="Locus de la exponencial compleja en el plano complejo"
+            ></svg>
+            <p class="signal-description">
+              La punta del fasor recorre una circunferencia de radio A. El ángulo
+              crece a razón de 2πf radianes por segundo.
+            </p>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

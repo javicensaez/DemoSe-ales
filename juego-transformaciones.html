@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Juego para identificar retraso, inversión y escalado temporal en señales."
+    />
+    <title>Transforma la señal — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="juego-transformaciones.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main game-main transform-game">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Transformaciones</p>
+        <h1>Transforma la <span>señal</span></h1>
+        <p>
+          Compara la señal de origen con la de destino y escribe una expresión
+          para transformarla, por ejemplo 3x(-2t-3).
+        </p>
+      </section>
+
+      <section class="transform-game-content" aria-label="Juego de transformaciones temporales">
+        <article class="plot-card transform-instructions">
+          <div class="challenge-navigation" aria-label="Navegación entre retos">
+            <button class="challenge-nav-button" id="previous-challenge" type="button" aria-label="Reto anterior">←</button>
+            <p class="eyebrow" id="challenge-progress" aria-live="polite">Reto 1 de 6</p>
+            <button class="challenge-nav-button" id="next-challenge" type="button" aria-label="Reto siguiente">→</button>
+          </div>
+          <div class="transform-instruction-copy">
+            <h2 id="challenge-title"></h2>
+            <p id="challenge-description"></p>
+          </div>
+          <p class="transform-formula">
+            <span>Convención:</span>
+            <b>y(t) = A x(σ · a · (t − τ))</b>
+          </p>
+          <p class="transform-explanation">
+            A escala la amplitud; τ &gt; 0 retrasa; σ = −1 invierte el tiempo;
+            a &gt; 1 comprime y 0 &lt; a &lt; 1 expande.
+          </p>
+        </article>
+
+        <div class="transform-plots">
+          <article class="plot-card transform-plot-card">
+            <div class="plot-heading">
+              <div>
+                <p class="eyebrow">Señal de origen</p>
+                <h2 id="source-title"></h2>
+              </div>
+              <span class="plot-badge">x(t)</span>
+            </div>
+            <svg class="time-plot transform-plot" id="source-plot" viewBox="0 0 800 360" role="img"></svg>
+          </article>
+          <article class="plot-card transform-plot-card">
+            <div class="plot-heading">
+              <div>
+                <p class="eyebrow">Señal de destino</p>
+                <h2>¿Qué transformación se aplicó?</h2>
+              </div>
+              <span class="plot-badge">y(t)</span>
+            </div>
+            <svg class="time-plot transform-plot" id="target-plot" viewBox="0 0 800 360" role="img"></svg>
+          </article>
+        </div>
+
+        <form class="plot-card transform-answer" id="transform-form" novalidate>
+          <div class="plot-heading">
+            <div>
+              <p class="eyebrow">Tu respuesta</p>
+              <h2>Escribe la señal transformada</h2>
+            </div>
+            <span class="plot-badge">Usa x(·)</span>
+          </div>
+          <label class="expression-label" for="transform-expression">y(t) =</label>
+          <div class="expression-entry">
+            <input
+              id="transform-expression"
+              name="expression"
+              type="text"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="p. ej. 3x(-2t-3)"
+              aria-describedby="transform-expression-help transform-feedback"
+              required
+            />
+            <button class="game-button primary-game-button" type="submit">Comprobar</button>
+          </div>
+          <p class="expression-help" id="transform-expression-help">
+            Escribe la amplitud y el argumento de la señal original, por ejemplo 3x(-2t-3).
+            Se admite multiplicación implícita.
+          </p>
+          <p class="transform-feedback" id="transform-feedback" role="status" aria-live="polite">
+            Escribe la expresión de la señal transformada y compruébala.
+          </p>
+          <div class="game-actions">
+            <button class="game-button secondary-game-button" id="show-solution" type="button">Ver solución</button>
+            <button class="game-button secondary-game-button" id="reset-transform" type="button">Reiniciar respuesta</button>
+            <button class="game-button primary-game-button" id="next-level-button" type="button" hidden>
+              Siguiente nivel →
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

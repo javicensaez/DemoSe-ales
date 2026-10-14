@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Practica la descomposición de señales en sus componentes par e impar."
+    />
+    <title>Señales pares e impares — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="juego-simetria.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main game-main parity-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Simetría</p>
+        <h1>Señales <span>pares e impares</span></h1>
+        <p>
+          Observa la señal, dibuja sus componentes par e impar en tu cuaderno
+          y después revela la solución para comprobarlo.
+        </p>
+      </section>
+
+      <section class="parity-game-content" aria-label="Juego de simetría de señales">
+        <article class="plot-card parity-instructions">
+          <div class="challenge-navigation" aria-label="Navegación entre retos">
+            <button class="challenge-nav-button" id="previous-challenge" type="button" aria-label="Reto anterior">←</button>
+            <p class="eyebrow" id="challenge-progress" aria-live="polite">Reto 1 de 4</p>
+            <button class="challenge-nav-button" id="next-challenge" type="button" aria-label="Reto siguiente">→</button>
+          </div>
+          <div>
+            <h2 id="challenge-title"></h2>
+            <p id="challenge-description"></p>
+          </div>
+          <p class="parity-reminder">
+            Recuerda:
+            <span>x<sub>par</sub>(t) = [x(t) + x(−t)] / 2</span>
+            <span>x<sub>impar</sub>(t) = [x(t) − x(−t)] / 2</span>
+          </p>
+        </article>
+
+        <article class="plot-card parity-source-card">
+          <div class="plot-heading">
+            <div>
+              <p class="eyebrow">Señal original</p>
+              <h2 id="source-title"></h2>
+            </div>
+            <span class="plot-badge">x(t)</span>
+          </div>
+          <svg class="time-plot parity-plot" id="source-plot" viewBox="0 0 800 360" role="img"></svg>
+          <p class="parity-notebook-prompt">
+            Sin revelar la solución, dibuja en tu cuaderno x<sub>par</sub>(t)
+            y x<sub>impar</sub>(t).
+          </p>
+          <div class="game-actions">
+            <button class="game-button primary-game-button" id="show-solution" type="button">
+              Ver solución
+            </button>
+          </div>
+        </article>
+
+        <section class="parity-solutions" id="parity-solutions" aria-label="Soluciones de las componentes" hidden>
+          <article class="plot-card parity-component-card">
+            <div class="plot-heading">
+              <div>
+                <p class="eyebrow">Componentes superpuestas</p>
+                <h2>Parte par e impar</h2>
+              </div>
+            </div>
+            <div class="plot-legend parity-legend" aria-label="Leyenda de las componentes">
+              <span class="legend-item"><span class="legend-swatch parity-even-swatch"></span>x<sub>par</sub>(t), componente par</span>
+              <span class="legend-item"><span class="legend-swatch parity-odd-swatch"></span>x<sub>impar</sub>(t), componente impar</span>
+            </div>
+            <div class="parity-formulas">
+              <p class="parity-component-formula" id="even-formula"></p>
+              <p class="parity-component-formula" id="odd-formula"></p>
+            </div>
+            <svg class="time-plot parity-plot" id="components-plot" viewBox="0 0 800 360" role="img"></svg>
+            <div class="parity-view-controls" role="group" aria-label="Componentes que se muestran">
+              <button class="game-button secondary-game-button" type="button" data-component-view="even" aria-pressed="false">
+                Solo par
+              </button>
+              <button class="game-button secondary-game-button" type="button" data-component-view="odd" aria-pressed="false">
+                Solo impar
+              </button>
+              <button class="game-button secondary-game-button" type="button" data-component-view="both" aria-pressed="true">
+                Ver ambas
+              </button>
+            </div>
+          </article>
+          <article class="plot-card parity-self-check">
+            <h2>Comprueba tus dibujos</h2>
+            <p>Compara las dos gráficas con tu cuaderno y elige la opción que mejor describe tu resultado.</p>
+            <div class="game-actions">
+              <button class="game-button secondary-game-button" type="button" data-self-check="match">
+                Coinciden con mis dibujos
+              </button>
+              <button class="game-button secondary-game-button" type="button" data-self-check="review">
+                Necesito revisar algún dibujo
+              </button>
+              <button class="game-button primary-game-button" id="next-level-button" type="button" hidden>
+                Siguiente reto →
+              </button>
+            </div>
+            <p class="parity-feedback" id="self-check-feedback" role="status" aria-live="polite">
+              La comprobación es tuya: compara la simetría y los valores de ambas componentes.
+            </p>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

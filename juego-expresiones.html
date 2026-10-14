@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Juego para reconstruir señales escribiendo expresiones matemáticas."
+    />
+    <title>Adivina la expresión — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="juego-expresiones.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.jpg" alt="Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main game-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Exprésalo</p>
+        <h1>Adivina la <span>expresión</span></h1>
+        <p>
+          Mira la señal objetivo y escribe una expresión de x(t) que la genere.
+          Prueba, compara las gráficas y avanza por los retos.
+        </p>
+      </section>
+
+      <section class="game-layout" aria-label="Juego de expresiones de señales">
+        <article class="plot-card challenge-card">
+          <div class="plot-heading">
+            <div>
+              <div class="challenge-navigation" aria-label="Navegación entre retos">
+                <button class="challenge-nav-button" id="previous-challenge" type="button" aria-label="Reto anterior">←</button>
+                <p class="eyebrow" id="challenge-progress" aria-live="polite">Reto 1 de 7</p>
+                <button class="challenge-nav-button" id="next-challenge" type="button" aria-label="Reto siguiente">→</button>
+              </div>
+              <h2 id="challenge-title"></h2>
+            </div>
+            <span class="plot-badge">Señal objetivo</span>
+          </div>
+          <p class="signal-equation-display" id="challenge-clue"></p>
+          <p class="signal-description" id="challenge-hint" hidden></p>
+        </article>
+
+        <article class="plot-card answer-card">
+          <div class="plot-heading">
+            <div>
+              <p class="eyebrow">Tu respuesta</p>
+              <h2>Escribe la expresión</h2>
+            </div>
+            <span class="plot-badge">Variable: t</span>
+          </div>
+          <form id="answer-form" novalidate>
+            <label class="expression-label" for="expression-input">x(t) =</label>
+            <div class="expression-entry">
+              <input
+                id="expression-input"
+                name="expression"
+                type="text"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="p. ej. t*(u(t)-u(t-1))"
+                aria-describedby="expression-help game-feedback"
+                required
+              />
+              <button class="game-button primary-game-button" type="submit">Comprobar</button>
+            </div>
+            <p class="expression-help" id="expression-help">
+              Operaciones: + − * / ^ &nbsp; Funciones: u(x), ramp(x), rect(x),
+              tri(x), sin(x), cos(x), exp(x), abs(x). Constantes: pi, e.
+            </p>
+            <div class="game-feedback" id="game-feedback" role="status" aria-live="polite">
+              Escribe una expresión y comprueba si coincide con la señal.
+            </div>
+          </form>
+
+          <div class="game-actions">
+            <button class="game-button secondary-game-button" id="hint-button" type="button">
+              Ver pista
+            </button>
+            <button class="game-button secondary-game-button" id="solution-button" type="button">
+              Ver solución
+            </button>
+            <button class="game-button secondary-game-button" id="retry-button" type="button">
+              Reintentar reto
+            </button>
+            <button class="game-button primary-game-button" id="next-level-button" type="button" hidden>
+              Siguiente nivel →
+            </button>
+          </div>
+        </article>
+
+        <article class="plot-card combined-plot-card">
+          <div class="plot-heading">
+            <div>
+              <p class="eyebrow">Comparación en tiempo real</p>
+              <h2>Superposición de señales</h2>
+            </div>
+            <span class="plot-badge">t (s)</span>
+          </div>
+          <div class="plot-legend">
+            <span class="legend-item"><span class="legend-swatch"></span>Señal objetivo</span>
+            <span class="legend-item"><span class="legend-swatch answer-swatch"></span>Tu expresión</span>
+          </div>
+          <svg
+            class="time-plot game-plot"
+            id="comparison-plot"
+            viewBox="0 0 800 360"
+            role="img"
+            aria-label="Señal objetivo; tu expresión aparecerá superpuesta al comprobarla"
+          ></svg>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
