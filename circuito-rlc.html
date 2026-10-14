@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Circuito RLC serie con salida en el condensador: elige R, L y C, observa la respuesta al escalón y el diagrama de polos y ceros."
+    />
+    <title>Circuito RLC — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="circuito-rlc.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Sistemas</p>
+        <h1>Circuito <span>RLC</span></h1>
+        <p>
+          Un circuito RLC serie con la salida en el condensador es un sistema de segundo orden.
+          Elige los valores de R, L y C, aplica un escalón y observa cómo la posición de los polos
+          en el plano s determina si la respuesta oscila, es crítica o es sobreamortiguada.
+          El circuito parte en reposo y el escalón se aplica en t = 0.
+        </p>
+      </section>
+
+      <section class="plot-card rc-model" aria-label="Circuito y ecuaciones del sistema">
+        <svg class="rc-schematic" viewBox="0 0 360 150" role="img" aria-label="Esquema de un circuito RLC serie: resistencia, bobina y condensador, con la salida en el condensador">
+          <g class="rc-wire">
+            <line x1="26" y1="40" x2="70" y2="40" /><rect x="70" y="31" width="50" height="18" rx="2" />
+            <line x1="120" y1="40" x2="140" y2="40" />
+            <path d="M140,40 a8,8 0 0 1 16,0 a8,8 0 0 1 16,0 a8,8 0 0 1 16,0 a8,8 0 0 1 16,0" />
+            <line x1="204" y1="40" x2="300" y2="40" />
+            <line x1="260" y1="40" x2="260" y2="66" />
+            <line x1="246" y1="71" x2="274" y2="71" /><line x1="246" y1="79" x2="274" y2="79" />
+            <line x1="260" y1="84" x2="260" y2="120" />
+            <line x1="26" y1="120" x2="300" y2="120" />
+          </g>
+          <circle class="rc-terminal" cx="26" cy="40" r="4" /><circle class="rc-terminal" cx="26" cy="120" r="4" />
+          <circle class="rc-terminal" cx="300" cy="40" r="4" /><circle class="rc-terminal" cx="300" cy="120" r="4" />
+          <text x="40" y="82">x(t)</text><text x="95" y="24" text-anchor="middle">R</text>
+          <text x="172" y="24" text-anchor="middle">L</text><text x="280" y="80">C</text>
+          <text x="314" y="82">y(t)</text>
+        </svg>
+        <div class="rc-equations">
+          <p>\(LC\,\dfrac{\mathrm{d}^2y}{\mathrm{d}t^2}+RC\,\dfrac{\mathrm{d}y}{\mathrm{d}t}+y(t)=x(t)\)</p>
+          <p>\(H(s)=\dfrac{1}{LC\,s^2+RC\,s+1}=\dfrac{\omega_0^2}{s^2+2\zeta\omega_0 s+\omega_0^2}\)</p>
+          <p>\(\omega_0=\dfrac{1}{\sqrt{LC}},\qquad \zeta=\dfrac{R}{2}\sqrt{\dfrac{C}{L}}\)</p>
+          <p>\(s_{1,2}=-\zeta\omega_0\pm\omega_0\sqrt{\zeta^2-1}\)</p>
+        </div>
+      </section>
+
+      <form class="plot-card rc-form" id="rlc-form" novalidate>
+        <div class="rc-form-grid">
+          <label class="convolution-signal-select" for="rlc-resistance">
+            Resistencia R (Ω)
+            <input id="rlc-resistance" type="number" inputmode="decimal" step="any" min="0.01" max="10000" value="100" aria-describedby="rlc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rlc-inductance">
+            Inductancia L (mH)
+            <input id="rlc-inductance" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="10" aria-describedby="rlc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rlc-capacitance">
+            Capacidad C (µF)
+            <input id="rlc-capacitance" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rlc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rlc-amplitude">
+            Amplitud del escalón A (V)
+            <input id="rlc-amplitude" type="number" inputmode="decimal" step="any" min="0.1" max="50" value="1" aria-describedby="rlc-error" />
+          </label>
+        </div>
+        <p class="discrete-sequence-help">
+          Rangos: R entre 0,01 y 10000 Ω · L entre 0,01 y 1000 mH · C entre 0,01 y 1000 µF · A entre 0,1 y 50 V. El resultado se actualiza al cambiar cualquier valor.
+        </p>
+        <p class="rc-validation" id="rlc-error" role="alert" hidden></p>
+      </form>
+
+      <section class="rc-workspace" aria-label="Respuesta al escalón y diagrama de polos y ceros">
+        <article class="plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Salida</p><h2>Respuesta al escalón y(t)</h2></div>
+            <span class="plot-badge" id="rlc-damping-badge">Subamortiguado</span>
+          </div>
+          <div class="convolution-legend convolution-overlay-legend">
+            <span><span class="rc-swatch rc-swatch-output"></span>y(t) tensión en el condensador</span>
+            <span><span class="rc-swatch rc-swatch-input"></span>x(t) escalón de entrada (discontinua)</span>
+          </div>
+          <svg class="time-plot rc-plot rlc-step-plot" id="rlc-step-plot" viewBox="0 0 800 480" role="img"></svg>
+        </article>
+
+        <article class="plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Plano s</p><h2>Diagrama de polos y ceros</h2></div>
+            <span class="plot-badge" id="rlc-stability-badge">Estable</span>
+          </div>
+          <div class="convolution-legend convolution-overlay-legend">
+            <span><span class="rlc-pole-mark" aria-hidden="true">×</span>polo</span>
+            <span><span class="rlc-zero-mark" aria-hidden="true">○</span>cero (esta función de transferencia no tiene ceros finitos)</span>
+          </div>
+          <svg class="rlc-polezero" id="rlc-polezero-plot" viewBox="0 0 440 440" role="img"></svg>
+          <p class="discrete-plot-note" id="rlc-polezero-note"></p>
+        </article>
+
+        <article class="plot-card rlc-readouts-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Medidas</p><h2>Parámetros de la respuesta</h2></div>
+          </div>
+          <dl class="rc-readouts" aria-live="polite" id="rlc-readouts"></dl>
+        </article>
+
+        <article class="plot-card rlc-readouts-card" aria-labelledby="rlc-identify-title">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Identificación</p><h2 id="rlc-identify-title">De la respuesta medida a H(s)</h2></div>
+          </div>
+          <p class="discrete-plot-note">Si conoces el sobreimpulso \(M_p\) (en tanto por uno, es decir, el porcentaje dividido entre 100) y el instante del primer pico \(t_p\), puedes obtener ζ y ω<sub>0</sub> y escribir H(s).</p>
+          <div class="rlc-identify-steps">
+            <div>
+              <p class="eyebrow">1 · Sobreimpulso M<sub>p</sub> → ζ</p>
+              <p>\(\zeta=\dfrac{-\ln M_p}{\sqrt{\pi^2+\ln^2 M_p}}\)</p>
+            </div>
+            <div>
+              <p class="eyebrow">2 · Instante del pico → ω<sub>d</sub></p>
+              <p>\(t_p=\dfrac{\pi}{\omega_d}\;\Rightarrow\;\omega_d=\dfrac{\pi}{t_p}\)</p>
+            </div>
+            <div>
+              <p class="eyebrow">3 · Frecuencia natural ω<sub>0</sub></p>
+              <p>\(\omega_0=\dfrac{\omega_d}{\sqrt{1-\zeta^2}}\)</p>
+            </div>
+            <div>
+              <p class="eyebrow">4 · Función de transferencia</p>
+              <p>\(H(s)=\dfrac{\omega_0^2}{s^2+2\zeta\omega_0 s+\omega_0^2}\)</p>
+            </div>
+          </div>
+          <dl class="rc-readouts" aria-live="polite" id="rlc-identify-values"></dl>
+          <p class="discrete-plot-note" id="rlc-identify-note"></p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

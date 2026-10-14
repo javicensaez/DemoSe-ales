@@ -3,6 +3,7 @@ const limits = {
   capacitance: { min: 0.01, max: 1000, label: "C", unit: "µF" },
   amplitude: { min: 0.1, max: 50, label: "La amplitud A", unit: "V" },
   period: { min: 0.01, max: 100000, label: "El periodo T", unit: "ms" },
+  width: { min: 0.01, max: 100000, label: "La anchura del pulso", unit: "ms" },
   duty: { min: 1, max: 99, label: "El ciclo de trabajo", unit: "%" },
 };
 
@@ -16,12 +17,15 @@ const fields = {
   capacitance: document.querySelector("#rc-capacitance"),
   amplitude: document.querySelector("#rc-amplitude"),
   period: document.querySelector("#rc-period"),
+  width: document.querySelector("#rc-width"),
   duty: document.querySelector("#rc-duty"),
 };
 const periodUnit = document.querySelector("#rc-period-unit");
 const unitFactor = { ms: 1, us: 0.001 };
 const unitName = { ms: "ms", us: "µs" };
 const squareFields = document.querySelectorAll("[data-square-field]");
+const pulseFields = document.querySelectorAll("[data-pulse-field]");
+const timeFields = new Set(["period", "width"]);
 const errorMessage = document.querySelector("#rc-error");
 const schematic = document.querySelector("#rc-schematic");
 const equations = document.querySelector("#rc-equations");
@@ -47,15 +51,17 @@ function formatTime(ms) {
 
 function readParameters() {
   const isSquare = inputSelect.value === "square";
+  const isPulse = inputSelect.value === "pulse";
   const names = ["resistance", "capacitance", "amplitude"];
   if (isSquare) names.push("period", "duty");
+  if (isPulse) names.push("width");
   const values = {};
   for (const name of names) {
     const { min, max, label, unit } = limits[name];
     const raw = fields[name].value.trim();
     const value = Number(raw);
-    const factor = name === "period" ? unitFactor[periodUnit.value] : 1;
-    const shownUnit = name === "period" ? unitName[periodUnit.value] : unit;
+    const factor = timeFields.has(name) ? unitFactor[periodUnit.value] : 1;
+    const shownUnit = timeFields.has(name) ? unitName[periodUnit.value] : unit;
     if (raw === "" || !Number.isFinite(value)) {
       return { error: `${label} debe ser un número. Escribe un valor entre ${formatNumber(min / factor)} y ${formatNumber(max / factor)} ${shownUnit}.` };
     }
@@ -67,6 +73,7 @@ function readParameters() {
   return {
     mode: circuitSelect.value,
     isSquare,
+    isPulse,
     ...values,
     tau: values.resistance * values.capacitance,
   };
@@ -86,6 +93,10 @@ function niceTicks(min, max, target = 7) {
 
 function buildSegments(params, tMin, tMax) {
   const segments = [{ t0: tMin, t1: 0, x: 0 }];
+  if (params.isPulse) {
+    segments.push({ t0: 0, t1: params.width, x: params.amplitude }, { t0: params.width, t1: tMax, x: 0 });
+    return segments;
+  }
   if (!params.isSquare) {
     segments.push({ t0: 0, t1: tMax, x: params.amplitude });
     return segments;
@@ -256,7 +267,10 @@ function readoutRow(term, value) {
 
 function render() {
   const isSquare = inputSelect.value === "square";
+  const isPulse = inputSelect.value === "pulse";
   for (const field of squareFields) field.hidden = !isSquare;
+  for (const field of pulseFields) field.hidden = !isPulse;
+  periodUnit.closest("label").hidden = !(isSquare || isPulse);
   showCircuit(circuitSelect.value);
 
   const params = readParameters();
@@ -270,7 +284,9 @@ function render() {
 
   const span = params.isSquare
     ? Math.min(Math.max(5 * params.tau, 4 * params.period), 30 * params.period)
-    : 6 * params.tau;
+    : params.isPulse
+      ? Math.max(6 * params.tau, 2 * params.width)
+      : 6 * params.tau;
   const tMin = -span / 10;
   const tMax = span;
   const { inputPoints, outputPoints } = solve(params, tMin, tMax);
@@ -281,7 +297,7 @@ function render() {
   const padding = (dataMax - dataMin) * 0.12;
   const yRange = [dataMin === 0 ? 0 - padding * 0.4 : dataMin - padding, dataMax + padding];
 
-  const timeUnit = params.isSquare ? periodUnit.value : span < 1 ? "us" : "ms";
+  const timeUnit = params.isSquare || params.isPulse ? periodUnit.value : span < 1 ? "us" : "ms";
   const toPlot = (points) => points.map(([time, value]) => [time / unitFactor[timeUnit], value]);
   const xRange = [tMin / unitFactor[timeUnit], tMax / unitFactor[timeUnit]];
   const timeLabel = `t (${unitName[timeUnit]})`;
@@ -308,12 +324,16 @@ function render() {
   const circuitName = params.mode === "rc" ? "RC, salida en el condensador" : "CR, salida en la resistencia";
   const inputName = params.isSquare
     ? `señal cuadrada de periodo ${formatTime(params.period)} y ciclo de trabajo ${formatNumber(params.duty)} %`
-    : "escalón unitario";
+    : params.isPulse
+      ? `pulso rectangular de anchura ${formatTime(params.width)}`
+      : "escalón unitario";
   inputPlot.setAttribute("aria-label", `Entrada x de t: ${inputName}, amplitud ${formatNumber(params.amplitude)} voltios`);
   outputPlot.setAttribute("aria-label", `Salida y de t del circuito ${circuitName} para la entrada ${inputName}`);
   inputBadge.textContent = params.isSquare
     ? `Cuadrada · T = ${formatTime(params.period)} · ${formatNumber(params.duty)} %`
-    : "Escalón unitario";
+    : params.isPulse
+      ? `Pulso · anchura ${formatTime(params.width)}`
+      : "Escalón unitario";
   outputBadge.textContent = `τ = ${formatTime(params.tau)}`;
 
   const outputValues = outputPoints.map(([, value]) => value);
@@ -324,6 +344,8 @@ function render() {
   ];
   if (params.isSquare) {
     rows.push(readoutRow("Frecuencia de la entrada f<sub>0</sub>", `${formatNumber(1000 / params.period)} Hz`));
+  } else if (params.isPulse) {
+    rows.push(readoutRow("Anchura del pulso / τ", formatNumber(params.width / params.tau)));
   } else {
     const atTau = params.mode === "rc" ? 1 - Math.exp(-1) : Math.exp(-1);
     rows.push(readoutRow("Salida en t = τ", `${formatNumber(atTau * params.amplitude)} V (${formatNumber(atTau * 100)} % de A)`));

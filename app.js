@@ -56,6 +56,13 @@ const demos = [
     href: "circuito-rc.html",
   },
   {
+    category: "Demo · Sistemas",
+    title: "Circuito RLC",
+    description:
+      "Elige R, L y C de un RLC serie con salida en el condensador, observa la respuesta al escalón y el diagrama de polos y ceros.",
+    href: "circuito-rlc.html",
+  },
+  {
     category: "Demo · Operaciones con señales",
     title: "Convolución discreta paso a paso",
     description:

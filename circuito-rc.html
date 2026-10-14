@@ -70,6 +70,7 @@
             Señal de entrada x(t)
             <select id="rc-input">
               <option value="step">Escalón unitario</option>
+              <option value="pulse">Pulso rectangular</option>
               <option value="square">Señal cuadrada periódica</option>
             </select>
           </label>
@@ -81,8 +82,12 @@
             Periodo T
             <input id="rc-period" type="number" inputmode="decimal" step="any" min="0.01" value="10" aria-describedby="rc-error" />
           </label>
-          <label class="convolution-signal-select" for="rc-period-unit" data-square-field hidden>
-            Unidad del periodo
+          <label class="convolution-signal-select" for="rc-width" data-pulse-field hidden>
+            Anchura del pulso
+            <input id="rc-width" type="number" inputmode="decimal" step="any" min="0.01" value="5" aria-describedby="rc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rc-period-unit" data-square-field data-pulse-field hidden>
+            Unidad de tiempo (T y anchura)
             <select id="rc-period-unit">
               <option value="ms">milisegundos (ms)</option>
               <option value="us">microsegundos (µs)</option>
@@ -94,7 +99,7 @@
           </label>
         </div>
         <p class="discrete-sequence-help">
-          Rangos: R y C entre 0,01 y 1000 · A entre 0,1 y 50 V · T entre 10 µs y 100 s · ciclo de trabajo entre 1 % y 99 %. El resultado se actualiza al cambiar cualquier valor.
+          Rangos: R y C entre 0,01 y 1000 · A entre 0,1 y 50 V · T y anchura del pulso entre 10 µs y 100 s · ciclo de trabajo entre 1 % y 99 %. El resultado se actualiza al cambiar cualquier valor.
         </p>
         <p class="rc-validation" id="rc-error" role="alert" hidden></p>
       </form>

@@ -1846,6 +1846,7 @@ h2 {
     gap: 6px;
     min-width: 0;
     overflow-x: auto;
+    padding-bottom: 4px;
     color: var(--accent);
     font-size: 15px;
   }
@@ -1860,6 +1861,19 @@ h2 {
 
   .rc-form [hidden] {
     display: none;
+  }
+
+  .rc-form .convolution-signal-select select,
+  .rc-form .convolution-signal-select input {
+    width: 100%;
+    min-height: 40px;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background-color: var(--background);
+    color: var(--foreground);
+    font: 12px/1.4 var(--font-mono);
   }
 
   .rc-form-grid {
@@ -1901,6 +1915,97 @@ h2 {
 
   .rc-swatch-input {
     border-top-style: dashed;
+  }
+
+  @media (min-width: 1000px) {
+    .rc-workspace:has(.rlc-polezero) {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
+      align-items: stretch;
+    }
+
+    .rlc-readouts-card {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .rc-plot.rlc-step-plot {
+    aspect-ratio: 800 / 480;
+  }
+
+  .rlc-polezero {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    aspect-ratio: 1;
+  }
+
+  .rlc-polezero text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .rlc-pole-label {
+    fill: var(--foreground);
+    font-weight: 600;
+  }
+
+  .rlc-identify-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin: 12px 0 16px;
+  }
+
+  .rlc-identify-steps > div {
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    overflow-x: auto;
+  }
+
+  .rlc-identify-steps p {
+    margin: 0;
+  }
+
+  .rlc-identify-steps .eyebrow {
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 8px;
+  }
+
+  .rlc-peak-guide {
+    stroke: var(--highlight);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 4;
+  }
+
+  .rlc-peak-dot {
+    fill: var(--highlight);
+    stroke: var(--surface);
+    stroke-width: 2;
+  }
+
+  .rlc-peak-label {
+    fill: var(--foreground);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    paint-order: stroke;
+    stroke: var(--surface);
+    stroke-width: 4px;
+  }
+
+  .rlc-pole-mark {
+    color: #d97706;
+    font: 700 18px/1 var(--font-mono);
+  }
+
+  .rlc-zero-mark {
+    color: var(--answer);
+    font: 700 16px/1 var(--font-mono);
   }
 
   .rc-readouts {
