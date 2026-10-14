@@ -18,7 +18,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Señales pares e impares** (`juego-simetria.html`): predice las componentes par e impar y comprueba la solución.
 - **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): compara cinco formas de onda y consulta su valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
 - **Preguntas de sistemas** (`sistemas-preguntas.html`): clasifica diez sistemas por memoria, causalidad, linealidad, invariancia temporal y estabilidad BIBO.
-- **Convolución paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
+- **Convolución continua paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
+- **Circuito RC / CR** (`circuito-rc.html`): elige un circuito RC (paso bajo) o CR (paso alto), varía R y C, aplica un escalón unitario o una señal cuadrada con ciclo de trabajo ajustable y observa la salida.
 - **Convolución discreta paso a paso** (`convolucion-discreta.html`): introduce dos secuencias, desplaza una sobre la otra y consulta cada producto y su suma.
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.

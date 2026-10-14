@@ -43,10 +43,17 @@ const demos = [
   },
   {
     category: "Demo · Operaciones con señales",
-    title: "Convolución paso a paso",
+    title: "Convolución continua paso a paso",
     description:
       "Elige x(t) y h(t), desplaza una señal con el deslizador y observa el producto y la integral de convolución.",
     href: "convolucion.html",
+  },
+  {
+    category: "Demo · Sistemas",
+    title: "Circuito RC / CR",
+    description:
+      "Elige un circuito RC o CR, varía R y C y observa su salida ante un escalón o una señal cuadrada con ciclo de trabajo ajustable.",
+    href: "circuito-rc.html",
   },
   {
     category: "Demo · Operaciones con señales",

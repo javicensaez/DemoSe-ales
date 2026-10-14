@@ -88,19 +88,19 @@ function renderOverlap() {
     const hY = hBaseline - hValue * scaleY;
     svgParts.push(
       `<line class="plot-grid-line" x1="${x}" y1="24" x2="${x}" y2="390" />`,
-      `<line x1="${x}" y1="${xBaseline}" x2="${x}" y2="${xY}" stroke="#164b8c" stroke-width="3" />`,
-      `<circle cx="${x}" cy="${xY}" r="5" fill="#164b8c"><title>x[${k}] = ${formatNumber(xValue)}</title></circle>`,
+      `<line x1="${x}" y1="${xBaseline}" x2="${x}" y2="${xY}" stroke="var(--answer)" stroke-width="3" />`,
+      `<circle cx="${x}" cy="${xY}" r="5" fill="var(--answer)"><title>x[${k}] = ${formatNumber(xValue)}</title></circle>`,
       `<text class="discrete-sample-value discrete-x-value" x="${x}" y="${xY + (xValue < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(xValue)}</text>`,
-      `<line x1="${x}" y1="${hBaseline}" x2="${x}" y2="${hY}" stroke="#1479bd" stroke-width="3" />`,
-      `<circle cx="${x}" cy="${hY}" r="5" fill="#1479bd"><title>h[${hIndex}] = ${formatNumber(hValue)}</title></circle>`,
+      `<line x1="${x}" y1="${hBaseline}" x2="${x}" y2="${hY}" stroke="var(--wave)" stroke-width="3" />`,
+      `<circle cx="${x}" cy="${hY}" r="5" fill="var(--wave)"><title>h[${hIndex}] = ${formatNumber(hValue)}</title></circle>`,
       `<text class="discrete-sample-value discrete-h-value" x="${x}" y="${hY + (hValue < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(hValue)}</text>`,
       `<text class="discrete-index-label" x="${x}" y="420" text-anchor="middle">${k}</text>`,
     );
     if (k >= 0 && k <= outputIndex) {
       const outputY = outputBaseline - outputSequence[k] * outputScaleY;
       svgParts.push(
-        `<line x1="${x}" y1="${outputBaseline}" x2="${x}" y2="${outputY}" stroke="#2878b9" stroke-width="3" />`,
-        `<circle cx="${x}" cy="${outputY}" r="5" fill="#2878b9"><title>y[${k}] = ${formatNumber(outputSequence[k])}</title></circle>`,
+        `<line x1="${x}" y1="${outputBaseline}" x2="${x}" y2="${outputY}" stroke="var(--highlight)" stroke-width="3" />`,
+        `<circle cx="${x}" cy="${outputY}" r="5" fill="var(--highlight)"><title>y[${k}] = ${formatNumber(outputSequence[k])}</title></circle>`,
         `<text class="discrete-output-value" x="${x}" y="${outputY + (outputSequence[k] < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(outputSequence[k])}</text>`,
       );
     }

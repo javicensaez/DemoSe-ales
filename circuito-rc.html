@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora la respuesta de un circuito RC o CR a un escalón unitario o a una señal cuadrada con ciclo de trabajo variable."
+    />
+    <title>Circuito RC / CR — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="circuito-rc.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Sistemas</p>
+        <h1>Circuito <span>RC / CR</span></h1>
+        <p>
+          Un circuito RC (salida en el condensador) se comporta como un filtro paso bajo y un
+          circuito CR (salida en la resistencia) como un filtro paso alto. Elige el circuito,
+          cambia R y C, aplica un escalón unitario o una señal cuadrada y observa cómo responde
+          la salida. El circuito parte en reposo y la entrada se aplica en t = 0.
+        </p>
+      </section>
+
+      <section class="plot-card rc-model" aria-label="Circuito y ecuaciones del sistema">
+        <svg class="rc-schematic" id="rc-schematic" viewBox="0 0 360 150" role="img" aria-label="Esquema del circuito"></svg>
+        <div class="rc-equations" id="rc-equations" aria-live="polite"></div>
+      </section>
+
+      <form class="plot-card rc-form" id="rc-form" novalidate>
+        <div class="rc-form-grid">
+          <label class="convolution-signal-select" for="rc-circuit">
+            Circuito
+            <select id="rc-circuit">
+              <option value="rc">RC · salida en el condensador (paso bajo)</option>
+              <option value="cr">CR · salida en la resistencia (paso alto)</option>
+            </select>
+          </label>
+          <label class="convolution-signal-select" for="rc-resistance">
+            Resistencia R (kΩ)
+            <input id="rc-resistance" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rc-capacitance">
+            Capacidad C (µF)
+            <input id="rc-capacitance" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rc-input">
+            Señal de entrada x(t)
+            <select id="rc-input">
+              <option value="step">Escalón unitario</option>
+              <option value="square">Señal cuadrada periódica</option>
+            </select>
+          </label>
+          <label class="convolution-signal-select" for="rc-amplitude">
+            Amplitud A (V)
+            <input id="rc-amplitude" type="number" inputmode="decimal" step="any" min="0.1" max="50" value="1" aria-describedby="rc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rc-period" data-square-field hidden>
+            Periodo T
+            <input id="rc-period" type="number" inputmode="decimal" step="any" min="0.01" value="10" aria-describedby="rc-error" />
+          </label>
+          <label class="convolution-signal-select" for="rc-period-unit" data-square-field hidden>
+            Unidad del periodo
+            <select id="rc-period-unit">
+              <option value="ms">milisegundos (ms)</option>
+              <option value="us">microsegundos (µs)</option>
+            </select>
+          </label>
+          <label class="convolution-signal-select" for="rc-duty" data-square-field hidden>
+            Ciclo de trabajo (%)
+            <input id="rc-duty" type="number" inputmode="decimal" step="any" min="1" max="99" value="50" aria-describedby="rc-error" />
+          </label>
+        </div>
+        <p class="discrete-sequence-help">
+          Rangos: R y C entre 0,01 y 1000 · A entre 0,1 y 50 V · T entre 10 µs y 100 s · ciclo de trabajo entre 1 % y 99 %. El resultado se actualiza al cambiar cualquier valor.
+        </p>
+        <p class="rc-validation" id="rc-error" role="alert" hidden></p>
+      </form>
+
+      <section class="rc-workspace" aria-label="Gráficas de entrada y salida">
+        <article class="plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Entrada</p><h2>Señal x(t)</h2></div>
+            <span class="plot-badge" id="rc-input-badge">Escalón unitario</span>
+          </div>
+          <svg class="time-plot rc-plot" id="rc-input-plot" viewBox="0 0 800 300" role="img"></svg>
+        </article>
+
+        <article class="plot-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Salida</p><h2>Respuesta y(t)</h2></div>
+            <span class="plot-badge" id="rc-output-badge">τ = 1 ms</span>
+          </div>
+          <div class="convolution-legend convolution-overlay-legend">
+            <span><span class="rc-swatch rc-swatch-output"></span>y(t) salida</span>
+            <span><span class="rc-swatch rc-swatch-input"></span>x(t) entrada, como referencia (discontinua)</span>
+          </div>
+          <svg class="time-plot rc-plot" id="rc-output-plot" viewBox="0 0 800 300" role="img"></svg>
+          <dl class="rc-readouts" aria-live="polite" id="rc-readouts"></dl>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

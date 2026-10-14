@@ -1810,6 +1810,123 @@ h2 {
     gap: 16px;
   }
 
+  .rc-model {
+    display: grid;
+    grid-template-columns: minmax(240px, 360px) minmax(0, 1fr);
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+
+  .rc-schematic {
+    width: 100%;
+    height: auto;
+  }
+
+  .rc-schematic .rc-wire {
+    fill: none;
+    stroke: var(--foreground);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .rc-schematic .rc-terminal {
+    fill: var(--background);
+    stroke: var(--foreground);
+    stroke-width: 2;
+  }
+
+  .rc-schematic text {
+    fill: var(--foreground);
+    font: 600 13px var(--font-mono);
+  }
+
+  .rc-equations {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    overflow-x: auto;
+    color: var(--accent);
+    font-size: 15px;
+  }
+
+  .rc-equations p {
+    margin: 0;
+  }
+
+  .rc-form {
+    margin-bottom: 16px;
+  }
+
+  .rc-form [hidden] {
+    display: none;
+  }
+
+  .rc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+  }
+
+  .rc-validation {
+    margin: 10px 0 0;
+    padding: 8px 10px;
+    border: 1px solid #c0392b;
+    border-left-width: 4px;
+    border-radius: 7px;
+    color: var(--foreground);
+    font-size: 12px;
+  }
+
+  .rc-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .rc-plot {
+    aspect-ratio: 800 / 300;
+  }
+
+  .rc-swatch {
+    display: inline-block;
+    width: 22px;
+    height: 0;
+    border-top: 3px solid var(--answer);
+  }
+
+  .rc-swatch-output {
+    border-top-color: #d97706;
+  }
+
+  .rc-swatch-input {
+    border-top-style: dashed;
+  }
+
+  .rc-readouts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px;
+    margin: 12px 0 0;
+  }
+
+  .rc-readouts div {
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+  }
+
+  .rc-readouts dt {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .rc-readouts dd {
+    margin: 2px 0 0;
+    color: var(--foreground);
+    font: 600 13px var(--font-mono);
+  }
+
   .discrete-sequence-plot {
     aspect-ratio: 800 / 430;
   }
@@ -1824,17 +1941,29 @@ h2 {
   }
 
   .discrete-x-label {
-    fill: #164b8c;
+      fill: var(--answer);
+  }
+
+  .discrete-convolution-main .x-swatch {
+      background: var(--answer);
+  }
+
+  .discrete-convolution-main .h-swatch {
+      background: var(--wave);
+  }
+
+  .discrete-convolution-main .result-swatch {
+      background: var(--highlight);
   }
 
   .discrete-h-label {
-    fill: #1479bd;
+      fill: var(--wave);
   }
 
   .discrete-output-label,
   .discrete-output-value,
   .discrete-sample-value {
-    fill: #2878b9;
+      fill: var(--highlight);
   }
 
   .discrete-sample-value {
@@ -1842,11 +1971,11 @@ h2 {
   }
 
   .discrete-x-value {
-    fill: #164b8c;
+      fill: var(--answer);
   }
 
-  .discrete-h-value {
-    fill: #1479bd;
+    .discrete-h-value {
+      fill: var(--wave);
   }
 
   .discrete-output-value {
@@ -2502,8 +2631,8 @@ h2 {
     padding: 8px 12px;
     border: 1px solid var(--line);
     border-radius: 7px;
-    background: #fff;
-    color: var(--ink);
+    background: var(--surface);
+    color: var(--foreground);
     font: 600 12px/1.3 "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
     cursor: pointer;
   }
@@ -2514,6 +2643,11 @@ h2 {
     border-color: var(--accent);
     background: var(--accent);
     color: #fff;
+  }
+
+  .game-button.secondary-game-button {
+    background: var(--surface);
+    color: var(--foreground);
   }
 
   .fourier-difficulty button:focus-visible,
@@ -2873,6 +3007,10 @@ h2 {
     }
 
     .discrete-sequence-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .rc-model {
       grid-template-columns: 1fr;
     }
 
