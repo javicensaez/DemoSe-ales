@@ -35,6 +35,13 @@ const demos = [
     href: "potencia-senales-periodicas.html",
   },
   {
+    category: "Juego · Sistemas",
+    title: "Preguntas de sistemas",
+    description:
+      "Clasifica diez sistemas según memoria, causalidad, linealidad, invariancia temporal y estabilidad BIBO.",
+    href: "sistemas-preguntas.html",
+  },
+  {
     category: "Demo · Operaciones con señales",
     title: "Convolución paso a paso",
     description:

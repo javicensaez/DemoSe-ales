@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Practica memoria, causalidad, linealidad, invariancia temporal y estabilidad de sistemas."
+    />
+    <title>Preguntas de sistemas — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="sistemas-preguntas.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="deusto-logo" src="assets/deusto-logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main systems-quiz-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Sistemas</p>
+        <h1>Preguntas <span>de sistemas</span></h1>
+        <p>
+          Clasifica diez sistemas según memoria, causalidad, linealidad,
+          invariancia temporal y estabilidad. Responde y consulta la explicación
+          antes de pasar a la siguiente pregunta.
+        </p>
+      </section>
+
+      <section class="systems-quiz-card plot-card" aria-label="Cuestionario de propiedades de sistemas">
+        <div class="systems-quiz-topline">
+          <p class="eyebrow" id="systems-progress" aria-live="polite"></p>
+          <p class="systems-quiz-score" id="systems-score" aria-live="polite"></p>
+        </div>
+        <h2 id="system-name"></h2>
+        <div class="systems-equation" id="system-equation" aria-label="Ecuación del sistema"></div>
+        <h3 class="systems-question" id="systems-question"></h3>
+        <div class="systems-options" id="systems-options" role="group" aria-label="Opciones de respuesta"></div>
+        <div class="systems-quiz-actions">
+          <button class="game-button primary-game-button" id="systems-check" type="button" disabled>
+            Comprobar
+          </button>
+          <button class="game-button secondary-game-button" id="systems-next" type="button" hidden>
+            Siguiente pregunta →
+          </button>
+          <button class="game-button secondary-game-button" id="systems-restart" type="button" hidden>
+            Repetir cuestionario
+          </button>
+        </div>
+        <div class="systems-feedback game-feedback" id="systems-feedback" role="status" aria-live="polite" hidden></div>
+      </section>
+
+      <p class="systems-quiz-note">
+        En el sistema diferencial con coeficiente variable, se considera la
+        evolución para \(t \ge 0\) y un estado inicial acotado.
+      </p>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
