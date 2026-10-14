@@ -7,6 +7,7 @@ Thumbs.db
 *.swo
 *~
 .idea/
+.vscode/
 
 # Dependencies and generated output
 node_modules/
