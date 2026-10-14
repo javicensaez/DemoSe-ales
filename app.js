@@ -105,6 +105,13 @@ const demos = [
     href: "sonar.html",
   },
   {
+    category: "Demo · Análisis de señales",
+    title: "Rueda desequilibrada y FFT",
+    description:
+      "Simula un motor DC con reductora y carga desequilibrada, captura su encoder Hall y analiza la FFT de sus canales y de la señal compleja.",
+    href: "rueda-fft.html",
+  },
+  {
     category: "Demo · Series de Fourier",
     title: "Laboratorio de series de Fourier",
     description:

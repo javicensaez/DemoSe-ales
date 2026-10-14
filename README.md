@@ -27,6 +27,7 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
 - **Detección de señales con ruido** (`correlacion-ruido.html`): elige el pulso del bit 1, transmite una secuencia aleatoria, varía el ruido gaussiano y observa la correlación cruzada normalizada y los bits detectados.
 - **Simulador de sonar** (`sonar.html`): emite un chirp de 3 ms, varía la separación del micrófono, la distancia (1–4 m), el tamaño de una persona y el ruido; estima su distancia a partir de la correlación del eco corrigiendo la geometría del emisor y receptor.
+- **Rueda desequilibrada y FFT** (`rueda-fft.html`): motor DC de 12 V con reductora 1000:1 y carga Unbalanced Load de inercia variable, con el término de variación del momento angular verificado en el código fuente de MATLAB. Captura el arranque o una ventana tardía, configura el encoder Hall y compara las FFT de sus canales y de la señal compleja, en voltios o potencia dBm.
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
 - **Desafío de Fourier** (`juego-fourier.html`): calcula coeficientes trigonométricos o módulo/fase, reconstruye la señal objetivo y comprueba tu resultado.
 

@@ -3327,3 +3327,31 @@ h2 {
 @media (max-width: 760px) {
   .sonar-page .rc-form-grid { grid-template-columns: 1fr; }
 }
+
+.wheel-page .sampling-range { display: grid; gap: 10px; }
+.wheel-page input[type="range"] { width: 100%; min-height: 32px; accent-color: var(--accent); }
+.wheel-page input:focus-visible, .wheel-page select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.wheel-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.wheel-scene { display: block; width: 100%; height: auto; }
+.wheel-disk { fill: var(--surface); stroke: var(--accent); stroke-width: 3; }
+.wheel-spokes { fill: none; stroke: var(--line); stroke-width: 3; }
+.wheel-sensor { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+.wheel-page .wheel-plot { aspect-ratio: 800 / 300; }
+.wheel-measurements { margin-block: 20px; }
+.wheel-cos-swatch { border-top-style: solid; }
+.wheel-sin-swatch { border-top: 3px dashed #d97706; }
+@media (max-width: 760px) {
+  .wheel-page .rc-form-grid { grid-template-columns: 1fr; }
+}
+
+.wheel-harmonics-table { overflow-x: auto; }
+.wheel-harmonics-table table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
+.wheel-harmonics-table th, .wheel-harmonics-table td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; }
+
+.wheel-parameters { margin-top: 20px; }
+.wheel-parameters summary { cursor: pointer; color: var(--accent); font-weight: 600; margin-bottom: 16px; }
+.wheel-delay-control { display: flex; gap: 10px; align-items: center; font-size: 13px; }
+.wheel-page .rc-equations a { text-decoration: underline; }
+
+.wheel-page .wheel-scene-card { margin-bottom: 20px; }
+.wheel-page .wheel-complex-card { margin-bottom: 20px; }
