@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Simula un sonar acústico: emite un chirp, observa su eco con ruido y estima la distancia mediante correlación cruzada." />
+    <title>Simulador de sonar — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="sonar.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page sonar-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Detección de señales</p>
+        <h1>Simulador <span>de sonar</span></h1>
+        <p>Un altavoz emite un chirp corto: un pulso cuyo tono aumenta con el tiempo. El micrófono recibe el sonido directo y el eco que rebota en una persona. Ajusta la separación del micrófono, la distancia y el tamaño de la persona, y el nivel de ruido. La correlación con el chirp emitido permite estimar el retardo del eco y la distancia.</p>
+        <p>La persona está frente al altavoz y el micrófono se separa lateralmente de él. Pulsa «Emitir chirp» para realizar otra medida; la animación del recorrido se muestra a cámara lenta. Las gráficas se actualizan al mover los controles.</p>
+      </section>
+      <section class="plot-card rc-form" aria-label="Configuración del sonar">
+        <div class="rc-form-grid">
+          <label class="sampling-range" for="sonar-baseline">Separación altavoz–micrófono <output id="sonar-baseline-value" for="sonar-baseline"></output><input id="sonar-baseline" type="range" min="0.05" max="0.8" step="0.01" value="0.3" /></label>
+          <label class="sampling-range" for="sonar-distance">Distancia de la persona <output id="sonar-distance-value" for="sonar-distance"></output><input id="sonar-distance" type="range" min="1" max="4" step="0.01" value="2" /></label>
+          <label class="sampling-range" for="sonar-size">Tamaño de la persona (altura) <output id="sonar-size-value" for="sonar-size"></output><input id="sonar-size" type="range" min="0.8" max="2.2" step="0.05" value="1.7" /></label>
+          <label class="sampling-range" for="sonar-noise">Nivel de ruido σ <output id="sonar-noise-value" for="sonar-noise"></output><input id="sonar-noise" type="range" min="0" max="1" step="0.01" value="0.06" /></label>
+        </div>
+        <div class="sonar-actions"><button class="game-button primary-game-button" id="sonar-emit" type="button">Emitir chirp · nueva medida</button><span class="discrete-plot-note">Pulso de 3 ms · barrido de 2 a 6 kHz · muestreo a 48 kHz · c = 343 m/s</span></div>
+        <p class="rc-validation" id="sonar-error" role="alert" hidden></p>
+      </section>
+      <section class="plot-card" aria-labelledby="sonar-scene-title">
+        <div class="plot-heading"><div><p class="eyebrow">Recorrido acústico</p><h2 id="sonar-scene-title">Altavoz → persona → micrófono</h2></div></div>
+        <svg class="sonar-scene" id="sonar-scene" viewBox="0 0 800 280" role="img" aria-label="Geometría del altavoz, micrófono y persona"></svg>
+        <p class="discrete-plot-note">Esquema de posición: la separación del micrófono es perpendicular a la dirección de la persona. El tamaño modifica la intensidad del eco en este modelo didáctico; la persona se representa como un único reflector, sin paredes ni ecos múltiples.</p>
+      </section>
+      <section class="plot-card sonar-measurements" aria-labelledby="sonar-measures-title">
+        <div class="plot-heading"><div><p class="eyebrow">Resultado del detector</p><h2 id="sonar-measures-title">Distancia estimada</h2></div><span class="plot-badge" id="sonar-status"></span></div>
+        <dl class="rc-readouts" id="sonar-readouts" aria-live="polite"></dl>
+        <p class="discrete-plot-note" id="sonar-detection-note"></p>
+      </section>
+      <section class="rc-workspace" aria-label="Señal emitida, recepción y correlación">
+        <article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">1 · Emisión</p><h2>Chirp emitido</h2></div></div>
+          <svg class="time-plot sonar-plot" id="sonar-emitted-plot" viewBox="0 0 800 280" role="img" aria-label="Chirp emitido de 3 milisegundos"></svg>
+        </article>
+        <article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">2 · Micrófono</p><h2>Señal recibida y eco</h2></div></div>
+          <div class="convolution-legend convolution-overlay-legend"><span><span class="rc-swatch sonar-received-swatch"></span>Recibida con ruido</span><span><span class="rc-swatch sonar-clean-swatch"></span>Directa + eco sin ruido (discontinua)</span></div>
+          <svg class="time-plot sonar-plot" id="sonar-received-plot" viewBox="0 0 800 280" role="img" aria-label="Señal recibida con sonido directo, eco y ruido"></svg>
+        </article>
+        <article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">3 · Correlación cruzada</p><h2>Localiza el eco</h2></div></div>
+          <svg class="time-plot sonar-plot" id="sonar-correlation-plot" viewBox="0 0 800 280" role="img" aria-label="Correlación con el chirp emitido"></svg>
+          <p class="discrete-plot-note">El pico inicial corresponde al sonido directo. El detector busca el máximo positivo en los retardos compatibles con distancias de 1 a 4 m; la zona sombreada es esa ventana de búsqueda. El retardo corresponde al comienzo del chirp recibido.</p>
+        </article>
+        <article class="plot-card" aria-labelledby="sonar-formulas-title">
+          <div class="plot-heading"><div><p class="eyebrow">Modelo y fórmulas</p><h2 id="sonar-formulas-title">Del retardo a la distancia</h2></div></div>
+          <div class="rc-equations">
+            <p>\(s(t)=\sin^2(\pi t/T)\,\sin\left[2\pi\left(f_0t+\dfrac{f_1-f_0}{2T}t^2\right)\right],\quad 0\le t\le T\)</p>
+            <p>\(T=3\,\mathrm{ms},\quad f_0=2\,\mathrm{kHz},\quad f_1=6\,\mathrm{kHz}\)</p>
+            <p>\(\tau_{\mathrm{directo}}=b/c,\qquad\tau_{\mathrm{eco}}=\dfrac{d+\sqrt{d^2+b^2}}{c}\)</p>
+            <p>\(r(t)=A_d\,s(t-\tau_{\mathrm{directo}})+A_e\,s(t-\tau_{\mathrm{eco}})+\sigma z(t)\)</p>
+            <p>\(C[k]=\dfrac{\sum_j s[j]\,r[k+j]}{\sum_j s[j]^2},\qquad\widehat\tau=\widehat k/f_s\)</p>
+            <p>\(L=c\widehat\tau,\qquad\widehat d=\dfrac{L^2-b^2}{2L}\)</p>
+          </div>
+          <p class="discrete-plot-note">d es la distancia desde el altavoz a la persona; b es la separación lateral del micrófono. Al estar separados el emisor y el receptor, se corrige su geometría en lugar de usar directamente cτ/2. El detector conoce b y el intervalo de búsqueda, pero no usa la distancia real ni el tamaño para localizar el eco.</p>
+          <p class="discrete-plot-note">Modelo de intensidad simplificado: Aₑ = 0,65·(h/1,7)² / [d·√(d²+b²)], con h y las distancias expresadas en metros. Una persona mayor produce un eco más intenso; la amplitud disminuye con el recorrido. Esta relación es didáctica, no una calibración acústica de personas.</p>
+          <p class="discrete-plot-note">Se exige un pico por encima de cinco veces la desviación típica del ruido de correlación, σ/√Σs[j]². Si no se supera ese umbral, no se publica una distancia fiable. Con ruido pueden aparecer falsas detecciones incluso al superarlo.</p>
+        </article>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

@@ -3314,3 +3314,16 @@ h2 {
   .correlation-page .correlation-sequences { grid-template-columns: 1fr; }
   .correlation-page .rc-form-grid { grid-template-columns: 1fr; }
 }
+
+.sonar-page .sampling-range { display: grid; gap: 10px; }
+.sonar-page input[type="range"] { width: 100%; min-height: 32px; accent-color: var(--accent); }
+.sonar-page input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sonar-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 20px; }
+.sonar-scene { display: block; width: 100%; height: auto; }
+.sonar-page .sonar-plot { aspect-ratio: 800 / 280; }
+.sonar-measurements { margin-block: 20px; }
+.sonar-received-swatch { border-top-style: solid; }
+.sonar-clean-swatch { border-top: 3px dashed #d97706; }
+@media (max-width: 760px) {
+  .sonar-page .rc-form-grid { grid-template-columns: 1fr; }
+}

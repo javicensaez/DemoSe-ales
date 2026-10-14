@@ -98,6 +98,13 @@ const demos = [
     href: "correlacion-ruido.html",
   },
   {
+    category: "Demo · Detección de señales",
+    title: "Simulador de sonar",
+    description:
+      "Emite un chirp, ajusta la posición y tamaño de una persona y estima su distancia mediante la correlación del eco con ruido.",
+    href: "sonar.html",
+  },
+  {
     category: "Demo · Series de Fourier",
     title: "Laboratorio de series de Fourier",
     description:

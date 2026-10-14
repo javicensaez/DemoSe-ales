@@ -26,6 +26,7 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Convolución discreta paso a paso** (`convolucion-discreta.html`): introduce dos secuencias, desplaza una sobre la otra y consulta cada producto y su suma.
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
 - **Detección de señales con ruido** (`correlacion-ruido.html`): elige el pulso del bit 1, transmite una secuencia aleatoria, varía el ruido gaussiano y observa la correlación cruzada normalizada y los bits detectados.
+- **Simulador de sonar** (`sonar.html`): emite un chirp de 3 ms, varía la separación del micrófono, la distancia (1–4 m), el tamaño de una persona y el ruido; estima su distancia a partir de la correlación del eco corrigiendo la geometría del emisor y receptor.
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
 - **Desafío de Fourier** (`juego-fourier.html`): calcula coeficientes trigonométricos o módulo/fase, reconstruye la señal objetivo y comprueba tu resultado.
 
