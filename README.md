@@ -25,6 +25,7 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Adivina H(s)** (`juego-respuesta-escalon.html`): identifica respuestas aleatorias de primer o segundo orden, completa los coeficientes de H(s), compara las curvas y consulta el porcentaje de coincidencia; incluye pistas, solución y navegación entre retos.
 - **Convolución discreta paso a paso** (`convolucion-discreta.html`): introduce dos secuencias, desplaza una sobre la otra y consulta cada producto y su suma.
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
+- **Detección de señales con ruido** (`correlacion-ruido.html`): elige el pulso del bit 1, transmite una secuencia aleatoria, varía el ruido gaussiano y observa la correlación cruzada normalizada y los bits detectados.
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
 - **Desafío de Fourier** (`juego-fourier.html`): calcula coeficientes trigonométricos o módulo/fase, reconstruye la señal objetivo y comprueba tu resultado.
 

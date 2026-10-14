@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Detecta pulsos en una secuencia binaria con ruido mediante correlación cruzada." />
+    <title>Detección de señales con ruido — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="correlacion-ruido.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page correlation-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Detección de señales</p>
+        <h1>Detecta señales <span>entre el ruido</span></h1>
+        <p>El bit 1 se transmite como un pulso y el bit 0 como silencio. Elige la forma del pulso, genera una secuencia aleatoria y añade ruido. Observa cómo la correlación cruzada busca la forma conocida dentro de la señal recibida y ayuda a recuperar los bits.</p>
+        <p>Mueve el desplazamiento para ver dónde se coloca el pulso de referencia. En la gráfica de correlación, cada punto señala el comienzo de un símbolo: el detector decide 1 si su valor es al menos 0,5, y 0 en otro caso.</p>
+      </section>
+      <section class="plot-card rc-form" aria-label="Configuración de la transmisión">
+        <div class="rc-form-grid">
+          <label class="convolution-signal-select" for="corr-shape">Forma de onda del bit 1
+            <select id="corr-shape">
+              <option value="cosine">Coseno elevado (pulso suave)</option>
+              <option value="rect">Rectangular</option>
+              <option value="triangle">Triangular</option>
+              <option value="half-sine">Medio seno</option>
+              <option value="bipolar">Seno bipolar (un periodo)</option>
+            </select>
+          </label>
+          <label class="sampling-range" for="corr-noise">Nivel de ruido σ <output id="corr-noise-value" for="corr-noise"></output>
+            <input id="corr-noise" type="range" min="0" max="2" step="0.05" value="0.6" />
+          </label>
+          <div class="correlation-actions">
+            <button class="game-button primary-game-button" id="corr-new-sequence" type="button">↻ Nueva secuencia</button>
+            <button class="game-button secondary-game-button" id="corr-new-noise" type="button">↻ Otro ruido</button>
+          </div>
+        </div>
+        <p class="discrete-sequence-help">8 bits · 40 ms por símbolo · 40 muestras por pulso · muestreo a 1 kHz. El ruido es gaussiano de media cero; σ es su desviación típica respecto a la amplitud de referencia 1. Al variar σ se conserva la misma realización de ruido para comparar.</p>
+        <p class="rc-validation" id="corr-error" role="alert" hidden></p>
+      </section>
+      <section class="plot-card" aria-labelledby="corr-template-title">
+        <div class="plot-heading"><div><p class="eyebrow">Referencia del detector</p><h2 id="corr-template-title">Pulso que representa el 1</h2></div><span class="plot-badge" id="corr-template-name"></span></div>
+        <svg class="time-plot correlation-plot" id="corr-template-plot" viewBox="0 0 800 260" role="img" aria-label="Pulso de referencia"></svg>
+      </section>
+      <section class="plot-card correlation-sequences" aria-label="Bits enviados y detectados">
+        <div><h2>Secuencia enviada</h2><div class="correlation-bits" id="corr-sent-bits" aria-label="Bits enviados"></div></div>
+        <div><h2>Secuencia detectada</h2><div class="correlation-bits" id="corr-detected-bits" aria-label="Bits detectados"></div></div>
+        <p class="discrete-plot-note" id="corr-detection-summary" aria-live="polite"></p>
+      </section>
+      <section class="rc-workspace" aria-label="Transmisión, recepción y correlación">
+        <article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">1 · Emisor</p><h2>Señal transmitida</h2></div></div>
+          <svg class="time-plot correlation-plot" id="corr-transmitted-plot" viewBox="0 0 800 260" role="img" aria-label="Señal transmitida sin ruido"></svg>
+        </article>
+        <article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">2 · Canal</p><h2>Señales transmitida y recibida superpuestas</h2></div></div>
+          <div class="convolution-legend convolution-overlay-legend"><span><span class="rc-swatch rc-swatch-input"></span>Señal recibida (continua)</span><span><span class="rc-swatch correlation-transmitted-swatch"></span>Señal transmitida (trazo largo discontinuo)</span><span><span class="rc-swatch rc-swatch-output"></span>Pulso de referencia desplazado (trazo corto discontinuo)</span></div>
+          <svg class="time-plot correlation-plot" id="corr-received-plot" viewBox="0 0 800 260" role="img" aria-label="Señales transmitida y recibida superpuestas y pulso desplazado"></svg>
+        </article>
+        <article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">3 · Detector</p><h2>Correlación cruzada con el pulso</h2></div></div>
+          <label class="sampling-range" for="corr-shift">Desplazamiento del pulso <output id="corr-shift-value" for="corr-shift"></output>
+            <input id="corr-shift" type="range" min="0" max="280" step="1" value="0" />
+          </label>
+          <svg class="time-plot correlation-plot" id="corr-correlation-plot" viewBox="0 0 800 260" role="img" aria-label="Correlación cruzada normalizada"></svg>
+          <p class="discrete-plot-note" id="corr-current-value" aria-live="polite"></p>
+          <p class="discrete-plot-note">El eje horizontal indica el comienzo del pulso, no su centro. La correlación solo se calcula entre 0 y 280 ms, donde el pulso completo cabe dentro de la señal. Los puntos son las decisiones en los comienzos de símbolo; los picos intermedios no son decisiones de bits.</p>
+        </article>
+        <article class="plot-card" aria-labelledby="corr-formulas-title">
+          <div class="plot-heading"><div><p class="eyebrow">Cómo funciona</p><h2 id="corr-formulas-title">Sumar coincidencias reduce el ruido</h2></div></div>
+          <div class="rc-equations">
+            <p>\(x[n]=\sum_{m=0}^{7}b_m\,p[n-40m],\qquad r[n]=x[n]+\sigma z[n],\quad z[n]\sim\mathcal N(0,1)\)</p>
+            <p>\(\widehat b_m=\begin{cases}1,&amp; C[40m]\ge0{,}5\\0,&amp; C[40m]&lt;0{,}5\end{cases}\)</p>
+          </div>
+          <p class="discrete-plot-note">Se multiplica la señal recibida por el pulso desplazado y se suman los 40 productos. La división por la energía del pulso normaliza la correlación: sin ruido, un 1 alineado da C = 1 y un 0 da C = 0. La señal conocida suma de forma coherente; las contribuciones del ruido tienden a compensarse. Con ruido fuerte pueden aparecer errores.</p>
+          <p class="discrete-plot-note">Se supone sincronización conocida: el detector conoce el inicio y la duración de los símbolos. La normalización permite comparar las formas de onda, aunque la energía de cada pulso cambia y, por tanto, también su resistencia al ruido.</p>
+        </article>
+        <article class="plot-card" aria-labelledby="corr-correlation-formula-title">
+          <div class="plot-heading"><div><p class="eyebrow">Fórmula</p><h2 id="corr-correlation-formula-title">Correlación cruzada</h2></div></div>
+          <div class="rc-equations">
+            <p>Para señales reales: \(R_{pr}(\tau)=\displaystyle\int_{-\infty}^{\infty}p(t)\,r(t+\tau)\,\mathrm{d}t\).</p>
+            <p>Con las 40 muestras del pulso: \(R_{pr}[k]=\displaystyle\sum_{j=0}^{39}p[j]\,r[k+j]\).</p>
+            <p>La gráfica muestra la versión normalizada por la energía del pulso:</p>
+            <p>\(C[k]=\dfrac{R_{pr}[k]}{\sum_{j=0}^{39}p[j]^2}=\dfrac{\sum_{j=0}^{39}p[j]\,r[k+j]}{\sum_{j=0}^{39}p[j]^2}\).</p>
+          </div>
+          <p class="discrete-plot-note">p es el pulso de referencia y r la señal recibida. τ es el desplazamiento temporal; k es el desplazamiento en muestras (cada muestra equivale a 1 ms). Al aumentar k, el pulso se desplaza hacia la derecha sobre la señal recibida.</p>
+        </article>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

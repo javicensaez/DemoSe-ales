@@ -91,6 +91,13 @@ const demos = [
     href: "muestreo.html",
   },
   {
+    category: "Demo · Detección de señales",
+    title: "Detección de señales con ruido",
+    description:
+      "Transmite bits con distintos pulsos, añade ruido y explora cómo la correlación cruzada permite detectar la secuencia recibida.",
+    href: "correlacion-ruido.html",
+  },
+  {
     category: "Demo · Series de Fourier",
     title: "Laboratorio de series de Fourier",
     description:
