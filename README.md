@@ -17,6 +17,7 @@ Las páginas también pueden servirse desde cualquier servidor de archivos está
 - **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): compara cinco formas de onda y consulta su valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
 - **Preguntas de sistemas** (`sistemas-preguntas.html`): clasifica diez sistemas por memoria, causalidad, linealidad, invariancia temporal y estabilidad BIBO.
 - **Convolución paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
+- **Convolución discreta paso a paso** (`convolucion-discreta.html`): introduce dos secuencias, desplaza una sobre la otra y consulta cada producto y su suma.
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
 - **Desafío de Fourier** (`juego-fourier.html`): calcula coeficientes trigonométricos o módulo/fase, reconstruye la señal objetivo y comprueba tu resultado.

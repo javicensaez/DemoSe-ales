@@ -1690,6 +1690,249 @@ h2 {
     max-width: 1320px;
   }
 
+  .discrete-convolution-main {
+    max-width: 1080px;
+  }
+
+  .discrete-formula {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 16px;
+    color: var(--accent);
+    font-size: 16px;
+  }
+
+  .discrete-formula p {
+    max-width: 470px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .discrete-sequence-form {
+    margin-bottom: 16px;
+  }
+
+  .discrete-sequence-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .convolution-signal-select input {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--background);
+    color: var(--foreground);
+    font: 12px/1.4 var(--font-mono);
+  }
+
+  .discrete-sequence-help,
+  .discrete-plot-note {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .discrete-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .discrete-apply-button {
+    min-height: 40px;
+    justify-content: center;
+    padding: 8px 12px;
+    background: var(--surface);
+    color: var(--foreground);
+    cursor: pointer;
+    font: 600 12px/1.4 var(--font-mono);
+  }
+
+  .discrete-validation {
+    margin: 0;
+    color: #a5332b;
+    font-size: 12px;
+  }
+
+  .discrete-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .discrete-sequence-plot {
+    aspect-ratio: 800 / 430;
+  }
+
+  .discrete-sequence-plot text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .discrete-row-label {
+    font-weight: 600;
+  }
+
+  .discrete-x-label {
+    fill: #164b8c;
+  }
+
+  .discrete-h-label {
+    fill: #1479bd;
+  }
+
+  .discrete-output-label,
+  .discrete-output-value,
+  .discrete-sample-value {
+    fill: #2878b9;
+  }
+
+  .discrete-sample-value {
+    font-size: 10px;
+  }
+
+  .discrete-x-value {
+    fill: #164b8c;
+  }
+
+  .discrete-h-value {
+    fill: #1479bd;
+  }
+
+  .discrete-output-value {
+    font-size: 10px;
+  }
+
+  .discrete-index-label {
+    fill: var(--muted);
+  }
+
+  .discrete-final-result {
+    margin: -4px 0 16px;
+  }
+
+  .discrete-final-sequence {
+    margin: 0;
+    color: var(--accent);
+    font: 600 15px/1.6 var(--font-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .discrete-show-result-button {
+    background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  }
+
+  .discrete-products-table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 12px/1.5 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .discrete-products-table th,
+  .discrete-products-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .discrete-products-table thead th {
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .discrete-products-table tbody th {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .discrete-products-table tfoot th,
+  .discrete-products-table tfoot td {
+    border-bottom: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .discrete-table-wrap {
+    overflow-x: auto;
+  }
+
+  .discrete-result {
+    margin: 12px 0 0;
+    color: var(--accent);
+    font: 600 12px/1.6 var(--font-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .discrete-step-controls {
+    display: grid;
+    grid-template-columns: auto minmax(220px, 1fr);
+    align-items: center;
+    gap: 24px;
+  }
+
+  .discrete-step-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .discrete-step-button {
+    min-height: 38px;
+    padding: 7px 11px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--foreground);
+    cursor: pointer;
+    font: 600 11px/1.4 var(--font-mono);
+  }
+
+  .discrete-step-button:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+
+  .discrete-step-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .discrete-current-step {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .discrete-current-step strong {
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .discrete-step-slider {
+    width: 100%;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
   .convolution-signal-select,
   .convolution-slider > span {
     display: flex;
@@ -2568,6 +2811,25 @@ h2 {
 
     .convolution-input-row {
       grid-template-columns: 1fr;
+    }
+
+    .discrete-formula {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .discrete-sequence-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .discrete-step-controls {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .discrete-step-buttons {
+      justify-content: space-between;
+      gap: 6px;
     }
 
     .sampling-controls {

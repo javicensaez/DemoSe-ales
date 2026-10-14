@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Introduce dos secuencias y explora la convolución discreta muestra a muestra."
+    />
+    <title>Convolución discreta paso a paso — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="convolucion-discreta.js" defer></script>
+  </head>
+  <body class="demo-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s[n]</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+      </nav>
+    </header>
+
+    <main class="demo-main discrete-convolution-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Operaciones con señales</p>
+        <h1>Convolución discreta <span>paso a paso</span></h1>
+        <p>
+          Introduce dos secuencias cortas y desplaza una sobre la otra. En cada paso
+          podrás seguir los valores alineados, cada producto y cómo se completa y[n]
+          muestra a muestra.
+        </p>
+      </section>
+
+      <section class="discrete-formula plot-card" aria-label="Definición de la convolución discreta">
+        <span>\(y[n]=(x*h)[n]=\displaystyle\sum_{k=-\infty}^{\infty}x[k]\,h[n-k]\)</span>
+        <p>Se asume que ambas secuencias empiezan en el índice 0; fuera de los valores introducidos, sus muestras valen 0.</p>
+      </section>
+
+      <form class="discrete-sequence-form plot-card" id="sequence-form" novalidate>
+        <div class="discrete-sequence-fields">
+          <label class="convolution-signal-select" for="x-sequence">
+            Secuencia x[k]
+            <input id="x-sequence" name="x" type="text" value="1, 2, 1" autocomplete="off" spellcheck="false" aria-describedby="sequence-help" />
+          </label>
+          <label class="convolution-signal-select" for="h-sequence">
+            Secuencia h[k]
+            <input id="h-sequence" name="h" type="text" value="1, -1, 2" autocomplete="off" spellcheck="false" aria-describedby="sequence-help" />
+          </label>
+        </div>
+        <p class="discrete-sequence-help" id="sequence-help">
+          Escribe entre 1 y 8 números separados por comas (por ejemplo: 1, -0.5, 2). Cada valor debe estar entre −100 y 100.
+        </p>
+        <div class="discrete-form-actions">
+          <button class="primary-button discrete-apply-button" type="submit">Aplicar secuencias <span aria-hidden="true">↗</span></button>
+          <button class="discrete-step-button discrete-show-result-button" id="show-result" type="button">Ver resultado</button>
+          <p class="discrete-validation" id="sequence-error" role="alert" hidden></p>
+        </div>
+      </form>
+
+      <section class="plot-card discrete-final-result" id="final-result-card" aria-live="polite" hidden>
+        <div class="plot-heading">
+          <div><p class="eyebrow">Convolución completa</p><h2>Secuencia resultante y[n]</h2></div>
+        </div>
+        <p class="discrete-final-sequence" id="final-sequence"></p>
+      </section>
+
+      <section class="discrete-workspace" aria-label="Pasos de la convolución">
+        <article class="plot-card discrete-overlap-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Desplazamiento y alineación</p><h2>Secuencias y resultado parcial</h2></div>
+            <span class="plot-badge" id="discrete-step-badge">n = 0</span>
+          </div>
+          <div class="convolution-legend convolution-overlay-legend">
+            <span><span class="convolution-swatch x-swatch"></span>x[k]</span>
+            <span><span class="convolution-swatch h-swatch"></span>h[n − k] (invertida y desplazada)</span>
+            <span><span class="convolution-swatch result-swatch"></span>y[n] calculada hasta el paso actual</span>
+          </div>
+          <svg class="time-plot discrete-sequence-plot" id="discrete-overlap-plot" viewBox="0 0 800 430" role="img" aria-label="Gráfica de las secuencias alineadas para el paso n igual a 0"></svg>
+          <p class="discrete-plot-note">Las filas comparten un eje de índices fijo; la tercera muestra las salidas calculadas hasta el paso actual.</p>
+        </article>
+
+        <section class="plot-card discrete-step-controls" aria-label="Controles de avance">
+          <div class="discrete-step-buttons">
+            <button class="discrete-step-button" id="previous-step" type="button">← Anterior</button>
+            <p class="discrete-current-step" aria-live="polite">Paso <strong id="step-number">1</strong> de <strong id="step-count">5</strong></p>
+            <button class="discrete-step-button" id="next-step" type="button">Siguiente →</button>
+          </div>
+          <label class="convolution-slider discrete-step-slider" for="step-slider">
+            <span>Índice de salida n <output id="step-value" for="step-slider">0</output></span>
+            <input id="step-slider" type="range" min="0" max="4" step="1" value="0" />
+          </label>
+        </section>
+
+        <article class="plot-card discrete-products-card">
+          <div class="plot-heading">
+            <div><p class="eyebrow">Cálculo del paso actual</p><h2 id="discrete-sum-title">Productos para n = 0</h2></div>
+            <span class="plot-badge">y[n] = suma de productos</span>
+          </div>
+          <div class="discrete-table-wrap">
+            <table class="discrete-products-table">
+              <caption class="visually-hidden">Productos de x[k] por h[n − k] en el paso actual</caption>
+              <thead>
+                <tr><th scope="col">k</th><th scope="col">x[k]</th><th scope="col">h[n − k]</th><th scope="col">Producto</th></tr>
+              </thead>
+              <tbody id="discrete-products-body"></tbody>
+              <tfoot><tr><th scope="row" colspan="3">Suma y[n]</th><td id="discrete-sum-value">0</td></tr></tfoot>
+            </table>
+          </div>
+          <p class="discrete-result" id="discrete-result" aria-live="polite"></p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s[n]</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

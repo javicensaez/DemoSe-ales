@@ -49,6 +49,13 @@ const demos = [
     href: "convolucion.html",
   },
   {
+    category: "Demo · Operaciones con señales",
+    title: "Convolución discreta paso a paso",
+    description:
+      "Introduce secuencias cortas y desplaza una sobre la otra para ver cada producto y la suma de convolución.",
+    href: "convolucion-discreta.html",
+  },
+  {
     category: "Demo · Muestreo",
     title: "Muestreo y aliasing",
     description:
