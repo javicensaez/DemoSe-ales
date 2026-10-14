@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Identifica un sistema de primer o segundo orden a partir de su respuesta al escalón y compara tu función de transferencia con la original." />
+    <title>Adivina H(s) — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="juego-respuesta-escalon.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page step-game-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Sistemas</p>
+        <h1>Adivina <span>H(s)</span></h1>
+        <p>Identifica la función de transferencia de un sistema a partir de su respuesta al escalón unitario. Elige primer o segundo orden, observa la curva objetivo y rellena las casillas de H(s). Tu respuesta se dibuja sobre la original; pulsa «Comprobar» para conocer el porcentaje de coincidencia. Todos los sistemas parten en reposo.</p>
+      </section>
+      <section class="plot-card step-game-settings" aria-label="Selección y navegación de retos">
+        <label class="convolution-signal-select" for="step-game-order">Tipo de sistema
+          <select id="step-game-order"><option value="1">Primer orden</option><option value="2">Segundo orden</option></select>
+        </label>
+        <div class="step-game-navigation" role="group" aria-label="Navegación entre retos">
+          <button class="game-button secondary-game-button" id="step-game-previous" type="button" disabled>← Reto anterior</button>
+          <span class="plot-badge" id="step-game-progress"></span>
+          <button class="game-button primary-game-button" id="step-game-next" type="button">Siguiente reto →</button>
+        </div>
+      </section>
+      <section class="plot-card" aria-labelledby="step-game-plot-title">
+        <div class="plot-heading"><div><p class="eyebrow">Observa e identifica</p><h2 id="step-game-plot-title">Respuesta al escalón unitario</h2></div></div>
+        <div class="convolution-legend convolution-overlay-legend">
+          <span><span class="rc-swatch rc-swatch-input"></span>Respuesta objetivo</span>
+          <span><span class="rc-swatch rc-swatch-output"></span>Tu respuesta (discontinua)</span>
+        </div>
+        <svg class="time-plot rc-plot rlc-step-plot" id="step-game-plot" viewBox="0 0 800 480" role="img" aria-label="Respuesta objetivo al escalón unitario"></svg>
+        <p class="discrete-plot-note">El escalón se aplica en t = 0. Ambas curvas usan los mismos ejes. La escala temporal se conserva mientras resuelves el reto.</p>
+      </section>
+      <form class="plot-card rc-form step-game-answer" id="step-game-form" novalidate aria-labelledby="step-game-answer-title">
+        <div class="plot-heading"><div><p class="eyebrow">Construye tu modelo</p><h2 id="step-game-answer-title">Rellena H(s)</h2></div></div>
+        <div id="step-game-first-model">
+          <p>\(H(s)=\dfrac{K}{\tau s+1}\)</p>
+          <div class="rc-form-grid">
+            <label class="convolution-signal-select" for="step-game-gain">Numerador K (ganancia)
+              <input id="step-game-gain" type="number" step="any" min="-1000" max="1000" aria-describedby="step-game-error step-game-entry-note" />
+            </label>
+            <label class="convolution-signal-select" for="step-game-tau">Coeficiente de s: τ (s)
+              <input id="step-game-tau" type="number" step="any" min="0.001" max="1000" aria-describedby="step-game-error step-game-entry-note" />
+            </label>
+          </div>
+        </div>
+        <div id="step-game-second-model" hidden>
+          <p>\(H(s)=\dfrac{b_0}{s^2+a_1s+a_0}\)</p>
+          <div class="rc-form-grid">
+            <label class="convolution-signal-select" for="step-game-b0">Numerador b₀ (s⁻²)
+              <input id="step-game-b0" type="number" step="any" min="-1000" max="1000" aria-describedby="step-game-error step-game-entry-note" />
+            </label>
+            <label class="convolution-signal-select" for="step-game-a1">Coeficiente de s: a₁ (s⁻¹)
+              <input id="step-game-a1" type="number" step="any" min="0.001" max="1000" aria-describedby="step-game-error step-game-entry-note" />
+            </label>
+            <label class="convolution-signal-select" for="step-game-a0">Término independiente a₀ (s⁻²)
+              <input id="step-game-a0" type="number" step="any" min="0.001" max="1000" aria-describedby="step-game-error step-game-entry-note" />
+            </label>
+          </div>
+        </div>
+        <p class="discrete-sequence-help" id="step-game-entry-note">Introduce todas las casillas con números decimales. Numerador entre −1000 y 1000; coeficientes del denominador entre 0,001 y 1000. El coeficiente constante del primer orden y el de s² del segundo orden están fijados a 1.</p>
+        <p class="rc-validation" id="step-game-error" role="alert" hidden></p>
+        <div class="step-game-actions">
+          <button class="game-button primary-game-button" type="submit">Comprobar</button>
+          <button class="game-button secondary-game-button" type="button" id="step-game-hint-button">Ver pista</button>
+          <button class="game-button secondary-game-button" type="button" id="step-game-solution-button">Ver solución</button>
+        </div>
+        <p class="game-feedback" id="step-game-feedback" aria-live="polite">Completa H(s) para visualizar tu respuesta.</p>
+        <p class="discrete-plot-note" id="step-game-score-note">La coincidencia compara ambas respuestas mediante el error RMS relativo en el intervalo mostrado: 100 % significa curvas coincidentes. No es el porcentaje de casillas correctas.</p>
+        <div class="discrete-plot-note" id="step-game-hint" hidden>
+          <p data-order-hint="1">Lee el valor final: \(K=y(\infty)\). La constante de tiempo τ es el instante en que la salida llega al 63,2 % de K.</p>
+          <p data-order-hint="2">\(K=b_0/a_0,\quad\omega_0=\sqrt{a_0},\quad\zeta=a_1/(2\omega_0)\). Si hay sobreimpulso, usa su magnitud y el instante del primer pico para estimar ζ y ω₀. Si no oscila, fíjate en la rapidez y la forma de la subida.</p>
+          <p data-order-hint="2">\(\zeta=\dfrac{-\ln(M_p/100)}{\sqrt{\pi^2+\ln^2(M_p/100)}},\quad\omega_0=\dfrac{\pi}{t_p\sqrt{1-\zeta^2}}\)</p>
+        </div>
+        <div class="discrete-plot-note" id="step-game-solution" hidden></div>
+      </form>
+      <section class="plot-card" aria-labelledby="step-game-formulas-title">
+        <div class="plot-heading"><div><p class="eyebrow">Guía de cálculo</p><h2 id="step-game-formulas-title">Fórmulas para identificar H(s)</h2></div></div>
+        <p class="discrete-plot-note">Estas fórmulas corresponden a un escalón unitario aplicado en t = 0, con el sistema inicialmente en reposo. Lee los tiempos en segundos y el valor final de la curva objetivo.</p>
+        <div class="rc-equations" data-order-formulas="1">
+          <p><strong>Primer orden: ganancia y constante de tiempo</strong></p>
+          <p>\(H(s)=\dfrac{K}{\tau s+1},\qquad y(t)=K\left(1-e^{-t/\tau}\right)\)</p>
+          <p>1. Obtén el numerador a partir del valor final: \(K=y(\infty)\).</p>
+          <p>2. Busca el instante donde \(y(t)=0{,}6321K\): ese instante es \(\tau\).</p>
+          <p>También puedes usar cualquier punto de la subida: \(\tau=\dfrac{-t}{\ln\left(1-y(t)/K\right)}\), con \(0&lt;y(t)/K&lt;1\).</p>
+          <p>3. Rellena las casillas con K y τ. El polo es \(s_1=-1/\tau\).</p>
+          <p>Tiempo de establecimiento al 2 %: \(t_s=-\tau\ln(0{,}02)\approx3{,}912\tau\).</p>
+        </div>
+        <div class="rc-equations" data-order-formulas="2" hidden>
+          <p><strong>Segundo orden: del escalón a los coeficientes</strong></p>
+          <p>\(H(s)=\dfrac{b_0}{s^2+a_1s+a_0}=\dfrac{K\omega_0^2}{s^2+2\zeta\omega_0s+\omega_0^2}\)</p>
+          <p>Lee el valor final: \(K=y(\infty)=b_0/a_0\). Tras estimar ζ y ω₀, rellena las casillas con:</p>
+          <p>\(a_0=\omega_0^2,\qquad a_1=2\zeta\omega_0,\qquad b_0=K\omega_0^2\)</p>
+          <p><strong>Si hay sobreimpulso (0 &lt; ζ &lt; 1)</strong></p>
+          <p>Lee el primer máximo \(y_p\) y su instante \(t_p\). Calcula el sobreimpulso en tanto por uno:</p>
+          <p>\(m_p=\dfrac{y_p-K}{K},\qquad M_p=100m_p\;\%\)</p>
+          <p>\(\zeta=\dfrac{-\ln m_p}{\sqrt{\pi^2+\ln^2m_p}},\qquad\omega_d=\dfrac{\pi}{t_p},\qquad\omega_0=\dfrac{\omega_d}{\sqrt{1-\zeta^2}}\)</p>
+          <p>Para comprobar la forma de la curva:</p>
+          <p>\(y(t)=K\left\{1-e^{-\zeta\omega_0t}\left[\cos(\omega_dt)+\dfrac{\zeta}{\sqrt{1-\zeta^2}}\sin(\omega_dt)\right]\right\}\)</p>
+          <p><strong>Si no hay sobreimpulso (ζ ≥ 1)</strong></p>
+          <p>El valor final y la ausencia de pico no bastan para distinguir los dos regímenes. Compara también la forma y la rapidez de la subida.</p>
+          <p>Crítico: \(\zeta=1,\quad y(t)=K\left[1-(1+\omega_0t)e^{-\omega_0t}\right]\).</p>
+          <p>En el caso crítico, si \(t_{63}\) es el instante donde \(y(t)=K(1-e^{-1})\), entonces \(\omega_0\approx2{,}1462/t_{63}\).</p>
+          <p>Sobreamortiguado: \(\zeta&gt;1,\quad s_{1,2}=-\zeta\omega_0\pm\omega_0\sqrt{\zeta^2-1}\).</p>
+          <p>\(y(t)=K\left[1+\dfrac{s_2e^{s_1t}-s_1e^{s_2t}}{s_1-s_2}\right]\)</p>
+          <p>Si estimas sus dos polos reales negativos ajustando la curva, recupera los coeficientes con \(a_1=-(s_1+s_2),\quad a_0=s_1s_2,\quad b_0=Ka_0\).</p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

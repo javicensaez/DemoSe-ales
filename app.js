@@ -63,6 +63,20 @@ const demos = [
     href: "circuito-rlc.html",
   },
   {
+    category: "Demo · Sistemas",
+    title: "Sistema de segundo orden",
+    description:
+      "Varía el factor de amortiguamiento y la frecuencia natural y observa la respuesta al escalón y el diagrama de polos y ceros.",
+    href: "segundo-orden.html",
+  },
+  {
+    category: "Juego · Sistemas",
+    title: "Adivina H(s)",
+    description:
+      "Identifica sistemas de primer o segundo orden a partir del escalón, completa H(s) y compara tu respuesta con la original.",
+    href: "juego-respuesta-escalon.html",
+  },
+  {
     category: "Demo · Operaciones con señales",
     title: "Convolución discreta paso a paso",
     description:

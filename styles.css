@@ -3212,3 +3212,63 @@ h2 {
     transition-duration: 0.01ms !important;
   }
 }
+
+.second-order-page .second-order-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-block: 24px;
+}
+.second-order-controls label {
+  display: grid;
+  gap: 12px;
+  color: var(--foreground);
+  font-weight: 600;
+}
+.second-order-controls output { color: var(--accent); font-family: var(--font-mono); }
+.second-order-controls input { width: 100%; accent-color: var(--accent); min-height: 32px; }
+.second-order-controls input:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.second-order-range { color: var(--muted); font-size: 12px; font-weight: 400; }
+.second-order-controls > p { grid-column: 1 / -1; margin: 0; }
+@media (max-width: 760px) {
+  .second-order-page .second-order-controls { grid-template-columns: 1fr; }
+}
+
+.step-game-page .step-game-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.step-game-settings select {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--foreground);
+  font: inherit;
+}
+.step-game-navigation, .step-game-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.step-game-page .step-game-answer { margin-top: 24px; }
+.step-game-page .rc-swatch-input { border-top-style: solid; }
+.step-game-page .rc-swatch-output { border-top-style: dashed; }
+.step-game-actions { margin-top: 20px; }
+.step-game-page input:focus-visible, .step-game-page select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.step-game-page #step-game-hint, .step-game-page #step-game-solution {
+  overflow-x: auto;
+}
+.step-game-page [data-order-formulas][hidden] { display: none; }
+@media (max-width: 760px) {
+  .step-game-page .rc-form-grid { grid-template-columns: 1fr; }
+  .step-game-navigation { gap: 8px; }
+}

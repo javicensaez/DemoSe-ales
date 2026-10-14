@@ -21,6 +21,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Convolución continua paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
 - **Circuito RC / CR** (`circuito-rc.html`): elige un circuito RC (paso bajo) o CR (paso alto), varía R y C, aplica un escalón unitario, un pulso rectangular de anchura ajustable o una señal cuadrada con ciclo de trabajo ajustable y observa la salida.
 - **Circuito RLC** (`circuito-rlc.html`): RLC serie con salida en el condensador; elige R, L y C, observa la respuesta al escalón (sub, crítica o sobreamortiguada) y el diagrama de polos y ceros.
+- **Sistema de segundo orden** (`segundo-orden.html`): ajusta ζ entre 0 y 2 y ω₀ entre 0,5 y 10 rad/s; compara la respuesta al escalón unitario y los polos, incluidos el caso sin amortiguamiento y el polo doble crítico.
+- **Adivina H(s)** (`juego-respuesta-escalon.html`): identifica respuestas aleatorias de primer o segundo orden, completa los coeficientes de H(s), compara las curvas y consulta el porcentaje de coincidencia; incluye pistas, solución y navegación entre retos.
 - **Convolución discreta paso a paso** (`convolucion-discreta.html`): introduce dos secuencias, desplaza una sobre la otra y consulta cada producto y su suma.
 - **Muestreo y aliasing** (`muestreo.html`): compara senos, suma de tonos y ondas periódicas rectangular y triangular; ajusta la frecuencia de muestreo y observa las muestras, el aliasing y la reconstrucción sinc.
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
