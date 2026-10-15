@@ -1,0 +1,46 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora señales comunes, su transformada bilateral de Laplace y la región de convergencia."/><title>Laplace y región de convergencia — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="laplace.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page laplace-page">    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+<main class="demo-main rc-main"><a class="back-link" href="index.html#demos">← Volver a las demos</a>
+<section class="demo-intro"><p class="eyebrow">Demo · Transformada de Laplace</p><h1>Transformada de Laplace <span>y convergencia</span></h1><p>Selecciona una señal para ver su forma temporal, su transformada bilateral y su región de convergencia (ROC). Compara señales causales y anticausales: pueden compartir la misma expresión algebraica y tener regiones de convergencia diferentes.</p><p>El área azul del plano s indica dónde converge la integral. Las fronteras discontinuas están excluidas y las cruces marcan polos. Mueve σ para comprobar si una recta vertical pertenece a la ROC. La convención es bilateral: una constante definida para todo t no tiene la misma transformada que un escalón causal.</p></section>
+<div class="laplace-workspace"><div class="laplace-sidebar"><section class="plot-card"><h2>Señal y parámetros</h2><div class="laplace-controls">
+<label for="lp-signal">Señal<select id="lp-signal">
+<optgroup label="Impulsos y señales causales"><option value="delta">Impulso δ(t)</option><option value="deltaDelay">Impulso retrasado</option><option value="deltaDerivative">Derivada del impulso</option><option value="step" selected>Escalón causal</option><option value="ramp">Rampa causal</option><option value="power">Potencia tⁿ causal</option><option value="exp">Exponencial causal</option><option value="expDelay">Exponencial causal retrasada</option><option value="expPower">Potencia por exponencial causal</option></optgroup>
+<optgroup label="Oscilaciones causales"><option value="sin">Seno causal</option><option value="cos">Coseno causal</option><option value="dampedSin">Seno amortiguado o creciente</option><option value="dampedCos">Coseno amortiguado o creciente</option><option value="complex">Exponencial compleja causal</option></optgroup>
+<optgroup label="Anticausales y bilaterales"><option value="leftStep">−u(−t), escalón anticausal negativo</option><option value="leftExp">−e^(αt)u(−t), exponencial anticausal</option><option value="bilateral">Exponencial e^(−β|t|)</option><option value="gauss">Gaussiana</option></optgroup>
+<optgroup label="Duración finita"><option value="pulse">Pulso entre 0 y T</option><option value="centerPulse">Pulso centrado de anchura T</option><option value="triangle">Triángulo centrado, base 2T</option><option value="causalTriangle">Triángulo causal, base 2T</option></optgroup>
+<optgroup label="Sin ROC bilateral"><option value="constant">Constante para todo t</option><option value="wholeExp">Exponencial para todo t</option><option value="wholeSin">Seno para todo t</option><option value="wholeCos">Coseno para todo t</option></optgroup>
+</select></label>
+<label id="lp-alpha-control" class="lp-range" for="lp-alpha"><span>Exponente α (s⁻¹)</span><output id="lp-alpha-value" for="lp-alpha"></output><input id="lp-alpha" type="range" min="-3" max="3" step="0.1" value="-1" /></label>
+<label id="lp-beta-control" class="lp-range" for="lp-beta"><span>Parámetro β</span><output id="lp-beta-value" for="lp-beta"></output><input id="lp-beta" type="range" min="0.2" max="3" step="0.1" value="1" /></label>
+<label id="lp-omega-control" class="lp-range" for="lp-omega"><span>Frecuencia Ω (rad/s)</span><output id="lp-omega-value" for="lp-omega"></output><input id="lp-omega" type="range" min="0.5" max="6" step="0.1" value="2" /></label>
+<label id="lp-duration-control" class="lp-range" for="lp-duration"><span>Tiempo T (s)</span><output id="lp-duration-value" for="lp-duration"></output><input id="lp-duration" type="range" min="0.2" max="2" step="0.1" value="1" /></label>
+<label id="lp-order-control" for="lp-order">Orden n<select id="lp-order"><option value="0">0</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label>
+<label class="lp-range" for="lp-sigma"><span>Recta de integración σ (s⁻¹)</span><output id="lp-sigma-value" for="lp-sigma"></output><input id="lp-sigma" type="range" min="-5" max="5" step="0.1" value="1" /></label>
+</div><p id="lp-error" role="alert" hidden></p></section>
+<section class="plot-card"><h2>Expresiones de la selección</h2><div id="lp-expressions"><h3>Señal x(t)</h3><div id="lp-time-formula"></div><h3>Transformada X(s)</h3><div id="lp-transform-formula"></div><h3>Región de convergencia</h3><div id="lp-roc-formula"></div></div><p id="lp-note"></p></section></div>
+<section class="lp-plots" aria-label="Señal y región de convergencia"><article class="plot-card"><h2>Señal temporal</h2><svg id="lp-time-plot" viewBox="0 0 800 310" role="img" aria-label="Señal temporal entre −4 y 4 segundos"></svg><p id="lp-time-note" class="discrete-plot-note"></p></article>
+<article class="plot-card"><h2>ROC en el plano s = σ + jω</h2><svg id="lp-roc-plot" viewBox="0 0 800 470" role="img" aria-label="Región de convergencia y polos en el plano complejo s"></svg><p id="lp-status" role="status"></p><p id="lp-fourier" class="discrete-plot-note"></p></article></section></div>
+<section class="plot-card"><h2>Definición y lectura de la ROC</h2><div class="rc-formulas"><p>\[X(s)=\int_{-\infty}^{\infty}x(t)e^{-st}\,dt,\qquad s=\sigma+j\omega\]</p><p>\[\mathrm{ROC}=\left\{s:\int_{-\infty}^{\infty}|x(t)|e^{-\sigma t}\,dt&lt;\infty\right\}\]</p></div><p>Para señales ordinarias se usa convergencia absoluta; los impulsos y sus derivadas se interpretan como distribuciones. Una señal causal suele producir un semiplano derecho, una anticausal un semiplano izquierdo y una bilateral puede producir una franja. La ROC no contiene polos.</p><p>Los pulsos y triángulos de duración finita tienen ROC en todo el plano: los denominadores s y s² de sus fórmulas tienen singularidades removibles en s = 0. El valor allí es el área temporal. La gaussiana también converge para todo s, aunque su duración sea infinita.</p><p>Si el eje imaginario (σ = 0) pertenece a la ROC, la transformada de Fourier ordinaria se obtiene evaluando X(jω). Que el eje quede en la frontera no asegura convergencia ordinaria: los escalones y las sinusoides también pueden tener transformadas de Fourier como distribuciones.</p><p class="discrete-plot-note">Se toma u(0) = 1/2. Se muestran todos los polos de los modelos racionales, con su multiplicidad cuando corresponde. Las señales sin ROC no admiten una transformada bilateral ordinaria; no se les asigna una expresión racional por prolongación formal.</p></section>
+</main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+</body></html>

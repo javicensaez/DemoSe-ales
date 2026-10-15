@@ -88,6 +88,13 @@ const demos = [
     topics: ["sistemas", "laplace"],
   },
   {
+    category: "Demo · Transformada de Laplace",
+    title: "Laplace y región de convergencia",
+    description: "Selecciona señales causales, anticausales y bilaterales y relaciona su expresión de Laplace con los polos y la ROC.",
+    href: "laplace.html",
+    topics: ["senales", "sistemas", "laplace"],
+  },
+  {
     category: "Demo · Respuesta en frecuencia",
     title: "Diagrama de Bode",
     description: "Elige entre nueve sistemas y explora magnitud, fase, polos, ceros, amortiguamiento y retardo con un cursor de frecuencia.",

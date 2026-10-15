@@ -45,6 +45,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **Laboratorio de espectrogramas** (`espectrograma.html`): siete señales, teléfono DTMF configurable y audio Play/Pausa; ventanas de 128 a 4096 muestras, cinco tipos y solapamiento entre 0 y 95 %.
 
+- **Laplace y región de convergencia** (`laplace.html`): 26 señales comunes, fórmulas bilaterales, ROC y polos; incluye señales sin ROC y singularidades removibles.
+
 ## Estructura
 
 - Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.

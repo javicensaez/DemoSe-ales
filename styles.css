@@ -3588,3 +3588,20 @@ h2 {
 .sp-slice-control { display: grid; gap: .5rem; }
 .sp-slice-control input { width: 100%; }
 #sp-plot { cursor: crosshair; }
+
+/* Laplace bilateral y región de convergencia. */
+.laplace-workspace { display: grid; grid-template-columns: minmax(270px, 340px) minmax(0, 1fr); align-items: start; gap: 1rem; margin-block: 1rem; }
+.laplace-sidebar, .lp-plots { display: grid; gap: 1rem; min-width: 0; }
+.laplace-controls { display: grid; gap: 1rem; }
+.laplace-controls label { display: grid; gap: .5rem; min-width: 0; }
+.laplace-controls label[hidden] { display: none; }
+.laplace-controls select { width: 100%; padding: .6rem; font: inherit; color: var(--foreground); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.laplace-controls label.lp-range { grid-template-columns: minmax(0, 1fr) 7ch; grid-template-areas: "label label" "slider value"; align-items: center; }
+.lp-range > span { grid-area: label; }
+.lp-range input { grid-area: slider; width: 100%; min-width: 0; margin: 0; }
+.lp-range output { grid-area: value; width: 7ch; text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+.lp-plots svg { display: block; width: 100%; height: auto; }
+#lp-expressions > div { overflow-x: auto; font-size: .95rem; }
+#lp-expressions h3 { margin: 1rem 0 .4rem; font-size: 1rem; }
+.laplace-page #lp-error { color: #b42318; }
+@media (max-width: 850px) { .laplace-workspace { grid-template-columns: minmax(0, 1fr); } }
