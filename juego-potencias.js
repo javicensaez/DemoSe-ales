@@ -5,6 +5,33 @@ const challenges = [
   { title: 'Senoidal con desplazamiento', description: 'Una cosenoide de amplitud 2 V con un desplazamiento de −3 V y periodo de 1 ms.', equation: 'v(t)=\\left[-3+2\\cos(2\\pi t/T)\\right]\\,\\mathrm{V}', mean: -3, square: 11, resistance: 10, value: q => -3 + 2 * Math.cos(2 * Math.PI * q), steps: 'V_{\\mathrm{medio}}=-3\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=(-3)^2+\\frac{2^2}{2}=11\\,\\mathrm{V}^2' },
   { title: 'Triangular entre 1 y 5 V', description: 'La tensión sube linealmente de 1 a 5 V en medio periodo y baja hasta 1 V en la otra mitad. T = 1 ms.', equation: 'v(t)=\\begin{cases}(1+8q)\\,\\mathrm{V}&0\\le q<1/2\\\\(9-8q)\\,\\mathrm{V}&1/2\\le q<1\\end{cases}', mean: 3, square: 31 / 3, resistance: 5, value: q => q < .5 ? 1 + 8 * q : 9 - 8 * q, steps: 'V_{\\mathrm{medio}}=\\frac{1+5}{2}=3\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=3^2+\\frac{(5-1)^2}{12}=\\frac{31}{3}\\,\\mathrm{V}^2' },
   { title: 'Rampa de −2 a 4 V', description: 'En cada periodo de 1 ms la tensión sube linealmente de −2 a 4 V y vuelve instantáneamente a −2 V.', equation: 'v(t)=(-2+6q)\\,\\mathrm{V}', mean: 1, square: 4, resistance: 2, value: q => -2 + 6 * q, steps: 'V_{\\mathrm{medio}}=\\frac{-2+4}{2}=1\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=\\frac{(-2)^2+(-2)(4)+4^2}{3}=4\\,\\mathrm{V}^2' },
+  {
+    title: 'V(d) · Triangular bipolar',
+    description: 'Señal V(d) de la imagen: parte de −1 V, alcanza +1 V a los 0,5 ms y vuelve a −1 V a 1 ms. T = 1 ms.',
+    equation: 'v_d(t)=\\begin{cases}(-1+4q)\\,\\mathrm{V}&0\\le q<1/2\\\\(3-4q)\\,\\mathrm{V}&1/2\\le q<1\\end{cases}',
+    mean: 0, square: 1 / 3, resistance: 1, period: 1,
+    plotMin: -1, plotMax: 1,
+    value: q => q < .5 ? -1 + 4 * q : 3 - 4 * q,
+    steps: 'V_{\\mathrm{medio}}=0\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=\\frac{1}{3}\\,\\mathrm{V}^2',
+  },
+  {
+    title: 'V(e) · Pulsos triangulares positivos',
+    description: 'Señal V(e) de la imagen: 0 V hasta 0,25 ms, subida lineal hasta 1 V a 0,5 ms, bajada hasta 0 V a 0,75 ms y 0 V hasta 1 ms. T = 1 ms.',
+    equation: 'v_e(t)=\\begin{cases}0\\,\\mathrm{V}&0\\le q<1/4\\\\(4q-1)\\,\\mathrm{V}&1/4\\le q<1/2\\\\(3-4q)\\,\\mathrm{V}&1/2\\le q<3/4\\\\0\\,\\mathrm{V}&3/4\\le q<1\\end{cases}',
+    mean: 1 / 4, square: 1 / 6, resistance: 1, period: 1,
+    plotMin: -1, plotMax: 1,
+    value: q => q < .25 || q >= .75 ? 0 : q < .5 ? 4 * q - 1 : 3 - 4 * q,
+    steps: 'V_{\\mathrm{medio}}=\\frac{1}{2}\\cdot\\frac{1}{2}\\cdot 1=\\frac{1}{4}\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=\\frac{1}{2}\\cdot\\frac{1^2}{3}=\\frac{1}{6}\\,\\mathrm{V}^2',
+  },
+  {
+    title: 'V(f) · Triangular positiva',
+    description: 'Señal V(f) de la imagen: baja linealmente de 1 V a 0 V en 0,25 ms y sube a 1 V a 0,5 ms. T = 0,5 ms; se muestran cuatro periodos.',
+    equation: 'v_f(t)=\\begin{cases}(1-2q)\\,\\mathrm{V}&0\\le q<1/2\\\\(2q-1)\\,\\mathrm{V}&1/2\\le q<1\\end{cases}',
+    mean: 1 / 2, square: 1 / 3, resistance: 1, period: .5,
+    plotMin: -1, plotMax: 1,
+    value: q => q < .5 ? 1 - 2 * q : 2 * q - 1,
+    steps: 'V_{\\mathrm{medio}}=\\frac{0+1}{2}=\\frac{1}{2}\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=\\frac{0^2+0\\cdot1+1^2}{3}=\\frac{1}{3}\\,\\mathrm{V}^2',
+  },
 ];
 const metrics = [ ['mean', 'Valor medio / componente DC', 'V'], ['power', 'Potencia media', 'W'], ['rms', 'RMS total', 'V'], ['dc', 'RMS de continua (DC)', 'V'], ['ac', 'RMS de alterna (AC)', 'V'] ];
 const states = challenges.map(() => ({ answers: {}, solved: false, revealed: false, checked: false }));
@@ -18,17 +45,19 @@ function typeset(element, content) {
   if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise([element]).catch(() => {});
 }
 function draw(c) {
-  const values = Array.from({length: 801}, (_, i) => c.value((i / 400) % 1));
-  const low = Math.floor(Math.min(0, ...values)) - 1;
-  const high = Math.ceil(Math.max(0, ...values)) + 1;
+  const period = c.period ?? 1;
+  const duration = 2;
+  const values = Array.from({length: 801}, (_, i) => c.value(((i / 800) * duration / period) % 1));
+  const low = c.plotMin ?? Math.floor(Math.min(0, ...values)) - 1;
+  const high = c.plotMax ?? Math.ceil(Math.max(0, ...values)) + 1;
   const x = t => 65 + t / 2 * 705;
   const y = v => 30 + (high - v) / (high - low) * 270;
-  let svg = '<title>Dos periodos de la tensión del reto</title>';
+  let svg = `<title>${duration / period} periodos de la tensión del reto, T = ${format(period)} ms</title>`;
   for (let v = low; v <= high; v++) svg += `<line class="${v === 0 ? 'plot-axis-line' : 'plot-grid-line'}" x1="65" x2="770" y1="${y(v)}" y2="${y(v)}"/><text class="plot-tick-label" x="52" y="${y(v)+4}" text-anchor="end">${v}</text>`;
-  for (let t = 0; t <= 2; t += .5) svg += `<line class="${t === 0 ? 'plot-axis-line' : 'plot-grid-line'}" x1="${x(t)}" x2="${x(t)}" y1="30" y2="300"/><text class="plot-tick-label" x="${x(t)}" y="325" text-anchor="middle">${format(t)}</text>`;
+  for (let t = 0; t <= 2; t += .25) svg += `<line class="${t === 0 ? 'plot-axis-line' : 'plot-grid-line'}" x1="${x(t)}" x2="${x(t)}" y1="30" y2="300"/><text class="plot-tick-label" x="${x(t)}" y="325" text-anchor="middle">${format(t)}</text>`;
   svg += `<path d="${values.map((v,i) => `${i ? 'L' : 'M'}${x(i/400)},${y(v)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="3"/><text class="plot-axis-label" x="65" y="18">Tensión (V)</text><text class="plot-axis-label" x="770" y="350" text-anchor="end">Tiempo (ms)</text>`;
   $('#game-plot').innerHTML = svg;
-  $('#game-plot').setAttribute('aria-label', `${c.title}. ${c.description}`);
+  $('#game-plot').setAttribute('aria-label', `${c.title}. ${c.description} Eje temporal de 0 a 2 ms; tensión en voltios.`);
 }
 function render() {
   const c = challenges[current], state = states[current];
