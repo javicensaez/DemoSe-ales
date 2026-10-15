@@ -85,6 +85,16 @@
           </p>
         </div>
 
+        <p id="demo-filter-help">Elige un tema. Una demo o juego puede aparecer en varias categorías.</p>
+        <div class="demo-filters" id="demo-filters" role="group" aria-label="Filtrar demos por tema" aria-describedby="demo-filter-help">
+          <button type="button" data-topic="all" aria-pressed="true" aria-controls="demo-grid">Mostrar todos</button>
+          <button type="button" data-topic="senales" aria-pressed="false" aria-controls="demo-grid">Señales</button>
+          <button type="button" data-topic="sistemas" aria-pressed="false" aria-controls="demo-grid">Sistemas</button>
+          <button type="button" data-topic="laplace" aria-pressed="false" aria-controls="demo-grid">Laplace</button>
+          <button type="button" data-topic="series" aria-pressed="false" aria-controls="demo-grid">Series de Fourier</button>
+          <button type="button" data-topic="fourier" aria-pressed="false" aria-controls="demo-grid">Fourier y muestreo</button>
+        </div>
+        <p class="demo-count" id="demo-count" role="status"></p>
         <div class="demo-grid" id="demo-grid" aria-live="polite"></div>
       </section>
     </main>

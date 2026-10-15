@@ -5,6 +5,7 @@ const demos = [
     description:
       "Explora la delta de Dirac, el escalón, pulsos, ondas periódicas y la exponencial compleja.",
     href: "senales-basicas.html",
+    topics: ["senales"],
   },
   {
     category: "Juego · Exprésalo",
@@ -12,6 +13,7 @@ const demos = [
     description:
       "Observa una señal, escribe su expresión con escalones y funciones básicas y comprueba tu respuesta en la gráfica.",
     href: "juego-expresiones.html",
+    topics: ["senales"],
   },
   {
     category: "Juego · Transformaciones",
@@ -19,6 +21,7 @@ const demos = [
     description:
       "Compara una señal de origen con su versión transformada y averigua su retraso, inversión temporal y escalado.",
     href: "juego-transformaciones.html",
+    topics: ["senales"],
   },
   {
     category: "Juego · Simetría",
@@ -26,6 +29,7 @@ const demos = [
     description:
       "Dibuja en tu cuaderno las partes par e impar de una señal, revela la solución y comprueba tus dibujos.",
     href: "juego-simetria.html",
+    topics: ["senales"],
   },
   {
     category: "Demo · Valores medios y eficaces",
@@ -33,6 +37,7 @@ const demos = [
     description:
       "Compara cinco señales periódicas y consulta su valor medio, potencia media, valor eficaz y valor eficaz de alterna.",
     href: "potencia-senales-periodicas.html",
+    topics: ["senales"],
   },
   {
     category: "Juego · Valores medios y eficaces",
@@ -40,6 +45,7 @@ const demos = [
     description:
       "Resuelve retos de valor medio, potencia media y tensión RMS total, de continua (DC) y de alterna (AC).",
     href: "juego-potencias.html",
+    topics: ["senales"],
   },
   {
     category: "Juego · Sistemas",
@@ -47,6 +53,7 @@ const demos = [
     description:
       "Clasifica diez sistemas según memoria, causalidad, linealidad, invariancia temporal y estabilidad BIBO.",
     href: "sistemas-preguntas.html",
+    topics: ["sistemas"],
   },
   {
     category: "Demo · Operaciones con señales",
@@ -54,6 +61,7 @@ const demos = [
     description:
       "Elige x(t) y h(t), desplaza una señal con el deslizador y observa el producto y la integral de convolución.",
     href: "convolucion.html",
+    topics: ["senales", "sistemas"],
   },
   {
     category: "Demo · Sistemas",
@@ -61,6 +69,7 @@ const demos = [
     description:
       "Elige un circuito RC o CR, varía R y C y observa su salida ante un escalón o una señal cuadrada con ciclo de trabajo ajustable.",
     href: "circuito-rc.html",
+    topics: ["sistemas", "laplace"],
   },
   {
     category: "Demo · Sistemas",
@@ -68,6 +77,7 @@ const demos = [
     description:
       "Elige R, L y C de un RLC serie con salida en el condensador, observa la respuesta al escalón y el diagrama de polos y ceros.",
     href: "circuito-rlc.html",
+    topics: ["sistemas", "laplace"],
   },
   {
     category: "Demo · Sistemas",
@@ -75,6 +85,7 @@ const demos = [
     description:
       "Varía el factor de amortiguamiento y la frecuencia natural y observa la respuesta al escalón y el diagrama de polos y ceros.",
     href: "segundo-orden.html",
+    topics: ["sistemas", "laplace"],
   },
   {
     category: "Juego · Sistemas",
@@ -82,6 +93,7 @@ const demos = [
     description:
       "Identifica sistemas de primer o segundo orden a partir del escalón, completa H(s) y compara tu respuesta con la original.",
     href: "juego-respuesta-escalon.html",
+    topics: ["sistemas", "laplace"],
   },
   {
     category: "Demo · Operaciones con señales",
@@ -89,6 +101,7 @@ const demos = [
     description:
       "Introduce secuencias cortas y desplaza una sobre la otra para ver cada producto y la suma de convolución.",
     href: "convolucion-discreta.html",
+    topics: ["senales", "sistemas"],
   },
   {
     category: "Demo · Muestreo",
@@ -96,6 +109,7 @@ const demos = [
     description:
       "Ajusta la frecuencia de muestreo, visualiza las muestras y compara la señal original con su reconstrucción.",
     href: "muestreo.html",
+    topics: ["senales", "fourier"],
   },
   {
     category: "Demo · Detección de señales",
@@ -103,6 +117,7 @@ const demos = [
     description:
       "Transmite bits con distintos pulsos, añade ruido y explora cómo la correlación cruzada permite detectar la secuencia recibida.",
     href: "correlacion-ruido.html",
+    topics: ["senales", "sistemas"],
   },
   {
     category: "Demo · Detección de señales",
@@ -110,6 +125,7 @@ const demos = [
     description:
       "Emite un chirp, ajusta la posición y tamaño de una persona y estima su distancia mediante la correlación del eco con ruido.",
     href: "sonar.html",
+    topics: ["senales", "sistemas"],
   },
   {
     category: "Demo · Análisis de señales",
@@ -117,6 +133,7 @@ const demos = [
     description:
       "Simula un motor DC con reductora y carga desequilibrada, captura su encoder Hall y analiza la FFT de sus canales y de la señal compleja.",
     href: "rueda-fft.html",
+    topics: ["senales", "fourier"],
   },
   {
     category: "Demo · Series de Fourier",
@@ -124,6 +141,7 @@ const demos = [
     description:
       "Explora la síntesis de señales periódicas, sus coeficientes y el espectro al variar el número de armónicos.",
     href: "series-fourier.html",
+    topics: ["senales", "series", "fourier"],
   },
   {
     category: "Juego · Series de Fourier",
@@ -131,6 +149,7 @@ const demos = [
     description:
       "Calcula coeficientes en forma trigonométrica o módulo/fase, reconstruye señales y comprueba tu puntuación.",
     href: "juego-fourier.html",
+    topics: ["senales", "series", "fourier"],
   },
 ];
 
@@ -138,28 +157,43 @@ const demoGrid = document.querySelector("#demo-grid");
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector("#site-nav");
 
+const topicLabels = {
+  senales: "Señales",
+  sistemas: "Sistemas",
+  laplace: "Laplace",
+  series: "Series de Fourier",
+  fourier: "Fourier y muestreo",
+};
+const demoFilters = document.querySelector("#demo-filters");
+const demoCount = document.querySelector("#demo-count");
+let selectedTopic = "all";
+
 function renderDemos() {
-  if (demos.length === 0) {
+  const visibleDemos = demos.filter(demo => selectedTopic === "all" || demo.topics.includes(selectedTopic));
+  demoCount.textContent = `${selectedTopic === "all" ? "Todos los temas" : topicLabels[selectedTopic]}: ${visibleDemos.length} de ${demos.length} demos y juegos`;
+
+  if (visibleDemos.length === 0) {
     demoGrid.innerHTML = `
       <div class="empty-state">
         <span class="empty-icon" aria-hidden="true">∿</span>
-        <h3>Las demos están por llegar</h3>
-        <p>Aquí aparecerán las experiencias interactivas. Iremos sumándolas una a una.</p>
+        <h3>No hay demos para este tema</h3>
+        <p>Selecciona otro tema o pulsa «Mostrar todos».</p>
       </div>
     `;
     return;
   }
 
-  demoGrid.innerHTML = demos
+  demoGrid.innerHTML = visibleDemos
     .map(
-      (demo, index) => `
+      (demo) => `
         <a class="demo-card" href="${demo.href}">
           <div class="demo-card-top">
             <span class="demo-category">${demo.category}</span>
-            <span class="demo-number">${String(index + 1).padStart(2, "0")}</span>
+            <span class="demo-number">${String(demos.indexOf(demo) + 1).padStart(2, "0")}</span>
           </div>
           <h3>${demo.title}</h3>
           <p>${demo.description}</p>
+          <div class="demo-topics" aria-label="Temas">${demo.topics.map(topic => `<span>${topicLabels[topic]}</span>`).join("")}</div>
           <span class="demo-card-link">Abrir demo <span aria-hidden="true">↗</span></span>
         </a>
       `,
@@ -178,6 +212,16 @@ siteNav.addEventListener("click", (event) => {
     menuToggle.setAttribute("aria-expanded", "false");
     siteNav.classList.remove("is-open");
   }
+});
+
+demoFilters.addEventListener("click", event => {
+  const button = event.target.closest("[data-topic]");
+  if (!button) return;
+  selectedTopic = button.dataset.topic;
+  demoFilters.querySelectorAll("[data-topic]").forEach(filter => {
+    filter.setAttribute("aria-pressed", String(filter === button));
+  });
+  renderDemos();
 });
 
 renderDemos();
