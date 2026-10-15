@@ -10,6 +10,9 @@ const formatNumber = value => numberFormat.format(Math.abs(value) < 1e-12 ? 0 : 
 let history = [];
 let challengeIndex = -1;
 let solutionShown = false;
+let plotInspection = null;
+let inspectedTime = 0;
+const cursorValues = document.querySelector("#step-game-cursor-values");
 
 function randomValue(min, max, step) {
   return Number((min + Math.floor(Math.random() * (Math.round((max - min) / step) + 1)) * step).toFixed(4));
@@ -117,9 +120,58 @@ function renderPlot(answer = null) {
     parts.push(`<path d="${path}" fill="none" stroke="${color}" stroke-width="3" ${dash} vector-effect="non-scaling-stroke" />`);
   }
   parts.push('<text class="plot-axis-label" x="776" y="478" text-anchor="end">t (s)</text><text class="plot-axis-label" x="14" y="22">y(t) (adimensional)</text>');
+  parts.push('<g id="step-game-cursor" visibility="hidden" pointer-events="none"><line id="step-game-cursor-line" y1="22" y2="438" stroke="var(--muted)" stroke-dasharray="4 4"/><circle id="step-game-target-dot" r="5" fill="var(--answer)" stroke="var(--surface)" stroke-width="2"/><circle id="step-game-answer-dot" r="5" fill="#d97706" stroke="var(--surface)" stroke-width="2"/></g>');
+  plotInspection = { target, answer, x, y };
+  inspectedTime = 0;
+  cursorValues.textContent = 'Sitúa el cursor sobre la gráfica para consultar los valores.';
   plot.innerHTML = parts.join("");
   plot.setAttribute("aria-label", `Respuesta al escalón unitario de ${target.order === 1 ? "primer" : "segundo"} orden, entre 0 y ${formatNumber(target.duration)} segundos${answer ? ", comparada con tu respuesta discontinua" : ""}`);
 }
+
+function inspectPlot(time) {
+  if (!plotInspection) return;
+  const { target, answer, x, y } = plotInspection;
+  inspectedTime = Math.max(0, Math.min(target.duration, time));
+  const amplitude = response(target, inspectedTime);
+  const cursorX = x(inspectedTime);
+  document.querySelector('#step-game-cursor').setAttribute('visibility', 'visible');
+  const line = document.querySelector('#step-game-cursor-line');
+  line.setAttribute('x1', cursorX); line.setAttribute('x2', cursorX);
+  const targetDot = document.querySelector('#step-game-target-dot');
+  targetDot.setAttribute('cx', cursorX); targetDot.setAttribute('cy', y(amplitude));
+  const answerDot = document.querySelector('#step-game-answer-dot');
+  answerDot.setAttribute('visibility', answer ? 'visible' : 'hidden');
+  let text = `t = ${formatNumber(inspectedTime)} s · Amplitud objetivo: ${formatNumber(amplitude)}`;
+  if (answer) {
+    const value = response(answer, inspectedTime);
+    answerDot.setAttribute('cx', cursorX); answerDot.setAttribute('cy', y(value));
+    text += ` · Amplitud de tu respuesta: ${formatNumber(value)}`;
+  }
+  cursorValues.textContent = `${text} (amplitudes adimensionales).`;
+}
+function inspectPointer(event) {
+  const matrix = plot.getScreenCTM();
+  if (!matrix || !plotInspection) return;
+  const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
+  if (point.x < 62 || point.x > 776 || point.y < 22 || point.y > 438) {
+    document.querySelector('#step-game-cursor').setAttribute('visibility', 'hidden');
+    return;
+  }
+  inspectPlot((point.x - 62) / 714 * plotInspection.target.duration);
+}
+plot.addEventListener('pointermove', inspectPointer);
+plot.addEventListener('pointerdown', inspectPointer);
+plot.addEventListener('pointerleave', () => {
+  document.querySelector('#step-game-cursor')?.setAttribute('visibility', 'hidden');
+});
+plot.addEventListener('focus', () => inspectPlot(inspectedTime));
+plot.addEventListener('keydown', event => {
+  if (!plotInspection || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+  event.preventDefault();
+  const duration = plotInspection.target.duration;
+  const step = duration / (event.shiftKey ? 20 : 200);
+  inspectPlot(event.key === 'Home' ? 0 : event.key === 'End' ? duration : inspectedTime + (event.key === 'ArrowLeft' ? -step : step));
+});
 
 function evaluateAnswer(grade = false) {
   feedback.className = "game-feedback";

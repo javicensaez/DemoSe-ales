@@ -50,7 +50,9 @@
           <span><span class="rc-swatch rc-swatch-input"></span>Respuesta objetivo</span>
           <span><span class="rc-swatch rc-swatch-output"></span>Tu respuesta (discontinua)</span>
         </div>
-        <svg class="time-plot rc-plot rlc-step-plot" id="step-game-plot" viewBox="0 0 800 480" role="img" aria-label="Respuesta objetivo al escalón unitario"></svg>
+        <svg class="time-plot rc-plot rlc-step-plot" id="step-game-plot" tabindex="0" aria-describedby="step-game-cursor-help step-game-cursor-values" viewBox="0 0 800 480" role="img" aria-label="Respuesta objetivo al escalón unitario"></svg>
+        <p class="discrete-plot-note" id="step-game-cursor-help">Mueve el ratón o toca la gráfica para leer el tiempo y la amplitud. Con teclado: enfoca la gráfica y usa ← y →; Inicio y Fin llevan a los extremos.</p>
+        <p class="step-game-cursor-values" id="step-game-cursor-values">Sitúa el cursor sobre la gráfica para consultar los valores.</p>
         <p class="discrete-plot-note">El escalón se aplica en t = 0. Ambas curvas usan los mismos ejes. La escala temporal se conserva mientras resuelves el reto.</p>
       </section>
       <form class="plot-card rc-form step-game-answer" id="step-game-form" novalidate aria-labelledby="step-game-answer-title">

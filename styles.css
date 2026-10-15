@@ -3452,3 +3452,7 @@ h2 {
 .adc-spectrum-analog { stroke: #b45c12; stroke-width: 2; stroke-dasharray: 6 4; }
 .adc-analog-swatch { border-top: 3px dashed #b45c12; }
 .adc-digital-swatch { border-top: 3px solid var(--accent); }
+
+.step-game-cursor-values { min-height: 1.5em; font-family: var(--font-mono); color: var(--accent); }
+.step-game-page #step-game-plot { cursor: crosshair; }
+.step-game-page #step-game-plot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
