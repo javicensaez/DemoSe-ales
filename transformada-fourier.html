@@ -1,0 +1,70 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora señales típicas y las propiedades de retraso, escalado e inversión de la transformada de Fourier."/><title>Transformada de Fourier — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="transformada-fourier.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page tf-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+
+
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro"><p class="eyebrow">Demo · Transformada de Fourier</p><h1>Del tiempo <span>a la frecuencia</span></h1>
+        <p>Selecciona una señal y observa su forma temporal, el módulo y la fase de su transformada de Fourier. Aplica un retraso, cambia la amplitud o comprime el tiempo y compara las propiedades.</p>
+        <p>La señal transformada es y(t) = A·x(a(t − τ)). Un retraso positivo desplaza la señal a la derecha; a &gt; 1 la comprime. La inversión temporal cambia el signo de a. La fase se representa entre −π y π y se omite donde el módulo es prácticamente cero.</p>
+      </section>
+      <div class="tf-workspace">
+      <section class="plot-card tf-control-card" aria-labelledby="tf-controls-title"><h2 id="tf-controls-title">Señal y transformaciones</h2>
+        <div class="tf-controls">
+          <label for="tf-signal">Señal<select id="tf-signal"><option value="rect">Pulso rectangular</option><option value="tri">Pulso triangular</option><option value="gauss">Gaussiana</option><option value="exp">Exponencial causal</option><option value="bilateral">Exponencial bilateral</option><option value="sinc">Sinc</option><option value="complex">Exponencial compleja de 1 Hz</option><option value="cos">Coseno de 1 Hz</option><option value="sin">Seno de 1 Hz</option><option value="constant">Constante</option><option value="delta">Impulso de Dirac</option></select></label>
+          <label for="tf-delay">Retraso τ (s) <output id="tf-delay-value" for="tf-delay">0</output><input id="tf-delay" type="range" min="-3" max="3" step="0.01" value="0" /></label>
+          <label for="tf-amplitude">Amplitud A <output id="tf-amplitude-value" for="tf-amplitude">1</output><input id="tf-amplitude" type="range" min="-2" max="2" step="0.01" value="1" /></label>
+          <label for="tf-scale">Escala temporal |a| <output id="tf-scale-value" for="tf-scale">1</output><input id="tf-scale" type="range" min="0.25" max="4" step="0.01" value="1" /></label>
+          <label for="tf-invert"><input id="tf-invert" type="checkbox" />Invertir en el tiempo (a negativo)</label>
+          <button id="tf-reset" class="game-button secondary-game-button" type="button">Restablecer transformaciones</button>
+        </div>
+        <p id="tf-summary" role="status"></p><p id="tf-error" role="alert" hidden></p>
+      </section>
+      <section class="tf-plots" aria-label="Señal temporal y transformada">
+        <article class="plot-card"><h2>Señal en el tiempo</h2><svg id="tf-time" viewBox="0 0 800 310" role="img" aria-label="Señal temporal entre −6 y 6 segundos"></svg><p id="tf-complex-legend" class="discrete-plot-note" hidden>Parte real: azul continuo · Parte imaginaria: naranja discontinuo. Ambas se muestran con la misma escala.</p></article>
+        <article class="plot-card"><h2>Módulo de Fourier</h2><svg id="tf-magnitude" viewBox="0 0 800 310" role="img" aria-label="Módulo de Fourier entre −6 y 6 hercios"></svg><p id="tf-impulse-note" class="discrete-plot-note"></p></article>
+        <article class="plot-card"><h2>Fase de Fourier</h2><svg id="tf-phase" viewBox="0 0 800 310" role="img" aria-label="Fase de Fourier en radianes entre −6 y 6 hercios"></svg><p class="discrete-plot-note">Los saltos de +π a −π son cambios de representación de una misma fase. No se unen los saltos ni se asigna fase a los ceros; en espectros de impulsos solo se marca la fase de cada peso.</p></article>
+      </section>
+      </div>
+      <section class="plot-card"><h2>Definición y propiedades</h2><div class="rc-formulas">
+        <p>\[X(f)=\int_{-\infty}^{\infty}x(t)e^{-j2\pi ft}\,dt\]</p>
+        <p>\[y(t)=A\,x\bigl(a(t-\tau)\bigr)\quad\Longleftrightarrow\quad Y(f)=\frac{A}{|a|}X\!\left(\frac{f}{a}\right)e^{-j2\pi f\tau}\]</p>
+        <div id="tf-pair"></div></div>
+        <p>Se usan expresiones analíticas, sin truncar la señal para calcular una FFT. La ventana visible solo limita el dibujo. Las escalas verticales se calculan para todo el rango de amplitud (−2 a 2), por lo que no cambian al mover A. Un retraso conserva el módulo y añade fase lineal; comprimir el tiempo ensancha el espectro. Invertir el tiempo refleja el espectro en frecuencia. Una amplitud negativa añade π a la fase.</p>
+        <p>Se utiliza la sinc normalizada: \(\operatorname{sinc}(v)=\sin(\pi v)/(\pi v)\), con valor 1 en v = 0. El pulso rectangular base tiene ancho 1 s y altura 1; el triangular tiene base 2 s y altura 1. Las constantes de decaimiento de las exponenciales son 1 s⁻¹.</p>
+        <p>Las señales se expresan en unidades arbitrarias (u.a.) y f en Hz. Para los espectros continuos, la transformada tiene unidades u.a.·s. Los impulsos se dibujan como flechas rotuladas con su peso, que representa un área y no una altura finita.</p>
+
+        <h3>Pares básicos de transformadas</h3>
+        <p>Convención en Hz, con el factor 2π en la exponencial. En esta tabla T &gt; 0, B &gt; 0, α &gt; 0 y n es un entero no negativo. Las señales periódicas y el escalón se interpretan mediante distribuciones.</p>
+<div class="tf-reference-scroll" role="region" aria-labelledby="tf-pairs-caption" tabindex="0"><table class="tf-reference-table"><caption id="tf-pairs-caption">Tabla de transformadas básicas</caption><thead><tr><th scope="col">Señal</th><th scope="col">Tiempo: x(t)</th><th scope="col">Frecuencia: X(f)</th></tr></thead><tbody><tr><th scope="row">Impulso</th><td>\(\delta(t)\)</td><td>\(1\)</td></tr><tr><th scope="row">Impulso desplazado</th><td>\(\delta(t-t_0)\)</td><td>\(e^{-j2\pi f t_0}\)</td></tr><tr><th scope="row">Derivada del impulso</th><td>\(\delta^{(n)}(t)\)</td><td>\((j2\pi f)^n\)</td></tr><tr><th scope="row">Constante</th><td>\(1\)</td><td>\(\delta(f)\)</td></tr><tr><th scope="row">Exponencial compleja</th><td>\(e^{j2\pi f_0t}\)</td><td>\(\delta(f-f_0)\)</td></tr><tr><th scope="row">Coseno</th><td>\(\cos(2\pi f_0t)\)</td><td>\(\tfrac12[\delta(f-f_0)+\delta(f+f_0)]\)</td></tr><tr><th scope="row">Seno</th><td>\(\sin(2\pi f_0t)\)</td><td>\(\tfrac{1}{2j}[\delta(f-f_0)-\delta(f+f_0)]\)</td></tr><tr><th scope="row">Pulso rectangular</th><td>\(\operatorname{rect}(t/T)\)</td><td>\(T\operatorname{sinc}(Tf)\)</td></tr><tr><th scope="row">Pulso triangular</th><td>\(\operatorname{tri}(t/T)\)</td><td>\(T\operatorname{sinc}^2(Tf)\)</td></tr><tr><th scope="row">Sinc</th><td>\(\operatorname{sinc}(Bt)\)</td><td>\(\tfrac1B\operatorname{rect}(f/B)\)</td></tr><tr><th scope="row">Sinc al cuadrado</th><td>\(\operatorname{sinc}^2(Bt)\)</td><td>\(\tfrac1B\operatorname{tri}(f/B)\)</td></tr><tr><th scope="row">Gaussiana</th><td>\(e^{-\pi\alpha t^2}\)</td><td>\(\tfrac{1}{\sqrt\alpha}e^{-\pi f^2/\alpha}\)</td></tr><tr><th scope="row">Exponencial causal</th><td>\(e^{-\alpha t}u(t)\)</td><td>\(\tfrac{1}{\alpha+j2\pi f}\)</td></tr><tr><th scope="row">Exponencial anticausal</th><td>\(e^{\alpha t}u(-t)\)</td><td>\(\tfrac{1}{\alpha-j2\pi f}\)</td></tr><tr><th scope="row">Exponencial bilateral</th><td>\(e^{-\alpha|t|}\)</td><td>\(\tfrac{2\alpha}{\alpha^2+(2\pi f)^2}\)</td></tr><tr><th scope="row">Escalón unitario</th><td>\(u(t)\)</td><td>\(\tfrac12\delta(f)+\operatorname{VP}\!\left(\tfrac{1}{j2\pi f}\right)\)</td></tr><tr><th scope="row">Signo</th><td>\(\operatorname{sgn}(t)\)</td><td>\(\operatorname{VP}\!\left(\tfrac{1}{j\pi f}\right)\)</td></tr><tr><th scope="row">Tren de impulsos</th><td>\(\sum_{n\in\mathbb Z}\delta(t-nT)\)</td><td>\(\tfrac1T\sum_{k\in\mathbb Z}\delta(f-k/T)\)</td></tr></tbody></table></div>
+        <p>\(\operatorname{rect}(v)=1\) para \(|v|&lt;1/2\), 0 para \(|v|&gt;1/2\) y 1/2 en los bordes; \(\operatorname{tri}(v)=\max(1-|v|,0)\). Se toma \(u(0)=1/2\). VP indica el valor principal de Cauchy: los términos 1/f no son funciones ordinarias en f = 0.</p>
+        <h3>Propiedades de la transformada de Fourier</h3>
+        <p>Suponemos los pares \(x(t)\leftrightarrow X(f)\) e \(y(t)\leftrightarrow Y(f)\). El asterisco como superíndice indica conjugación y entre señales indica convolución. Las últimas filas expresan identidades y simetrías.</p>
+<div class="tf-reference-scroll" role="region" aria-labelledby="tf-properties-caption" tabindex="0"><table class="tf-reference-table"><caption id="tf-properties-caption">Tabla de propiedades e identidades</caption><thead><tr><th scope="col">Propiedad</th><th scope="col">Tiempo</th><th scope="col">Frecuencia</th></tr></thead><tbody><tr><th scope="row">Linealidad</th><td>\(a\,x(t)+b\,y(t)\)</td><td>\(aX(f)+bY(f)\)</td></tr><tr><th scope="row">Retraso temporal</th><td>\(x(t-t_0)\)</td><td>\(X(f)e^{-j2\pi ft_0}\)</td></tr><tr><th scope="row">Desplazamiento en frecuencia</th><td>\(x(t)e^{j2\pi f_0t}\)</td><td>\(X(f-f_0)\)</td></tr><tr><th scope="row">Escala temporal, a real ≠ 0</th><td>\(x(at)\)</td><td>\(\tfrac{1}{|a|}X(f/a)\)</td></tr><tr><th scope="row">Inversión temporal</th><td>\(x(-t)\)</td><td>\(X(-f)\)</td></tr><tr><th scope="row">Conjugación</th><td>\(x^*(t)\)</td><td>\(X^*(-f)\)</td></tr><tr><th scope="row">Conjugación e inversión</th><td>\(x^*(-t)\)</td><td>\(X^*(f)\)</td></tr><tr><th scope="row">Dualidad</th><td>\(X(t)\)</td><td>\(x(-f)\)</td></tr><tr><th scope="row">Derivación temporal</th><td>\(\tfrac{d^nx(t)}{dt^n}\)</td><td>\((j2\pi f)^nX(f)\)</td></tr><tr><th scope="row">Multiplicación por tⁿ</th><td>\(t^nx(t)\)</td><td>\(\left(\tfrac{j}{2\pi}\right)^n\tfrac{d^nX(f)}{df^n}\)</td></tr><tr><th scope="row">Integración desde −∞</th><td>\(\int_{-\infty}^t x(v)\,dv\)</td><td>\(\operatorname{VP}\!\left(\tfrac{X(f)}{j2\pi f}\right)+\tfrac12 X(0)\delta(f)\)</td></tr><tr><th scope="row">Convolución temporal</th><td>\((x*y)(t)\)</td><td>\(X(f)Y(f)\)</td></tr><tr><th scope="row">Producto temporal</th><td>\(x(t)y(t)\)</td><td>\((X*Y)(f)\)</td></tr><tr><th scope="row">Modulación por coseno</th><td>\(x(t)\cos(2\pi f_0t)\)</td><td>\(\tfrac12[X(f-f_0)+X(f+f_0)]\)</td></tr><tr><th scope="row">Correlación cruzada</th><td>\(r_{xy}(\tau)=\int_{-\infty}^{\infty}x(v+\tau)y^*(v)\,dv\)</td><td>\(X(f)Y^*(f)\)</td></tr><tr><th scope="row">Autocorrelación</th><td>\(r_{xx}(\tau)\)</td><td>\(|X(f)|^2\)</td></tr><tr><th scope="row">Área temporal / valor en continua</th><td>\(\int_{-\infty}^{\infty}x(t)\,dt\)</td><td>\(X(0)\)</td></tr><tr><th scope="row">Valor temporal en el origen</th><td>\(x(0)\)</td><td>\(\int_{-\infty}^{\infty}X(f)\,df\)</td></tr><tr><th scope="row">Parseval: energía</th><td>\(\int_{-\infty}^{\infty}|x(t)|^2\,dt\)</td><td>\(\int_{-\infty}^{\infty}|X(f)|^2\,df\)</td></tr><tr><th scope="row">Parseval: producto interno</th><td>\(\int_{-\infty}^{\infty}x(t)y^*(t)\,dt\)</td><td>\(\int_{-\infty}^{\infty}X(f)Y^*(f)\,df\)</td></tr><tr><th scope="row">Simetría de una señal real</th><td>\(x(t)\in\mathbb R\)</td><td>\(X(-f)=X^*(f)\)</td></tr><tr><th scope="row">Señal real y par</th><td>\(x(-t)=x(t)\in\mathbb R\)</td><td>\(X(f)\text{ real y par}\)</td></tr><tr><th scope="row">Señal real e impar</th><td>\(x(-t)=-x(t)\in\mathbb R\)</td><td>\(X(f)\text{ imaginaria pura e impar}\)</td></tr></tbody></table></div>
+        <p>Las propiedades se aplican cuando existen las integrales o sus extensiones como distribuciones. Parseval y la autocorrelación de energía se usan para señales de energía finita. En la integración se supone x integrable y X regular en el origen; la elección del límite −∞ fija el término de continua. Las identidades de valores puntuales requieren continuidad en el punto; en un salto se interpreta el promedio de los límites laterales.</p>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+</body></html>

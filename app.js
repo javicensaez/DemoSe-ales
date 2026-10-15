@@ -88,6 +88,13 @@ const demos = [
     topics: ["sistemas", "laplace"],
   },
   {
+    category: "Demo · Respuesta en frecuencia",
+    title: "Diagrama de Bode",
+    description: "Elige entre nueve sistemas y explora magnitud, fase, polos, ceros, amortiguamiento y retardo con un cursor de frecuencia.",
+    href: "bode.html",
+    topics: ["sistemas", "laplace", "fourier"],
+  },
+  {
     category: "Juego · Sistemas",
     title: "Adivina H(s)",
     description:
@@ -141,6 +148,20 @@ const demos = [
     description:
       "Simula un motor DC con reductora y carga desequilibrada, captura su encoder Hall y analiza la FFT de sus canales y de la señal compleja.",
     href: "rueda-fft.html",
+    topics: ["senales", "fourier"],
+  },
+  {
+    category: "Demo · Transformada de Fourier",
+    title: "Transformada de Fourier",
+    description: "Elige señales típicas, observa tiempo, módulo y fase y explora retraso, escalado e inversión temporal.",
+    href: "transformada-fourier.html",
+    topics: ["senales", "fourier"],
+  },
+  {
+    category: "Juego · Transformada de Fourier",
+    title: "Adivina la transformada de Fourier",
+    description: "Escribe la transformada de pulsos y un triángulo y compara la reconstrucción temporal de tu expresión con el objetivo.",
+    href: "juego-transformada-fourier.html",
     topics: ["senales", "fourier"],
   },
   {

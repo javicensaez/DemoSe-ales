@@ -3476,3 +3476,62 @@ h2 {
 @media (max-width: 850px) { .fourier-xy-layout { grid-template-columns: minmax(0, 1fr); } }
 
 .fourier-xy-actions #xy-play { margin-left: auto; }
+
+/* Transformada de Fourier y sus propiedades. */
+.tf-workspace { display: grid; grid-template-columns: minmax(260px, 310px) minmax(0, 1fr); align-items: start; gap: 1rem; margin-block: 1rem; }
+.tf-control-card { position: sticky; top: 1rem; min-width: 0; }
+.tf-controls { display: grid; gap: 1rem; }
+.tf-controls label { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.tf-controls label:has(input[type="range"]) { flex: 1 1 210px; }
+.tf-controls input[type="range"] { width: 100%; }
+.tf-controls output { margin-left: auto; font-family: var(--font-mono); }
+.tf-controls select { max-width: 100%; padding: .6rem; background: var(--surface); color: var(--foreground); border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.tf-plots { display: grid; gap: 1rem; min-width: 0; }
+.tf-plots svg { display: block; width: 100%; height: auto; }
+.tf-page #tf-error { color: #b42318; }
+
+@media (max-width: 850px) {
+  .tf-workspace { grid-template-columns: minmax(0, 1fr); }
+  .tf-control-card { position: static; }
+}
+
+.tf-reference-scroll { overflow-x: auto; margin-block: 1rem; border: 1px solid var(--line); border-radius: 10px; }
+.tf-reference-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.tf-reference-table caption { text-align: left; padding: 1rem; font-weight: 700; color: var(--foreground); }
+.tf-reference-table th, .tf-reference-table td { padding: .85rem 1rem; text-align: left; border-top: 1px solid var(--line); }
+.tf-reference-table thead { background: var(--background); }
+.tf-reference-table th[scope="row"] { min-width: 160px; font-weight: 600; }
+.tf-reference-table td { white-space: nowrap; }
+.tf-reference-table mjx-container { margin: 0 !important; }
+
+/* Juego de transformadas de Fourier. */
+.ftg-page .plot-card { margin-block: 1rem; }
+.ftg-page svg { display: block; width: 100%; height: auto; }
+.tf-game-navigation { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.tf-game-navigation label { display: flex; flex: 1; align-items: center; flex-wrap: wrap; gap: .5rem; min-width: 0; }
+.ftg-page select { max-width: 100%; padding: .6rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--foreground); font: inherit; }
+.ftg-expression { display: block; width: 100%; box-sizing: border-box; margin-block: .75rem; padding: .85rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--foreground); font: inherit; font-family: var(--font-mono); }
+.ftg-expression[aria-invalid="true"] { border-color: #b42318; }
+.ftg-page #ftg-error { color: #b42318; }
+.ftg-page code { overflow-wrap: anywhere; }
+.ftg-page #ftg-pass-next[hidden] { display: none; }
+
+/* Diagrama de Bode. */
+.bode-workspace { display: grid; grid-template-columns: minmax(260px, 310px) minmax(0, 1fr); gap: 1rem; align-items: start; margin-block: 1rem; }
+.bode-controls-card { position: sticky; top: 1rem; min-width: 0; }
+.bode-controls { display: grid; gap: 1rem; }
+.bode-controls label { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
+.bode-controls label[hidden] { display: none; }
+.bode-controls input[type="range"] { width: 100%; }
+.bode-controls output { margin-left: auto; font-family: var(--font-mono); }
+.bode-controls select { width: 100%; padding: .65rem; font: inherit; background: var(--surface); color: var(--foreground); border: 1px solid var(--line); border-radius: 8px; }
+.bode-plots { display: grid; gap: 1rem; min-width: 0; }
+.bode-plots svg { display: block; width: 100%; height: auto; }
+.bode-page #bode-error { color: #b42318; }
+@media (max-width: 850px) { .bode-workspace { grid-template-columns: minmax(0, 1fr); } .bode-controls-card { position: static; } }
+
+.bode-sidebar { display: grid; gap: 1rem; min-width: 0; }
+.bode-sidebar .bode-controls-card { position: static; }
+.bode-expression-card { min-width: 0; }
+.bode-expression-card h3 { font-size: 1rem; margin: 1rem 0 .4rem; }
+#bode-expressions > div, #bode-expression-variable { overflow-x: auto; font-size: .9rem; }

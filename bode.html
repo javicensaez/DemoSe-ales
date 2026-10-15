@@ -1,0 +1,56 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora diagramas de Bode de nueve sistemas y ajusta sus ganancias, polos, ceros y amortiguamiento."/><title>Diagrama de Bode — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="bode.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page bode-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro"><p class="eyebrow">Demo · Respuesta en frecuencia</p><h1>Diagrama <span>de Bode</span></h1>
+        <p>Elige un sistema y relaciona su función de transferencia con la ganancia y el desfase que produce sobre una entrada sinusoidal. Cambia sus parámetros y recorre la frecuencia con el cursor para consultar valores exactos.</p>
+        <p>Las gráficas comparten un eje de frecuencia angular de 0,01 a 1000 rad/s. Elige magnitud en dB o lineal y frecuencia logarítmica o lineal. La fase se muestra en grados, sin envolver. Los deslizadores de frecuencia conservan su recorrido logarítmico en ambos modos.</p>
+      </section>
+      <div class="bode-workspace">
+        <div class="bode-sidebar">
+        <section class="plot-card bode-controls-card" aria-labelledby="bode-controls-title"><h2 id="bode-controls-title">Sistema y parámetros</h2><div class="bode-controls">
+          <label for="bode-system">Sistema<select id="bode-system"><option value="low">Paso bajo de primer orden</option><option value="high">Paso alto de primer orden</option><option value="secondLow">Paso bajo de segundo orden</option><option value="secondHigh">Paso alto de segundo orden</option><option value="integrator">Integrador</option><option value="differentiator">Derivador</option><option value="polezero">Polo y cero reales</option><option value="gain">Ganancia constante</option><option value="delay">Retardo puro</option></select></label>
+          <label for="bode-magnitude-scale">Escala de magnitud<select id="bode-magnitude-scale"><option value="db">Decibelios (dB)</option><option value="linear">Lineal (V/V)</option></select></label>
+          <label for="bode-frequency-scale">Escala de frecuencia<select id="bode-frequency-scale"><option value="log">Logarítmica</option><option value="linear">Lineal</option></select></label>
+          <label for="bode-gain">Ganancia K (dB)<output id="bode-gain-value" for="bode-gain"></output><input id="bode-gain" type="range" min="-20" max="20" step="0.1" value="0" /></label>
+          <label id="bode-frequency-control" for="bode-frequency"><span id="bode-frequency-label">Frecuencia de corte ωc</span><output id="bode-frequency-value" for="bode-frequency"></output><input id="bode-frequency" type="range" min="-1" max="2" step="0.01" value="1" /></label>
+          <label id="bode-damping-control" for="bode-damping">Amortiguamiento ζ<output id="bode-damping-value" for="bode-damping"></output><input id="bode-damping" type="range" min="0.05" max="2" step="0.01" value="0.5" /></label>
+          <label id="bode-zero-control" for="bode-zero">Frecuencia del cero ωz<output id="bode-zero-value" for="bode-zero"></output><input id="bode-zero" type="range" min="-1" max="2" step="0.01" value="0" /></label>
+          <label id="bode-pole-control" for="bode-pole">Frecuencia del polo ωp<output id="bode-pole-value" for="bode-pole"></output><input id="bode-pole" type="range" min="-1" max="2" step="0.01" value="1" /></label>
+          <label id="bode-delay-control" for="bode-delay">Retardo T (s)<output id="bode-delay-value" for="bode-delay"></output><input id="bode-delay" type="range" min="0" max="2" step="0.01" value="0.1" /></label>
+          <label for="bode-probe">Cursor de frecuencia ω<output id="bode-probe-value" for="bode-probe"></output><input id="bode-probe" type="range" min="-2" max="3" step="0.01" value="1" /></label>
+          <button class="game-button secondary-game-button" id="bode-reset" type="button">Restablecer parámetros</button>
+        </div><p id="bode-error" role="alert" hidden></p><p class="discrete-plot-note">K es positiva: K = 10^(dB/20). En el integrador y el derivador, K representa el módulo a 1 rad/s.</p></section>
+        <section class="plot-card bode-expression-card" aria-labelledby="bode-expressions-title"><h2 id="bode-expressions-title">Expresiones del sistema</h2><p class="discrete-plot-note">Para f &gt; 0, con ω = 2πf. La fase de estas expresiones está en radianes; las gráficas la muestran en grados.</p><div id="bode-expressions"><p id="bode-expression-variable"></p><h3>H(s)</h3><div id="bode-model"></div><h3>H(f) = H(j2πf)</h3><div id="bode-frequency-expression"></div><h3>Módulo |H(f)|</h3><div id="bode-modulus-expression"></div><h3>Fase φ(f)</h3><div id="bode-phase-expression"></div></div></section>
+        </div>
+        <section class="bode-plots" aria-label="Magnitud y fase de Bode">
+          <article class="plot-card"><h2>Magnitud</h2><svg id="bode-magnitude" viewBox="0 0 800 310" role="img" aria-label="Magnitud de H(jω) en decibelios frente a frecuencia angular en escala logarítmica"></svg></article>
+          <article class="plot-card"><h2>Fase</h2><svg id="bode-phase" viewBox="0 0 800 310" role="img" aria-label="Fase continua de H(jω) en grados frente a frecuencia angular en escala logarítmica"></svg></article>
+          <article class="plot-card"><h2>Medidas en el cursor</h2><dl id="bode-readouts" class="rc-readouts" aria-live="polite"></dl></article>
+        </section>
+      </div>
+      <section class="plot-card"><h2>Propiedades de la respuesta en frecuencia</h2><p id="bode-explanation"></p><div class="rc-formulas"><p>\[s=j\omega,\qquad M(\omega)=20\log_{10}|H(j\omega)|,\qquad \varphi(\omega)=\arg H(j\omega)\]</p><p>\[\omega=2\pi f,\qquad x(t)=A\cos(\omega t)\;\Rightarrow\; y_{\mathrm{particular}}(t)=A|H(j\omega)|\cos\bigl(\omega t+\varphi(\omega)\bigr)\]</p></div><p>Un polo real añade una pendiente de −20 dB/década y hasta −90°; un cero real añade +20 dB/década y hasta +90°. En los sistemas de segundo orden, ζ controla la resonancia. Un retardo conserva el módulo y añade una fase de −ωT rad.</p><p class="discrete-plot-note">Se calcula la respuesta exacta, sin aproximaciones asintóticas. La escala de magnitud reserva todo el intervalo de K (−20 a 20 dB), por lo que no se reajusta al mover la ganancia. Puede cambiar con los demás parámetros para contener las curvas. El integrador y el derivador son modelos ideales; la expresión sinusoidal describe una solución particular y no incluye transitorios ni constantes debidas a condiciones iniciales.</p></section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+</body></html>

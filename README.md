@@ -33,6 +33,12 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **Fourier en el plano XY** (`fourier-xy.html`): introduce coeficientes complejos de dos señales reales, observa sus señales temporales y anima el trazado XY, con ejemplos de corazón, circunferencia, ocho y flor.
 
+- **Transformada de Fourier** (`transformada-fourier.html`): señales habituales con transformadas analíticas, módulo y fase; retraso, amplitud, escala temporal e inversión, con representación de los espectros de impulsos.
+
+- **Adivina la transformada de Fourier** (`juego-transformada-fourier.html`): siete retos de pulsos, triángulos, sumas y diferencias, entrada segura de expresiones complejas, reconstrucción temporal por transformada inversa y comparación del espectro.
+
+- **Diagrama de Bode** (`bode.html`): nueve sistemas con magnitud y fase exactas, parámetros configurables y medidas en un cursor de frecuencia logarítmico.
+
 ## Estructura
 
 - Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.
