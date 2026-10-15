@@ -35,6 +35,13 @@ const demos = [
     href: "potencia-senales-periodicas.html",
   },
   {
+    category: "Juego · Valores medios y eficaces",
+    title: "Calcula el valor medio y la potencia",
+    description:
+      "Resuelve retos de valor medio, potencia media y tensión RMS total, de continua (DC) y de alterna (AC).",
+    href: "juego-potencias.html",
+  },
+  {
     category: "Juego · Sistemas",
     title: "Preguntas de sistemas",
     description:

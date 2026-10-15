@@ -3355,3 +3355,31 @@ h2 {
 
 .wheel-page .wheel-scene-card { margin-bottom: 20px; }
 .wheel-page .wheel-complex-card { margin-bottom: 20px; }
+
+.power-game-page .power-game-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.power-game-fields { display: grid; gap: 16px; margin-block: 20px; }
+.power-game-fields > div { display: grid; gap: 6px; }
+.power-game-fields label { font-weight: 600; }
+.power-game-fields input {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  font: inherit;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+.power-game-fields input[aria-invalid="true"] { border: 2px solid #a63825; }
+.power-game-fields input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.power-game-fields small { min-height: 1.4em; }
+.power-game-solution { margin-top: 20px; }
+.power-game-page .math-display, .power-game-solution { overflow-x: auto; }
+.power-game-page .power-workspace > * { min-width: 0; }

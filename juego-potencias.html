@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Calcula valor medio, potencia media y valores eficaces de señales periódicas."
+    />
+    <title>Juego de valores medios y potencia — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="juego-potencias.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page power-game-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main power-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Valores medios y eficaces</p>
+        <h1>Calcula el valor medio <span>y la potencia</span></h1>
+        <p>Practica la descomposición DC y AC de una tensión periódica. Calcula en tu cuaderno el valor medio, la potencia media y los tres valores RMS; introduce tus resultados y compruébalos antes de ver la solución.</p>
+        <p>Usa voltios (V) y vatios (W), con al menos dos decimales cuando sea necesario. Se admite coma o punto decimal y un error de hasta el mayor de 0,01 unidades o el 1 % del resultado.</p>
+        <a href="potencia-senales-periodicas.html">Repasar la demo de cálculos de potencias →</a>
+      </section>
+      <section class="plot-card power-game-navigation" aria-label="Navegación entre retos">
+        <div class="challenge-navigation">
+          <button class="challenge-nav-button" id="previous-challenge" type="button" aria-label="Reto anterior">←</button>
+          <p class="eyebrow" id="challenge-progress" aria-live="polite"></p>
+          <button class="challenge-nav-button" id="next-challenge" type="button" aria-label="Reto siguiente">→</button>
+        </div>
+        <p id="game-score" role="status"></p>
+      </section>
+      <section class="power-workspace" aria-label="Reto de cálculo">
+        <article class="plot-card">
+          <h2 id="challenge-title"></h2>
+          <p id="challenge-description"></p>
+          <svg class="time-plot power-plot" id="game-plot" viewBox="0 0 800 360" role="img"></svg>
+          <p id="challenge-equation" class="math-display"></p>
+        </article>
+        <article class="plot-card">
+          <h2>Tus cálculos</h2>
+          <p id="load-description"></p>
+          <form id="answer-form" novalidate>
+            <div id="answer-fields" class="power-game-fields"></div>
+            <div class="game-actions">
+              <button class="game-button primary-game-button" type="submit">Comprobar</button>
+              <button class="game-button secondary-game-button" id="show-solution" type="button" aria-expanded="false" aria-controls="game-solution">Ver solución</button>
+              <button class="game-button primary-game-button" id="next-correct-challenge" type="button" hidden>Siguiente reto →</button>
+            </div>
+          </form>
+          <p id="game-feedback" role="status"></p>
+        </article>
+      </section>
+      <section class="plot-card power-game-solution" id="game-solution" aria-label="Solución razonada" hidden>
+        <h2>Solución paso a paso</h2>
+        <div id="solution-content"></div>
+      </section>
+      <aside class="power-note">
+        <strong>Relaciones útiles</strong>
+        <span>\(V_{\mathrm{medio}}=\langle v\rangle=\frac{1}{T}\int_0^T v(t)\,dt\)</span>
+        <span>\(V_{\mathrm{RMS}}=\sqrt{\langle v^2\rangle},\quad \overline P=\langle v^2\rangle/R\)</span>
+        <span>\(V_{\mathrm{DC}}=V_{\mathrm{medio}},\quad V_{\mathrm{RMS,DC}}=|V_{\mathrm{medio}}|\)</span>
+        <span>\(v_{\mathrm{AC}}(t)=v(t)-V_{\mathrm{medio}},\quad V_{\mathrm{RMS,AC}}=\sqrt{V_{\mathrm{RMS}}^2-V_{\mathrm{medio}}^2}\)</span>
+        <p>El valor medio conserva el signo; los valores RMS son no negativos. La potencia corresponde a la tensión total aplicada a una resistencia ideal.</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
