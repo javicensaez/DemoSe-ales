@@ -3456,3 +3456,23 @@ h2 {
 .step-game-cursor-values { min-height: 1.5em; font-family: var(--font-mono); color: var(--accent); }
 .step-game-page #step-game-plot { cursor: crosshair; }
 .step-game-page #step-game-plot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Series exponenciales y dibujo XY. */
+.fourier-xy-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
+.fourier-xy-controls label { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.fourier-xy-controls input[type="number"] { width: 6rem; }
+.fourier-xy-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(290px, 1fr); gap: 1.25rem; align-items: start; }
+.fourier-xy-plots { min-width: 0; display: grid; gap: 1.25rem; }
+.fourier-xy-page svg { display: block; width: 100%; height: auto; }
+.fourier-xy-page fieldset { border: 1px solid var(--line); border-radius: 12px; margin: 1rem 0; padding: .65rem; min-width: 0; }
+.fourier-xy-page legend { padding: 0 .4rem; font-weight: 700; }
+.fourier-xy-table table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.fourier-xy-table th, .fourier-xy-table td { padding: .3rem; text-align: center; }
+.fourier-xy-table th:first-child { width: 2rem; }
+.fourier-xy-table input { width: 100%; min-width: 0; box-sizing: border-box; }
+.fourier-xy-page input[type="number"], .fourier-xy-page select { padding: .45rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--foreground); font: inherit; }
+.fourier-xy-page [aria-invalid="true"] { border: 2px solid #b42318; }
+.fourier-xy-page #xy-error { color: #b42318; }
+@media (max-width: 850px) { .fourier-xy-layout { grid-template-columns: minmax(0, 1fr); } }
+
+.fourier-xy-actions #xy-play { margin-left: auto; }

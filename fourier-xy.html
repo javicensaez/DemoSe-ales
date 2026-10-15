@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Introduce coeficientes exponenciales de dos series de Fourier y anima su dibujo XY." /><title>Fourier en el plano XY — Sistemas y señales</title><link rel="stylesheet" href="styles.css" /><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="fourier-xy.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page fourier-xy-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+
+
+
+    <main class="demo-main rc-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Demo · Series de Fourier</p>
+        <h1>Series de Fourier <span>en el plano XY</span></h1>
+        <p>Construye dos señales periódicas con coeficientes exponenciales complejos. La posición del lápiz es (x(t), y(t)): observa cómo los armónicos se combinan para dibujar una figura.</p>
+        <p>Introduce la parte real e imaginaria de los coeficientes de k = 1 hasta el armónico máximo N y el término constante de cada señal. Los coeficientes negativos se completan por simetría conjugada para que X e Y sean reales. Elige un ejemplo o modifica las casillas y pulsa iniciar.</p>
+      </section>
+      <section class="plot-card" aria-labelledby="xy-controls-title">
+        <h2 id="xy-controls-title">Controles del dibujo</h2>
+        <div class="fourier-xy-controls">
+          <label for="xy-example">Ejemplo<select id="xy-example"><option value="heart">Corazón</option><option value="squareRamps">Cuadrado</option><option value="astroid">Astroide</option><option value="circle">Circunferencia</option><option value="eight">Figura de ocho</option><option value="flower">Flor</option><option value="zero">Todo a cero</option><option value="custom" disabled>Personalizado</option></select></label>
+          <label for="xy-order">Armónico máximo N<select id="xy-order"><option value="7">7</option><option value="20">20</option></select></label>
+          <label for="xy-period">Periodo T₀ (s)<input id="xy-period" type="number" min="0.5" max="60" step="0.5" value="10" /></label>
+          <label for="xy-range">Ejes XY (u.a.)<select id="xy-range"><option value="20">−20 a 20</option><option value="40">−40 a 40</option><option value="100">−100 a 100</option><option value="250">−250 a 250</option><option value="1500">−1500 a 1500</option></select></label>
+          <label for="xy-guide"><input id="xy-guide" type="checkbox" checked />Mostrar figura completa como guía</label>
+        </div>
+        <div class="fourier-xy-controls">
+          <label for="xy-scale-x">Escala X <input id="xy-scale-x" type="range" min="0.5" max="1.5" step="0.01" value="1" /><output id="xy-scale-x-value" for="xy-scale-x">1</output></label>
+          <label for="xy-scale-y">Escala Y <input id="xy-scale-y" type="range" min="0.5" max="1.5" step="0.01" value="1" /><output id="xy-scale-y-value" for="xy-scale-y">1</output></label>
+          <label for="xy-rotation">Rotación <input id="xy-rotation" type="range" min="-180" max="180" step="1" value="0" /><output id="xy-rotation-value" for="xy-rotation">0°</output></label>
+          <label for="xy-scale-sync"><input id="xy-scale-sync" type="checkbox" />Escalar X e Y sincronizadamente</label>
+        </div>
+        <p class="discrete-plot-note">Las casillas muestran los coeficientes escalados de k ≥ 1; X₀ e Y₀ permanecen iguales. Los factores se aplican respecto a los valores originales, sin acumularse. Al sincronizar se toma la escala X. La rotación se aplica después de la escala, alrededor de (X₀, Y₀), en sentido antihorario para ángulos positivos. Cada ejemplo restablece las escalas a 1 y el ángulo a 0°. Conjugar ambos canales cambia el signo de sus partes imaginarias y recorre la figura en sentido contrario.</p>
+        <div class="wheel-actions fourier-xy-actions"><button class="game-button secondary-game-button" id="xy-conjugate" type="button">Conjugar coeficientes X e Y</button><button class="game-button secondary-game-button" id="xy-clear" type="button">Borrar y volver al inicio</button><button class="game-button primary-game-button" id="xy-play" type="button" aria-pressed="false">Iniciar</button></div>
+        <p id="xy-status" role="status">Listo para dibujar.</p>
+        <p id="xy-error" role="alert" hidden></p>
+      </section>
+      <section class="fourier-xy-layout" aria-label="Dibujo y coeficientes">
+        <div class="fourier-xy-plots">
+          <article class="plot-card"><h2>Dibujo XY</h2><svg id="xy-plot" viewBox="0 0 600 600" role="img" aria-label="Trayectoria XY con escalas iguales en ambos ejes"></svg><p class="discrete-plot-note" id="xy-position"></p></article>
+          <article class="plot-card"><h2>Señales X e Y</h2><p class="discrete-plot-note">X: azul continuo · Y: naranja discontinuo. La línea vertical indica el instante actual.</p><svg id="xy-signals" viewBox="0 0 700 300" role="img" aria-label="Señales X e Y durante un periodo, amplitud en unidades arbitrarias y tiempo en segundos"></svg></article>
+        </div>
+        <section class="plot-card" aria-labelledby="xy-coeff-title"><h2 id="xy-coeff-title">Coeficientes exponenciales</h2><p class="discrete-plot-note">Cada casilla admite valores entre −100 y 100. El término k = 0 es real. Todos los términos activos aparecen en las tablas. Al volver a N = 7 se eliminan los términos superiores; cada ejemplo restablece todos sus coeficientes. Las amplitudes se expresan en unidades arbitrarias (u.a.).</p><div id="xy-coefficients"></div></section>
+      </section>
+      <section class="plot-card" aria-labelledby="xy-formula-title"><h2 id="xy-formula-title">Del coeficiente al dibujo</h2>
+        <div class="rc-formulas">
+          <p>\[x(t)=\sum_{k=-N}^{N}X_k e^{jk\omega_0t},\qquad y(t)=\sum_{k=-N}^{N}Y_k e^{jk\omega_0t},\qquad \omega_0=\frac{2\pi}{T_0}\]</p>
+          <p>\[x_s(t)=X_0+s_x[x(t)-X_0],\qquad y_s(t)=Y_0+s_y[y(t)-Y_0]\]</p>
+          <p>\[X′_k=X_k\cos\theta-Y_k\sin\theta,\qquad Y′_k=X_k\sin\theta+Y_k\cos\theta\quad(k\geq1)\]</p>
+          <p>\[X_{-k}=X_k^*,\qquad Y_{-k}=Y_k^*\]</p>
+          <p>\[X_k=a_k+jb_k\quad\Longrightarrow\quad x(t)=X_0+2\sum_{k=1}^{N}\left[a_k\cos(k\omega_0t)-b_k\sin(k\omega_0t)\right]\]</p>
+        </div>
+        <p>La misma expresión se aplica a Y. Para generar A cos(kω₀t), introduce A/2 en la parte real; para A sin(kω₀t), introduce −A/2 en la imaginaria. Cambiar T₀ modifica el tiempo de recorrido, conservando la geometría. X₀ desplaza la figura horizontalmente e Y₀ verticalmente. Los ejes permanecen fijos; amplía su rango si la figura sale del área visible.</p>
+        <p>El corazón usa x = 16 sen³(ω₀t) e y = 13 cos(ω₀t) − 5 cos(2ω₀t) − 2 cos(3ω₀t) − cos(4ω₀t). El astroide usa x = 6 cos³(ω₀t) e y = −6 sen³(ω₀t), con los coeficientes de la captura. N es el armónico máximo elegido (7 o 20). En «Cuadrado», durante el primer cuarto del periodo X sube de −6 a 6 e Y se mantiene en −6; en el segundo, X se mantiene en 6 e Y sube; en el tercero, X baja e Y se mantiene en 6; en el cuarto, X se mantiene en −6 e Y baja. Se sintetizan estas señales continuas con N = 20: la aproximación redondea ligeramente las esquinas. Una vuelta de la animación corresponde a un periodo; el trazo permanece al repetirla.</p>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+</body></html>

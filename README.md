@@ -31,6 +31,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Laboratorio de series de Fourier** (`series-fourier.html`): compara una señal periódica con su suma parcial y explora coeficientes, espectro y error RMS.
 - **Desafío de Fourier** (`juego-fourier.html`): calcula coeficientes trigonométricos o módulo/fase, reconstruye la señal objetivo y comprueba tu resultado.
 
+- **Fourier en el plano XY** (`fourier-xy.html`): introduce coeficientes complejos de dos señales reales, observa sus señales temporales y anima el trazado XY, con ejemplos de corazón, circunferencia, ocho y flor.
+
 ## Estructura
 
 - Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.

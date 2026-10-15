@@ -152,6 +152,13 @@ const demos = [
     topics: ["senales", "series", "fourier"],
   },
   {
+    category: "Demo · Series de Fourier",
+    title: "Fourier en el plano XY",
+    description: "Introduce los coeficientes exponenciales de X e Y y anima figuras como el corazón, una flor o una figura de ocho.",
+    href: "fourier-xy.html",
+    topics: ["senales", "series", "fourier"],
+  },
+  {
     category: "Juego · Series de Fourier",
     title: "Desafío de Fourier",
     description:
