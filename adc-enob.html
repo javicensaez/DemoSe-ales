@@ -51,13 +51,6 @@
               <label for="adc-bits">Resolución nominal N (bits)
                 <input id="adc-bits" type="number" min="1" max="32" step="1" value="12" aria-describedby="adc-error" />
               </label>
-              <div class="adc-presets" role="group" aria-label="Resoluciones habituales">
-                <button type="button" data-bits="8" aria-pressed="false">8 bits</button>
-                <button type="button" data-bits="10" aria-pressed="false">10 bits</button>
-                <button type="button" data-bits="12" aria-pressed="true">12 bits</button>
-                <button type="button" data-bits="16" aria-pressed="false">16 bits</button>
-                <button type="button" data-bits="24" aria-pressed="false">24 bits</button>
-              </div>
               <div class="adc-reference">
                 <label for="adc-vref">Tensión de referencia Vref
                   <input id="adc-vref" type="number" min="0.000001" max="1000" step="any" value="10" aria-describedby="adc-error adc-range-help" />
@@ -74,6 +67,13 @@
                 <input id="adc-sinad" type="number" min="-20" max="200" step="any" value="50" aria-describedby="adc-error adc-sinad-help" disabled />
                 <small id="adc-sinad-help">Medido con una senoide a escala completa, a una frecuencia y tasa de muestreo concretas.</small>
               </label>
+              <div class="adc-presets" role="group" aria-label="Resoluciones habituales">
+                <button type="button" data-bits="8" aria-pressed="false">8 bits</button>
+                <button type="button" data-bits="10" aria-pressed="false">10 bits</button>
+                <button type="button" data-bits="12" aria-pressed="true">12 bits</button>
+                <button type="button" data-bits="16" aria-pressed="false">16 bits</button>
+                <button type="button" data-bits="24" aria-pressed="false">24 bits</button>
+              </div>
             </div>
             <p id="adc-error" role="status"></p>
           </form>
