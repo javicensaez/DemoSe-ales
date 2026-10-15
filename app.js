@@ -88,6 +88,13 @@ const demos = [
     topics: ["sistemas", "laplace"],
   },
   {
+    category: "Demo · Sistemas",
+    title: "Simplificación de diagramas de bloques",
+    description: "Elige entre cinco ejemplos y simplifica sus diagramas con reglas, comparaciones visuales y álgebra paso a paso.",
+    href: "diagrama-bloques.html",
+    topics: ["sistemas", "laplace"],
+  },
+  {
     category: "Demo · Transformada de Laplace",
     title: "Laplace y región de convergencia",
     description: "Selecciona señales causales, anticausales y bilaterales y relaciona su expresión de Laplace con los polos y la ROC.",

@@ -47,6 +47,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **Laplace y región de convergencia** (`laplace.html`): 26 señales comunes, fórmulas bilaterales, ROC y polos; incluye señales sin ROC y singularidades removibles.
 
+- **Simplificación de diagramas de bloques** (`diagrama-bloques.html`): cinco ejemplos guiados con realimentaciones, ramas de avance y bypass, reglas, compensación de sumadores y tomas, separación inicial de sumadores de tres entradas, comparación visual, comprobación algebraica final y las 13 reglas ilustradas de la tabla del alumnado y la realimentación positiva como regla complementaria.
+
 ## Estructura
 
 - Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.

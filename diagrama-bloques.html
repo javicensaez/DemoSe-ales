@@ -1,0 +1,33 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Simplifica paso a paso un diagrama de bloques con realimentaciones y una rama de avance."/><title>Simplificación de diagramas de bloques — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="diagrama-bloques.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page blocks-page">    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+<main class="demo-main rc-main"><a class="back-link" href="index.html#demos">← Volver a las demos</a>
+<section class="demo-intro"><p class="eyebrow">Demo · Álgebra de diagramas de bloques</p><h1>Simplifica un diagrama <span>paso a paso</span></h1><p>Elige un ejemplo y reduce el diagrama hasta obtener su función de transferencia entre la entrada y la salida. Avanza una transformación cada vez y observa qué bloques, sumadores o ramas cambian y qué regla conserva las señales.</p><p id="blocks-example-description">En el original, R(s) llega por dos caminos: al primer sumador y al bloque 5. Y(s) vuelve con signo negativo a los dos sumadores: directamente al primero y a través de s + 1 al segundo. Mantener esos signos y puntos de toma es esencial.</p></section>
+<section class="plot-card"><label class="blocks-example-label" for="blocks-example">Seleccionar ejemplo<select id="blocks-example"><option value="0">1 · Dos realimentaciones negativas</option><option value="1">2 · Bloques G₁–G₆ y realimentación positiva</option><option value="2">3 · Dos caminos de salida y retorno intermedio</option><option value="3">4 · Rama de avance y bypass</option><option value="4">5 · Tres realimentaciones con H₁–H₆</option></select></label><div class="blocks-navigation"><button id="blocks-prev" class="game-button secondary-game-button" type="button">← Paso anterior</button><label for="blocks-step">Paso<select id="blocks-step"></select></label><button id="blocks-next" class="game-button primary-game-button" type="button">Siguiente paso →</button></div><p id="blocks-progress" role="status"></p><label class="blocks-compare-label" for="blocks-compare"><input id="blocks-compare" type="checkbox" />Comparar con el diagrama del paso anterior</label></section>
+<section class="plot-card"><p class="eyebrow" id="blocks-rule-name"></p><h2 id="blocks-title"></h2><p id="blocks-explanation"></p><p id="blocks-rule-reference" class="discrete-plot-note"></p><div class="blocks-diagrams-row-scroll" role="region" aria-label="Comparación: paso anterior a la izquierda y paso actual a la derecha" tabindex="0"><div id="blocks-diagrams-row" class="blocks-diagrams-row"><article id="blocks-previous-card" hidden><h3>Antes de este paso</h3><div class="blocks-diagram-scroll"><svg id="blocks-previous" viewBox="0 0 1100 540" role="img" aria-label="Diagrama anterior para comparar"></svg></div></article><article><h3>Paso actual</h3><div class="blocks-diagram-scroll" role="region" aria-label="Diagrama del paso actual; permite desplazamiento horizontal" tabindex="0"><svg id="blocks-diagram" viewBox="0 0 1100 540" role="img" aria-label="Diagrama de bloques del paso actual"></svg></div></article></div></div><p class="discrete-plot-note">Los elementos destacados con trazo discontinuo corresponden a la transformación actual. Las flechas indican el sentido de cada señal; + y − son los signos en los sumadores.</p></section>
+
+<section class="plot-card"><h2>Regla y desarrollo algebraico</h2><div id="blocks-math" class="rc-formulas"></div><p id="blocks-caution"></p></section>
+<section class="plot-card" id="blocks-result" hidden><h2>Función de transferencia equivalente</h2><div id="blocks-result-math" class="rc-formulas"></div><p>La reducción conserva la relación entrada-salida con condiciones iniciales nulas. La comprobación anterior utiliza las señales y los signos del diagrama original.</p></section>
+<section class="plot-card" aria-labelledby="blocks-rules-title"><h2 id="blocks-rules-title">Documentación: las 13 reglas de la tabla del alumnado</h2><p>Se conserva la numeración de la hoja del alumnado. Compara cada diagrama original con su equivalente. La regla 2 separa tres entradas en dos sumadores en cascada y se aplica al inicio de los ejemplos que la necesitan. Más adelante se pueden asociar sumas de nuevo si facilita una reducción, siempre conservando los signos.</p><p>Las letras A, B y C de esta tabla son señales; G, H, G₁ y G₂ son funciones de transferencia escalares. Una toma marcada con un punto conecta las ramas. Un cruce sin punto o con puente no las conecta.</p><div id="blocks-rules-reference" class="blocks-rules-scroll" role="region" aria-label="Tabla de reglas con diagramas originales y equivalentes" tabindex="0"></div><h3>Regla complementaria: realimentación positiva</h3><p>Esta regla se presenta aparte de las 13 de la hoja y permite resolver el lazo positivo del ejemplo 2.</p><div id="blocks-complement-reference" class="blocks-rules-scroll" role="region" aria-label="Regla complementaria de realimentación positiva" tabindex="0"></div><p class="discrete-plot-note">Las reglas conservan todas las señales utilizadas por otras ramas, no solo la salida final. No se deben atravesar tomas o bloques intermedios sin compensarlos. Las divisiones por un bloque suponen una inversa algebraica definida; las expresiones se simplifican como funciones racionales, con condiciones iniciales nulas.</p></section>
+</main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+</body></html>

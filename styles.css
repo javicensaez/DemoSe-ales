@@ -3605,3 +3605,43 @@ h2 {
 #lp-expressions h3 { margin: 1rem 0 .4rem; font-size: 1rem; }
 .laplace-page #lp-error { color: #b42318; }
 @media (max-width: 850px) { .laplace-workspace { grid-template-columns: minmax(0, 1fr); } }
+
+/* Simplificación guiada de un diagrama de bloques. */
+.blocks-page main > .plot-card { margin-block: 1rem; }
+.blocks-navigation { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.blocks-navigation label { display: flex; flex: 1; align-items: center; flex-wrap: wrap; gap: .6rem; min-width: 0; }
+.blocks-navigation select { max-width: 100%; min-width: 0; padding: .65rem; background: var(--surface); color: var(--foreground); border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.blocks-compare-label { display: flex; align-items: center; gap: .6rem; }
+.blocks-diagram-scroll { overflow-x: auto; margin-block: 1rem; }
+.blocks-diagram-scroll svg { display: block; width: 100%; min-width: 800px; height: auto; }
+.blocks-wire { fill: none; stroke: var(--foreground); stroke-width: 2.5; stroke-linejoin: round; }
+.blocks-take { fill: var(--foreground); }
+.blocks-box, .blocks-sum { fill: var(--surface); stroke: var(--foreground); stroke-width: 2.5; }
+.blocks-label { fill: var(--foreground); font-family: var(--font-mono); font-size: 24px; }
+.blocks-signal-label { fill: var(--muted); font-size: 19px; }
+.blocks-fraction { stroke: var(--foreground); stroke-width: 1.5; }
+.blocks-changed { stroke: #d97706; stroke-width: 3; stroke-dasharray: 8 5; }
+.blocks-changed-wire { stroke: #d97706; stroke-dasharray: 8 5; }
+.blocks-page #blocks-previous-card[hidden], .blocks-page #blocks-result[hidden] { display: none; }
+#blocks-caution { padding: .8rem 1rem; border-left: 3px solid #d97706; background: var(--background); }
+
+.blocks-diagrams-row-scroll { overflow-x: auto; }
+.blocks-diagrams-row > article { min-width: 0; }
+.blocks-diagrams-row.is-comparing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; min-width: 1000px; }
+.blocks-diagrams-row.is-comparing > article + article { border-left: 1px solid var(--line); padding-left: 1rem; }
+.blocks-diagrams-row.is-comparing .blocks-diagram-scroll svg { min-width: 0; }
+.blocks-diagrams-row h3 { margin: 1rem 0 0; font-size: 1rem; }
+
+.blocks-example-label { display: grid; gap: .5rem; margin-bottom: 1.25rem; max-width: 650px; }
+.blocks-example-label select { width: 100%; min-width: 0; padding: .65rem; background: var(--surface); color: var(--foreground); border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+
+.blocks-rules-scroll { overflow-x: auto; margin-top: 1rem; border: 1px solid var(--line); border-radius: 10px; }
+.blocks-rules-table { width: 100%; min-width: 1100px; border-collapse: collapse; table-layout: fixed; }
+.blocks-rules-table caption { text-align: left; padding: 1rem; font-weight: 700; }
+.blocks-rules-table th, .blocks-rules-table td { border: 1px solid var(--line); padding: .8rem; vertical-align: top; text-align: left; }
+.blocks-rules-table th:first-child { width: 22%; }
+.blocks-rules-table thead { background: var(--background); }
+.blocks-rules-table th p { font-size: .9rem; font-weight: 400; line-height: 1.5; }
+.blocks-rule-diagram { width: 100%; height: auto; display: block; }
+.blocks-rule-diagram .blocks-label { font-size: 20px; }
+.blocks-rules-table td > p { overflow-x: auto; margin: .5rem 0; font-size: .9rem; }
