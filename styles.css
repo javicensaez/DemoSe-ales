@@ -3415,7 +3415,7 @@ h2 {
 }
 
 .adc-modes, .adc-presets { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-.adc-page .power-workspace { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.adc-page .power-workspace { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
 .adc-page .power-workspace > * { min-width: 0; }
 .adc-fields { display: grid; gap: 18px; }
 .adc-fields label { display: grid; gap: 8px; font-weight: 600; }

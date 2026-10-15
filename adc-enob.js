@@ -109,7 +109,6 @@ function renderAdc() {
   adc('#adc-result-title').textContent = measured ? 'Resultados a partir del SINAD' : 'Resultados ideales';
   if (errors.length) {
     adc('#adc-results').textContent = 'Corrige los parámetros para calcular los resultados.';
-    adc('#adc-interpretation').textContent = '';
     adc('#adc-spectrum-plot').replaceChildren();
     adc('#adc-spectrum-note').textContent = 'Corrige los parámetros para mostrar el espectro.';
     return;
@@ -146,11 +145,6 @@ function renderAdc() {
     card.append(name, result); fragment.append(card);
   }
   adc('#adc-results').replaceChildren(fragment);
-  let explanation = measured ? `Un ADC nominal de ${bits} bits ofrece ${adcNumber(r.enob)} bits efectivos con este SINAD.` : `El rango de ${adcVoltage(span)} se divide en ${adcNumber(r.levels, 0)} niveles. Añadir un bit reduce el LSB a la mitad y mejora el SNR ideal aproximadamente 6,02 dB.`;
-  if (measured && r.enob > bits) explanation += ' El ENOB supera la resolución nominal: los bits perdidos son negativos. Revisa la banda de medida, el sobremuestreo y las condiciones de la prueba; el cálculo se muestra sin limitarlo a N.';
-  if (measured && r.enob < 0) explanation += ' El ENOB es negativo porque SINAD < 1,76 dB: indica un rendimiento inferior al equivalente de un bit; no es un número de bits físicos.';
-  explanation += ` El SNR final estimado es ${adcNumber(finalSnr)} dB, sumando las potencias de ruido independientes. Se tiene en cuenta la atenuación de ${adcNumber(spectrum.backoff)} dB aplicada en la gráfica para evitar saturación. Es una estimación con ruido de cuantificación uniforme; la FFT de una realización concreta puede diferir.`;
-  adc('#adc-interpretation').textContent = explanation;
 }
 adc('#adc-form').addEventListener('submit', event => event.preventDefault());
 adc('#adc-form').addEventListener('input', renderAdc);
