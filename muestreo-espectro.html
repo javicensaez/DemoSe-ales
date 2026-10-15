@@ -1,0 +1,46 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora el aliasing de un espectro triangular al variar la frecuencia de muestreo."/><title>Muestreo en frecuencia — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="muestreo-espectro.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page sampling-spectrum-page">    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+
+<main class="demo-main rc-main">
+<a class="back-link" href="index.html#demos">← Volver a las demos</a>
+<section class="demo-intro"><p class="eyebrow">Demo · Muestreo en frecuencia</p><h1>Muestreo y aliasing <span>en el espectro</span></h1><p>La señal de entrada tiene un espectro triangular centrado en 0 y limitado a ±B Hz. Al muestrearla aparecen copias separadas por fₛ. Mueve la frecuencia de muestreo y observa cuándo empiezan a solaparse: ese solapamiento es el aliasing.</p><p>La primera gráfica muestra el espectro original y la segunda las réplicas y su suma. Ambas usan el mismo eje de frecuencia fijo, de −20 a 20 Hz.</p></section>
+<div class="sampling-spectrum-workspace">
+<section class="plot-card" aria-labelledby="ss-controls-title"><h2 id="ss-controls-title">Controles del muestreo</h2><div class="ss-controls">
+<label for="ss-bandwidth"><span>Ancho de banda B</span><output id="ss-bandwidth-value" for="ss-bandwidth"></output><input id="ss-bandwidth" type="range" min="0.5" max="5" step="0.1" value="2" /></label>
+<label for="ss-rate"><span>Frecuencia de muestreo fₛ</span><output id="ss-rate-value" for="ss-rate"></output><input id="ss-rate" type="range" min="0.5" max="20" step="0.01" value="6" /></label>
+<label for="ss-antialias"><input id="ss-antialias" type="checkbox" />Activar filtro antialiasing ideal (corte fₛ/2)</label>
+<label for="ss-normalize"><input id="ss-normalize" type="checkbox" checked />Normalizar el espectro muestreado por Tₛ</label>
+<button id="ss-separated" class="game-button secondary-game-button" type="button">Sin aliasing: fₛ = 3B</button><button id="ss-limit" class="game-button secondary-game-button" type="button">Límite: fₛ = 2B</button><button id="ss-overlap" class="game-button secondary-game-button" type="button">Con aliasing: fₛ = 1,5B</button>
+</div><p id="ss-state" role="status"></p><p id="ss-error" role="alert" hidden></p><dl class="rc-readouts" id="ss-readouts"></dl></section>
+<section class="ss-plots" aria-label="Espectros antes y después del muestreo">
+<article class="plot-card"><h2>Espectro de entrada X(f)</h2><p class="discrete-plot-note">Original: azul continuo · Con el filtro activo, espectro que llega al muestreador: verde discontinuo.</p><svg id="ss-original" viewBox="0 0 800 330" role="img" aria-label="Espectro triangular original limitado a menos B y B hercios"></svg></article>
+<article class="plot-card"><h2>Espectro de la señal muestreada</h2><p class="discrete-plot-note">Copia central: azul continuo · Otras copias: naranja discontinuo · Suma: violeta grueso · Límites ±fₛ/2: verde discontinuo. El sombreado rosado señala zonas donde se superponen dos o más copias.</p><svg id="ss-sampled" viewBox="0 0 800 330" role="img" aria-label="Réplicas del espectro separadas por la frecuencia de muestreo y su suma"></svg><p id="ss-scale-note" class="discrete-plot-note"></p></article>
+</section></div>
+<section class="plot-card"><h2>Qué ocurre al muestrear</h2><div class="rc-formulas">
+<p>\[X(f)=\operatorname{tri}\left(\frac{f}{B}\right)=\max\left(1-\frac{|f|}{B},0\right),\qquad x(t)=B\operatorname{sinc}^2(Bt)\]</p>
+<p>\[x_s(t)=\sum_{n=-\infty}^{\infty}x(nT_s)\delta(t-nT_s),\qquad T_s=\frac{1}{f_s}\]</p>
+<p>\[X_s(f)=f_s\sum_{k=-\infty}^{\infty}X(f-kf_s),\qquad T_sX_s(f)=\sum_{k=-\infty}^{\infty}X(f-kf_s)\]</p>
+<p>\[f_s&gt;2B\;\Rightarrow\;\text{réplicas separadas},\qquad f_s&lt;2B\;\Rightarrow\;\text{aliasing}\]</p></div>
+<p>El filtro antialiasing se aplica antes del muestreo: \(H_{AA}(f)=\operatorname{rect}(f/f_s)\), \(X_{AA}(f)=X(f)H_{AA}(f)\). Con el filtro activo, las réplicas se calculan a partir de \(X_{AA}\). Si fₛ &lt; 2B evita el aliasing recortando parte del espectro original; no recupera la información eliminada. Es un filtro ideal de corte abrupto; un filtro real necesita una banda de transición y margen adicional.</p><p>Con la normalización activada, cada copia conserva la altura del triángulo original y se ve mejor el efecto del solapamiento. Al desactivarla se muestra el espectro del tren de impulsos ideal, incluyendo el factor fₛ. La escala vertical se indica en cada gráfica.</p><p>En fₛ = 2B las réplicas se tocan en sus extremos, donde este espectro triangular vale cero. En la práctica se reserva margen y se utiliza un filtro antialias antes del muestreo. Las líneas ±fₛ/2 delimitan una banda de Nyquist; los componentes que se solapan ya no se pueden separar con un filtro de reconstrucción.</p><p class="discrete-plot-note">Se representa muestreo ideal mediante impulsos, sin retención de orden cero. Se suman todas las réplicas que contribuyen dentro del intervalo visible. La sinc está normalizada como sin(πv)/(πv).</p></section>
+</main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+</body></html>

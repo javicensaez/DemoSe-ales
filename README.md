@@ -39,6 +39,10 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **Diagrama de Bode** (`bode.html`): nueve sistemas con magnitud y fase exactas, parámetros configurables y medidas en un cursor de frecuencia logarítmico.
 
+- **Muestreo y aliasing en frecuencia** (`muestreo-espectro.html`): espectro triangular y réplicas, frecuencia de muestreo y ancho de banda variables, zonas de solapamiento y normalización opcional.
+
+- **FFT de dos sinusoides** (`fft.html`): dos tonos con frecuencias y amplitudes variables, registros de 64 a 4096 muestras y ventanas rectangular, Hann, Hamming, Blackman y flat top.
+
 ## Estructura
 
 - Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.

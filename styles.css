@@ -3535,3 +3535,35 @@ h2 {
 .bode-expression-card { min-width: 0; }
 .bode-expression-card h3 { font-size: 1rem; margin: 1rem 0 .4rem; }
 #bode-expressions > div, #bode-expression-variable { overflow-x: auto; font-size: .9rem; }
+
+/* Réplicas espectrales y aliasing. */
+.sampling-spectrum-workspace { display: grid; grid-template-columns: minmax(260px, 310px) minmax(0, 1fr); gap: 1rem; align-items: start; margin-block: 1rem; }
+.ss-controls { display: grid; gap: 1rem; }
+.ss-controls label { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.ss-controls input[type="range"] { width: 100%; }
+.ss-controls output { margin-left: auto; font-family: var(--font-mono); }
+.ss-plots { display: grid; gap: 1rem; min-width: 0; }
+.ss-plots svg { display: block; width: 100%; height: auto; }
+.sampling-spectrum-page #ss-state { font-weight: 700; }
+.sampling-spectrum-page #ss-error { color: #b42318; }
+@media (max-width: 850px) { .sampling-spectrum-workspace { grid-template-columns: minmax(0, 1fr); } }
+
+.ss-controls label:has(input[type="range"]) { display: grid; grid-template-columns: minmax(0, 1fr) 8ch; grid-template-areas: "label label" "slider value"; }
+.ss-controls label:has(input[type="range"]) > span { grid-area: label; }
+.ss-controls label:has(input[type="range"]) input { grid-area: slider; min-width: 0; margin-inline: 0; }
+.ss-controls label:has(input[type="range"]) output { grid-area: value; width: 8ch; margin: 0; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* FFT de dos tonos. */
+.fft-workspace { display: grid; grid-template-columns: minmax(260px, 310px) minmax(0, 1fr); gap: 1rem; align-items: start; margin-block: 1rem; }
+.fft-controls { display: grid; gap: 1rem; }
+.fft-controls label { display: grid; gap: .5rem; min-width: 0; }
+.fft-controls label:has(input[type="range"]) { grid-template-columns: minmax(0, 1fr) 10ch; grid-template-areas: "label label" "slider value"; align-items: center; }
+.fft-controls label > span { grid-area: label; }
+.fft-controls input[type="range"] { grid-area: slider; width: 100%; min-width: 0; margin-inline: 0; }
+.fft-controls output { grid-area: value; width: 10ch; text-align: right; white-space: nowrap; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.fft-controls select { max-width: 100%; padding: .6rem; font: inherit; background: var(--surface); color: var(--foreground); border: 1px solid var(--line); border-radius: 8px; }
+.fft-plots { display: grid; gap: 1rem; min-width: 0; }
+.fft-plots svg { display: block; width: 100%; height: auto; }
+.fft-page #fft-error { color: #b42318; }
+.fft-page main > .plot-card { margin-block: 1rem; }
+@media (max-width: 850px) { .fft-workspace { grid-template-columns: minmax(0, 1fr); } }

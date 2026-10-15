@@ -119,6 +119,13 @@ const demos = [
     topics: ["senales", "fourier"],
   },
   {
+    category: "Demo · Muestreo",
+    title: "Muestreo y aliasing en frecuencia",
+    description: "Varía la frecuencia de muestreo y observa las réplicas de un espectro triangular y su solapamiento.",
+    href: "muestreo-espectro.html",
+    topics: ["senales", "fourier"],
+  },
+  {
     category: "Demo · Conversión analógica-digital",
     title: "Resolución ADC y ENOB",
     description:
@@ -141,6 +148,13 @@ const demos = [
       "Emite un chirp, ajusta la posición y tamaño de una persona y estima su distancia mediante la correlación del eco con ruido.",
     href: "sonar.html",
     topics: ["senales", "sistemas"],
+  },
+  {
+    category: "Demo · Análisis espectral",
+    title: "FFT de dos sinusoides",
+    description: "Ajusta dos frecuencias y amplitudes, el número de muestras y la ventana para explorar resolución y fuga espectral.",
+    href: "fft.html",
+    topics: ["senales", "fourier"],
   },
   {
     category: "Demo · Análisis de señales",
