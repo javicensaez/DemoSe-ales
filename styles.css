@@ -3567,3 +3567,24 @@ h2 {
 .fft-page #fft-error { color: #b42318; }
 .fft-page main > .plot-card { margin-block: 1rem; }
 @media (max-width: 850px) { .fft-workspace { grid-template-columns: minmax(0, 1fr); } }
+
+/* Espectrograma y reproducción del registro analizado. */
+.spectrogram-workspace { display: grid; grid-template-columns: minmax(260px, 310px) minmax(0, 1fr); align-items: start; gap: 1rem; margin-block: 1rem; }
+.sp-controls { display: grid; gap: 1rem; }
+.sp-controls label { display: grid; min-width: 0; gap: .5rem; }
+.sp-controls label[hidden], .sp-controls p[hidden] { display: none; }
+.sp-controls input[type="text"], .sp-controls select { width: 100%; box-sizing: border-box; min-width: 0; padding: .6rem; font: inherit; background: var(--surface); color: var(--foreground); border: 1px solid var(--line); border-radius: 8px; }
+.sp-controls label.sp-range { grid-template-columns: minmax(0, 1fr) 7ch; grid-template-areas: "label label" "slider value"; align-items: center; }
+.sp-range > span { grid-area: label; }
+.sp-range input { grid-area: slider; width: 100%; min-width: 0; margin: 0; }
+.sp-range output { grid-area: value; width: 7ch; text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+.sp-plots { display: grid; gap: 1rem; min-width: 0; }
+.sp-plots svg { display: block; width: 100%; height: auto; }
+.spectrogram-page main > .plot-card { margin-block: 1rem; }
+.spectrogram-page #sp-error { color: #b42318; }
+@media (max-width: 850px) { .spectrogram-workspace { grid-template-columns: minmax(0, 1fr); } }
+
+.spectrogram-page #sp-slice-card[hidden] { display: none; }
+.sp-slice-control { display: grid; gap: .5rem; }
+.sp-slice-control input { width: 100%; }
+#sp-plot { cursor: crosshair; }

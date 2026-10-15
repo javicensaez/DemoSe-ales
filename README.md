@@ -43,6 +43,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **FFT de dos sinusoides** (`fft.html`): dos tonos con frecuencias y amplitudes variables, registros de 64 a 4096 muestras y ventanas rectangular, Hann, Hamming, Blackman y flat top.
 
+- **Laboratorio de espectrogramas** (`espectrograma.html`): siete señales, teléfono DTMF configurable y audio Play/Pausa; ventanas de 128 a 4096 muestras, cinco tipos y solapamiento entre 0 y 95 %.
+
 ## Estructura
 
 - Cada demo tiene una página HTML propia y puede tener un archivo JavaScript dedicado.

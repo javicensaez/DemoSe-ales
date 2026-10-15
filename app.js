@@ -157,6 +157,13 @@ const demos = [
     topics: ["senales", "fourier"],
   },
   {
+    category: "Demo · Análisis tiempo-frecuencia",
+    title: "Laboratorio de espectrogramas",
+    description: "Explora siete señales con audio, incluido DTMF, y cambia ventana, tamaño y solapamiento para comparar resolución temporal y frecuencial.",
+    href: "espectrograma.html",
+    topics: ["senales", "fourier"],
+  },
+  {
     category: "Demo · Análisis de señales",
     title: "Rueda desequilibrada y FFT",
     description:
