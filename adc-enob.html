@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora la resolución de un ADC, su ruido de cuantificación y los bits efectivos a partir del SINAD."
+    />
+    <title>Resolución ADC y ENOB — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="adc-enob.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page adc-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main power-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Conversión analógica-digital</p>
+        <h1>Resolución ADC <span>y bits efectivos (ENOB)</span></h1>
+        <p>Descubre cómo los bits y el rango de entrada determinan el paso mínimo de un convertidor analógico-digital (ADC). Compara su límite ideal con los bits efectivos obtenidos de una medida de SINAD: relación señal a ruido y distorsión.</p>
+        <p>Elige un modo, ajusta la resolución y la referencia y observa los resultados. En el modo medido, introduce el SINAD de una prueba con una señal senoidal a escala completa.</p>
+      </section>
+      <div class="adc-modes" role="group" aria-label="Modo de cálculo">
+        <button class="game-button secondary-game-button" type="button" data-mode="ideal" aria-pressed="true">Ideal (teórico)</button>
+        <button class="game-button secondary-game-button" type="button" data-mode="measured" aria-pressed="false">Medido (SINAD → ENOB)</button>
+      </div>
+      <section class="power-workspace" aria-label="Calculadora de resolución ADC">
+        <article class="plot-card">
+          <h2>Parámetros</h2>
+          <form id="adc-form" novalidate>
+            <div class="adc-fields">
+              <label for="adc-bits">Resolución nominal N (bits)
+                <input id="adc-bits" type="number" min="1" max="32" step="1" value="12" aria-describedby="adc-error" />
+              </label>
+              <div class="adc-presets" role="group" aria-label="Resoluciones habituales">
+                <button type="button" data-bits="8" aria-pressed="false">8 bits</button>
+                <button type="button" data-bits="10" aria-pressed="false">10 bits</button>
+                <button type="button" data-bits="12" aria-pressed="true">12 bits</button>
+                <button type="button" data-bits="16" aria-pressed="false">16 bits</button>
+                <button type="button" data-bits="24" aria-pressed="false">24 bits</button>
+              </div>
+              <div class="adc-reference">
+                <label for="adc-vref">Tensión de referencia Vref
+                  <input id="adc-vref" type="number" min="0.000001" max="1000" step="any" value="10" aria-describedby="adc-error adc-range-help" />
+                </label>
+                <label for="adc-unit">Unidad
+                  <select id="adc-unit"><option value="1">V</option><option value="0.001">mV</option></select>
+                </label>
+              </div>
+              <label for="adc-range">Rango de entrada ideal
+                <select id="adc-range"><option value="1">Unipolar: de 0 a Vref</option><option value="2">Bipolar: de −Vref a +Vref</option></select>
+              </label>
+              <p id="adc-range-help">Se usa la anchura total del rango (FSR): Vref en unipolar y 2·Vref en bipolar. En un ADC real, consulta el rango especificado en su ficha técnica.</p>
+              <label for="adc-sinad" id="adc-sinad-field" hidden>SINAD medido (dB)
+                <input id="adc-sinad" type="number" min="-20" max="200" step="any" value="50" aria-describedby="adc-error adc-sinad-help" disabled />
+                <small id="adc-sinad-help">Medido con una senoide a escala completa, a una frecuencia y tasa de muestreo concretas.</small>
+              </label>
+            </div>
+            <p id="adc-error" role="status"></p>
+          </form>
+
+        </article>
+        <article class="plot-card" aria-label="Resultados">
+          <div class="plot-heading"><h2 id="adc-result-title">Resultados ideales</h2></div>
+          <div class="power-metrics" id="adc-results" aria-live="polite"></div>
+          <p id="adc-interpretation"></p>
+        </article>
+      </section>
+      <section class="plot-card adc-spectrum" aria-labelledby="adc-spectrum-title">
+        <h3 id="adc-spectrum-title">Espectro de potencia</h3>
+        <p>Compara una senoide analógica con su versión cuantificada. En el modo medido, la entrada analógica incorpora ruido ajustado al SINAD indicado. Cambia los bits para observar los componentes introducidos por la cuantificación.</p>
+        <div class="plot-legend" aria-label="Leyenda del espectro">
+          <span class="legend-item"><span class="legend-swatch adc-analog-swatch"></span>Analógica (trazo discontinuo)</span>
+          <span class="legend-item"><span class="legend-swatch adc-digital-swatch"></span>Cuantificada (trazo continuo)</span>
+        </div>
+        <svg id="adc-spectrum-plot" class="time-plot" viewBox="0 0 800 380" role="img" aria-label="Espectros de potencia de la señal analógica y cuantificada" aria-describedby="adc-spectrum-note"></svg>
+        <p id="adc-spectrum-note" role="status"></p>
+        <p>Simulación: senoide de 148 Hz (a escala completa en modo ideal), muestreo a 8192 muestras/s, 2048 muestras y FFT unilateral sin ventana (37 periodos completos). Se elimina la continua. 0 dBFS corresponde a la potencia de una senoide a escala completa; se representa la potencia por bin de 4 Hz, con un suelo visual de −240 dBFS. No se supone una carga resistiva.</p>
+      </section>
+      <aside class="power-note">
+        <strong>Cómo se calcula</strong>
+        <span>\(L=2^N,\qquad \Delta=\mathrm{LSB}=\frac{\mathrm{FSR}}{2^N}\)</span>
+        <span>\(v_{n,\mathrm{RMS}}=\frac{\Delta}{\sqrt{12}},\qquad \mathrm{SNR}_{\mathrm{ideal}}\approx6{,}02N+1{,}76\;\mathrm{dB}\)</span>
+        <span>\(\mathrm{ENOB}=\frac{\mathrm{SINAD}-1{,}76}{6{,}02},\qquad \text{bits perdidos}=N-\mathrm{ENOB}\)</span>
+        <span>\(\Delta_{\mathrm{equiv}}=\frac{\mathrm{FSR}}{2^{\mathrm{ENOB}}}\)</span>
+        <span>\(\mathrm{SNR}_{q}=\mathrm{SNR}_{\mathrm{ideal}}-B,\quad B=\text{atenuación del tono en dB}\)</span>
+        <span>\(\mathrm{SNR}_{\mathrm{final}}=-10\log_{10}\!\left(10^{-\mathrm{SNR}_{\mathrm{original}}/10}+10^{-\mathrm{SNR}_{q}/10}\right)\)</span>
+        <p>El SNR final suma las potencias del ruido original y del ruido de cuantificación, suponiéndolos independientes y en la misma banda. En el modelo medido se interpreta el SINAD introducido como SNR original, al representar toda la degradación como ruido sin distorsión. El SNR de cuantificación se ajusta al nivel del tono usado en la gráfica.</p>
+        <p>El modelo ideal supone cuantificación uniforme, sin saturación y error uniforme entre −½ LSB y +½ LSB. La expresión del SNR corresponde a una senoide a escala completa y ruido integrado en toda la banda de Nyquist.</p>
+        <p>El SINAD incluye ruido y distorsión; no equivale al SNR de una medida que excluye armónicos. El LSB equivalente a partir de ENOB es una comparación de prestaciones: el paso físico del ADC sigue siendo FSR/2ᴺ. ENOB tampoco describe por sí solo la precisión en continua.</p>
+        <p>Referencia: <a href="https://www.analog.com/en/resources/technical-articles/defining-and-testing-dynamic-parameters-in-highspeed-adcs-part-1.html">Analog Devices: parámetros dinámicos de los ADC</a>.</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

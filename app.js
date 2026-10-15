@@ -112,6 +112,14 @@ const demos = [
     topics: ["senales", "fourier"],
   },
   {
+    category: "Demo · Conversión analógica-digital",
+    title: "Resolución ADC y ENOB",
+    description:
+      "Calcula el LSB, el ruido de cuantificación y el SNR ideal, o estima los bits efectivos a partir del SINAD medido.",
+    href: "adc-enob.html",
+    topics: ["senales", "sistemas", "fourier"],
+  },
+  {
     category: "Demo · Detección de señales",
     title: "Detección de señales con ruido",
     description:
