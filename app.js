@@ -8,6 +8,20 @@ const demos = [
     topics: ["senales"],
   },
   {
+    category: "Demo · Operaciones con señales",
+    title: "Suma, resta y producto de señales",
+    description: "Elige dos señales y compara su suma, diferencia o producto punto a punto.",
+    href: "operaciones-senales.html",
+    topics: ["senales"],
+  },
+  {
+    category: "Demo · Cálculo de señales",
+    title: "Derivada e integral de señales",
+    description: "Deriva una señal o integra desde −∞ hasta t y explora el área acumulada con un deslizador de tiempo.",
+    href: "derivada-integral.html",
+    topics: ["senales"],
+  },
+  {
     category: "Juego · Exprésalo",
     title: "Adivina la expresión",
     description:

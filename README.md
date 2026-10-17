@@ -13,6 +13,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 ## Demos
 
 - **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, la sinc, ondas periódicas y la exponencial compleja.
+- **Suma, resta y producto de señales** (`operaciones-senales.html`): elige dos señales en desplegables y compara sus gráficas con la suma, diferencia o producto punto a punto, con escalas comunes.
+- **Derivada e integral de señales** (`derivada-integral.html`): selecciona una señal y su derivada o integral desde −∞ hasta t; un deslizador de tiempo muestra el área con signo acumulada y su valor, con impulsos de Dirac en las derivadas de señales con saltos.
 - **Adivina la expresión** (`juego-expresiones.html`): empieza con un modo de dibujo libre sin referencia; después interpreta una gráfica y escribe la expresión de la señal en una casilla o como suma de varias casillas y comprueba la respuesta.
 - **Transforma la señal** (`juego-transformaciones.html`): practica desplazamientos, inversión temporal y escalado de señales.
 - **Señales pares e impares** (`juego-simetria.html`): predice las componentes par e impar y comprueba la solución.

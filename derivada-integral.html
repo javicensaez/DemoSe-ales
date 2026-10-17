@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explora la derivada y la integral acumulada de una señal y observa el área de integración hasta el instante elegido." />
+  <title>Derivada e integral de señales — Sistemas y señales</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="derivada-integral.js" defer></script>
+  <script src="projector-mode.js" defer></script>
+</head>
+<body class="demo-page calculus-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Demo · Operaciones con señales</p>
+        <h1>Derivada e <span>integral</span></h1>
+        <p>Elige una señal y calcula su derivada o su integral desde −∞ hasta t. Mueve el deslizador de tiempo para explorar el resultado: al integrar, el sombreado de la señal original muestra el área acumulada hasta ese instante. Las áreas bajo el eje se restan.</p>
+        <p>Todas las señales del selector valen cero antes de su inicio, por lo que la integral desde −∞ está bien definida. El tiempo está en segundos; cada gráfica ajusta su escala vertical a las unidades de la operación.</p>
+      </section>
+      <section class="calculus-workspace" aria-label="Derivada e integral de una señal">
+        <section class="calculus-row" aria-label="Señal de origen">
+          <div class="plot-card calculus-controls">
+            <h2>Señal de origen</h2>
+            <label for="calculus-signal">Elige x(t)<select id="calculus-signal"></select></label>
+            <div id="calculus-source-equation" class="rc-formulas"></div>
+            <p id="calculus-signal-note"></p>
+          </div>
+          <article class="plot-card calculus-chart">
+            <h2>Señal original</h2>
+            <div class="plot-legend" id="calculus-area-legend">
+              <span class="legend-item"><span class="calculus-area-key positive" aria-hidden="true"></span>Área positiva (+)</span>
+              <span class="legend-item"><span class="calculus-area-key negative" aria-hidden="true"></span>Área negativa (−)</span>
+            </div>
+            <svg class="time-plot" id="calculus-source-plot" viewBox="0 0 800 260" role="img" aria-label="Señal original y área de integración"></svg>
+          </article>
+        </section>
+        <section class="calculus-row" aria-label="Operación y resultado">
+          <div class="plot-card calculus-controls">
+            <h2>Operación</h2>
+            <div class="calculus-operation-buttons" role="group" aria-label="Operación">
+              <button class="game-button" type="button" data-calculus-operation="derivative" aria-pressed="false">Derivada</button>
+              <button class="game-button" type="button" data-calculus-operation="integral" aria-pressed="true">Integral</button>
+            </div>
+            <label class="range-control" for="calculus-time"><span>Instante t <output id="calculus-time-value" for="calculus-time">0,5 s</output></span><input id="calculus-time" type="range" min="-2" max="4" step="0.1" value="0.5" aria-describedby="calculus-time-help" /></label>
+            <p id="calculus-time-help">Mueve t para ver el área acumulada y su valor en la gráfica del resultado.</p>
+            <div id="calculus-result-equation" class="rc-formulas"></div>
+            <p id="calculus-readout" role="status" aria-live="polite"></p>
+          </div>
+          <article class="plot-card calculus-chart">
+            <h2 id="calculus-result-title">Integral acumulada</h2>
+            <p id="calculus-result-note"></p>
+            <svg class="time-plot" id="calculus-result-plot" viewBox="0 0 800 260" role="img" aria-label="Resultado y valor en el instante elegido"></svg>
+          </article>
+        </section>
+      </section>
+      <section class="plot-card calculus-definitions" aria-labelledby="calculus-definitions-title">
+        <h2 id="calculus-definitions-title">Cómo interpretar las gráficas</h2>
+        <p>La integral es el área con signo: suma las zonas sobre el eje y resta las zonas bajo el eje. El punto del resultado indica esa acumulación hasta el tiempo elegido. El sombreado empieza donde la señal deja de ser cero; antes de ese inicio, la contribución desde −∞ es nula.</p>
+        <p>La derivada mide la pendiente. En los saltos, la derivada generalizada contiene impulsos de Dirac: las flechas indican su posición, signo y peso, y su altura gráfica no representa una amplitud finita. En las esquinas, la derivada clásica puede no existir.</p>
+        <p>En las fórmulas se usan el escalón u(t) y la rampa r(t) = t u(t). Se toma u(0) = 1; el valor aislado en un salto no cambia la integral.</p>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

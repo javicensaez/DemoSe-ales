@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Elige dos señales y observa su suma, diferencia o producto punto a punto." />
+  <title>Operaciones con señales — Sistemas y señales</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="operaciones-senales.js" defer></script>
+  <script src="projector-mode.js" defer></script>
+</head>
+<body class="demo-page signal-operations-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Demo · Operaciones con señales</p>
+        <h1>Opera con <span>dos señales</span></h1>
+        <p>Explora cómo se suman, restan o multiplican dos señales en cada instante. Elige una señal en cada desplegable y después la operación. Las tres gráficas comparten los mismos ejes para facilitar la comparación.</p>
+        <p><span id="operations-shift-help">Desplaza cada señal entre −2 y 2 s: los valores positivos la mueven a la derecha y los negativos a la izquierda.</span> La resta calcula la primera señal menos la segunda. La multiplicación es punto a punto. El tiempo se mide en segundos y las amplitudes se muestran en unidades arbitrarias (u.a.).</p>
+      </section>
+      <section class="operations-workspace" aria-label="Señales de entrada y operación">
+        <section class="operations-row" aria-label="Primera señal">
+          <div class="plot-card operations-controls">
+            <h2>Primera señal</h2>
+            <label for="operations-first">Señal x₁(t)<select id="operations-first"></select></label>
+            <label class="range-control" for="operations-shift-first">
+              <span>Desplazamiento <output id="operations-shift-first-value" for="operations-shift-first">0,0 s</output></span>
+              <input id="operations-shift-first" type="range" min="-2" max="2" step="0.1" value="0" aria-describedby="operations-shift-help" />
+            </label>
+            <div id="operations-equation-first" class="rc-formulas"></div>
+          </div>
+          <article class="plot-card">
+            <h2>Primera señal</h2>
+            <svg id="operations-plot-first" class="time-plot" viewBox="0 0 800 220" role="img" aria-label="Primera señal: tiempo en segundos y amplitud en unidades arbitrarias"></svg>
+          </article>
+        </section>
+        <section class="operations-row" aria-label="Segunda señal">
+          <div class="plot-card operations-controls">
+            <h2>Segunda señal</h2>
+            <label for="operations-second">Señal x₂(t)<select id="operations-second"></select></label>
+            <label class="range-control" for="operations-shift-second">
+              <span>Desplazamiento <output id="operations-shift-second-value" for="operations-shift-second">0,0 s</output></span>
+              <input id="operations-shift-second" type="range" min="-2" max="2" step="0.1" value="0" aria-describedby="operations-shift-help" />
+            </label>
+            <div id="operations-equation-second" class="rc-formulas"></div>
+          </div>
+          <article class="plot-card">
+            <h2>Segunda señal</h2>
+            <svg id="operations-plot-second" class="time-plot" viewBox="0 0 800 220" role="img" aria-label="Segunda señal: tiempo en segundos y amplitud en unidades arbitrarias"></svg>
+          </article>
+        </section>
+        <section class="operations-row" aria-label="Operación">
+          <div class="plot-card operations-controls">
+            <h2>Operación</h2>
+            <label for="operations-operation">Combina las señales<select id="operations-operation"><option value="add">Sumar: x₁ + x₂</option><option value="subtract">Restar: x₁ − x₂</option><option value="multiply">Multiplicar: x₁ × x₂</option></select></label>
+            <div id="operations-equation-result" class="rc-formulas"></div>
+            <p id="operations-status" role="status"></p>
+          </div>
+          <article class="plot-card">
+            <h2>Resultado</h2>
+            <svg id="operations-plot-result" class="time-plot" viewBox="0 0 800 220" role="img" aria-label="Resultado: tiempo en segundos y amplitud en unidades arbitrarias"></svg>
+          </article>
+        </section>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
