@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Descompón una señal analógica simulada en pulsos rectangulares y observa cómo mejora la aproximación al reducir su anchura." />
+  <title>De una señal a pulsos rectangulares — Sistemas y señales</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="senal-rectangulos.js" defer></script>
+  <script src="projector-mode.js" defer></script>
+</head>
+<body class="demo-page rectangles-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Demo · Descomposición de señales</p>
+        <h1>De una señal a <span>pulsos rectangulares</span></h1>
+        <p>Observa la señal analógica simulada y cambia la anchura de los pulsos con el deslizador. Cada rectángulo toma la altura de la señal al inicio de su intervalo: su vértice izquierdo toca la curva. Al reducir su base, la suma de los rectángulos se aproxima cada vez más a la curva.</p>
+        <p>Las dos gráficas muestran el mismo intervalo de 0 a 6 s y usan las mismas escalas. Los rectángulos bajo el eje representan valores negativos de la señal.</p>
+      </section>
+      <section class="plot-card rectangles-card" aria-labelledby="rectangles-source-title">
+        <h2 id="rectangles-source-title">Señal analógica simulada</h2>
+        <p>Una curva continua formada por la suma de tres oscilaciones.</p>
+        <svg id="rectangles-source-plot" class="time-plot" viewBox="0 0 900 250" role="img" aria-label="Señal analógica simulada, tiempo de cero a seis segundos y amplitud en unidades arbitrarias"></svg>
+      </section>
+      <section class="plot-card rectangles-card" aria-labelledby="rectangles-controls-title">
+        <h2 id="rectangles-controls-title">Elige la anchura de los pulsos</h2>
+        <label class="range-control" for="rectangles-width"><span>Base de cada rectángulo Δ <output id="rectangles-width-value" for="rectangles-width">0,50 s</output></span><input id="rectangles-width" type="range" min="0" max="6" step="1" value="5" aria-describedby="rectangles-width-help" /></label>
+        <div class="rectangles-range-labels" aria-hidden="true"><span>0,02 s · Más finos</span><span>1,00 s · Más anchos</span></div>
+        <p id="rectangles-width-help">Mueve el deslizador hacia la izquierda para estrechar los pulsos. Anchuras disponibles: 0,02; 0,05; 0,10; 0,20; 0,25; 0,50 y 1,00 s.</p>
+        <div class="rectangles-measures" role="status" aria-live="polite"><p>Pulsos en 6 s: <strong id="rectangles-count">12</strong></p><p>Error RMS: <strong id="rectangles-error"></strong></p></div>
+      </section>
+      <section class="plot-card rectangles-card" aria-labelledby="rectangles-result-title">
+        <h2 id="rectangles-result-title">Aproximación por rectángulos</h2>
+        <div class="plot-legend"><span class="legend-item"><span class="legend-swatch answer-swatch"></span>Suma de pulsos: contorno continuo</span><span class="legend-item"><span class="rectangles-reference-key" aria-hidden="true"></span>Original: línea discontinua</span></div>
+        <svg id="rectangles-result-plot" class="time-plot" viewBox="0 0 900 250" role="img" aria-label="Suma de pulsos rectangulares y señal original de referencia"></svg>
+        <p id="rectangles-result-description"></p>
+      </section>
+      <section class="plot-card rectangles-card" aria-labelledby="rectangles-how-title">
+        <h2 id="rectangles-how-title">¿Cómo se construye la aproximación?</h2>
+        <p>Divide el intervalo en N partes iguales, evalúa la señal al inicio de cada una y conserva ese valor durante toda la anchura Δ. La suma de estos pulsos forma una señal escalonada.</p>
+        <div class="rc-formulas">\[t_k=k\Delta,\qquad N=\frac{6}{\Delta}\]\[x_\Delta(t)=\sum_{k=0}^{N-1}x(t_k)\operatorname{rect}\!\left(\frac{t-t_k-\Delta/2}{\Delta}\right),\qquad 0\leq t&lt;6\]</div>
+        <p>Se toma cada pulso igual a 1 en su intervalo [kΔ, (k + 1)Δ) y 0 fuera. El error RMS mide la diferencia entre la curva y la aproximación en el intervalo mostrado, en unidades de amplitud. Esta aproximación conserva alturas reales; no redondea los valores a niveles digitales.</p>
+      </section>
+      <section class="plot-card rectangles-card" aria-labelledby="rectangles-limit-title">
+        <h2 id="rectangles-limit-title">¿Qué pasa cuando Δ tiende a cero?</h2>
+        <p>Los rectángulos se hacen cada vez más estrechos y necesitamos cada vez más para cubrir el mismo intervalo. Como la señal de esta demo es continua, su valor cambia cada vez menos dentro de cada rectángulo: los escalones se ajustan progresivamente a la curva original.</p>
+        <p>Cuando Δ tiende a cero, la aproximación converge a la señal original en el intervalo mostrado y el error RMS tiende a cero. Así podemos entender una señal continua como el límite de una suma de pulsos rectangulares cada vez más finos.</p>
+        <p>Para conectar este límite con la delta de Dirac, escribimos cada rectángulo usando un pulso de área 1: su base es Δ y su altura es 1/Δ. Este pulso normalizado tiende a la delta en el sentido de las distribuciones.</p>
+        <div class="rc-formulas">\[\delta_\Delta(s)=\frac{u(s)-u(s-\Delta)}{\Delta},\qquad \delta_\Delta\longrightarrow\delta\]</div>
+        <p>La aproximación se puede escribir entonces como una suma de esos pulsos, ponderados por el valor de la señal y por Δ. El factor Δ conserva las alturas de los rectángulos que ves en la gráfica.</p>
+        <div class="rc-formulas">\[x_\Delta(t)=\sum_{k=0}^{N-1}x(k\Delta)\,\delta_\Delta(t-k\Delta)\,\Delta\]</div>
+        <p>Extendiendo la construcción a todo el eje temporal, la aproximación se expresa como:</p>
+        <div class="rc-formulas" id="rectangles-dirac-sum">\[\hat{x}(t)=\sum_{k=-\infty}^{\infty}x(k\Delta)\,\delta_\Delta(t-k\Delta)\,\Delta\]</div>
+        <p>El símbolo de sombrero indica que todavía es una aproximación, que depende de Δ. Cada término es un pulso desplazado de área 1, multiplicado por x(kΔ) y por Δ. Al hacer Δ cada vez menor, los puntos kΔ recorren el tiempo con mayor detalle y la suma conduce a la integral. En el límite, la propiedad de selección de la delta recupera el valor de la señal continua en t:</p>
+        <div class="rc-formulas" id="rectangles-dirac-identity">\[\boxed{x(t)=\int_{-\infty}^{\infty}x(\tau)\,\delta(t-\tau)\,d\tau}\]</div>
+        <p>El impulso situado en τ está ponderado por x(τ). La delta selecciona la contribución correspondiente a τ = t. En la demo se representa únicamente el intervalo de 0 a 6 s.</p>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

@@ -15,6 +15,20 @@ const demos = [
     topics: ["senales"],
   },
   {
+    category: "Demo · Delta de Dirac",
+    title: "Origen de la delta de Dirac",
+    description: "Acorta una rampa de 0 a 1 y observa su derivada: un pulso cada vez más estrecho y alto, de área constante 1.",
+    href: "origen-delta-dirac.html",
+    topics: ["senales"],
+  },
+  {
+    category: "Demo · Descomposición de señales",
+    title: "De una señal a pulsos rectangulares",
+    description: "Aproxima una señal analógica simulada con rectángulos y reduce su anchura para acercarte a la curva original.",
+    href: "senal-rectangulos.html",
+    topics: ["senales"],
+  },
+  {
     category: "Demo · Cálculo de señales",
     title: "Derivada e integral de señales",
     description: "Deriva una señal o integra desde −∞ hasta t y explora el área acumulada con un deslizador de tiempo.",
@@ -75,6 +89,13 @@ const demos = [
     description:
       "Elige x(t) y h(t), desplaza una señal con el deslizador y observa el producto y la integral de convolución.",
     href: "convolucion.html",
+    topics: ["senales", "sistemas"],
+  },
+  {
+    category: "Demo · Convolución",
+    title: "Propiedades de la convolución",
+    description: "Comprueba la conmutativa, asociativa, distributiva, delta, retardos y derivación comparando ambos miembros de cada igualdad.",
+    href: "propiedades-convolucion.html",
     topics: ["senales", "sistemas"],
   },
   {

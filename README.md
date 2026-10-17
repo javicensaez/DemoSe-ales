@@ -14,6 +14,8 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, la sinc, ondas periódicas y la exponencial compleja.
 - **Suma, resta y producto de señales** (`operaciones-senales.html`): elige dos señales en desplegables y compara sus gráficas con la suma, diferencia o producto punto a punto, con escalas comunes.
+- **Origen de la delta de Dirac** (`origen-delta-dirac.html`): acorta el tiempo de subida de una rampa de 0 a 1 y observa su derivada rectangular, con anchura T, altura 1/T y área constante 1; incluye el límite ideal en T = 0.
+- **De una señal a pulsos rectangulares** (`senal-rectangulos.html`): aproxima una señal analógica simulada con pulsos de anchura ajustable, compara con la curva original y observa el error RMS al estrechar sus bases.
 - **Derivada e integral de señales** (`derivada-integral.html`): selecciona una señal y su derivada o integral desde −∞ hasta t; un deslizador de tiempo muestra el área con signo acumulada y su valor, con impulsos de Dirac en las derivadas de señales con saltos.
 - **Adivina la expresión** (`juego-expresiones.html`): empieza con un modo de dibujo libre sin referencia; después interpreta una gráfica y escribe la expresión de la señal en una casilla o como suma de varias casillas y comprueba la respuesta.
 - **Transforma la señal** (`juego-transformaciones.html`): practica desplazamientos, inversión temporal y escalado de señales.
@@ -21,6 +23,7 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 - **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): compara cinco formas de onda y consulta su valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
 - **Preguntas de sistemas** (`sistemas-preguntas.html`): clasifica diez sistemas por memoria, causalidad, linealidad, invariancia temporal y estabilidad BIBO.
 - **Convolución continua paso a paso** (`convolucion.html`): elige señales, desplázalas y observa el solapamiento, el producto y la convolución.
+- **Propiedades de la convolución** (`propiedades-convolucion.html`): explora siete propiedades con diagramas de bloques equivalentes, señales seleccionables, retardos, resultados intermedios y comparación gráfica y numérica de los miembros de cada igualdad.
 - **Circuito RC / CR** (`circuito-rc.html`): elige un circuito RC (paso bajo) o CR (paso alto), varía R y C, aplica un escalón unitario, un pulso rectangular de anchura ajustable o una señal cuadrada con ciclo de trabajo ajustable y observa la salida.
 - **Circuito RLC** (`circuito-rlc.html`): RLC serie con salida en el condensador; elige R, L y C, observa la respuesta al escalón (sub, crítica o sobreamortiguada) y el diagrama de polos y ceros.
 - **Sistema de segundo orden** (`segundo-orden.html`): ajusta ζ entre 0 y 2 y ω₀ entre 0,5 y 10 rad/s; compara la respuesta al escalón unitario y los polos, incluidos el caso sin amortiguamiento y el polo doble crítico.

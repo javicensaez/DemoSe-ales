@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explora siete propiedades de la convolución y compara gráficamente los resultados de ambos miembros de cada igualdad." />
+  <title>Propiedades de la convolución — Sistemas y señales</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="propiedades-convolucion.js" defer></script>
+  <script src="projector-mode.js" defer></script>
+</head>
+<body class="demo-page convolution-properties-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Demo · Convolución</p>
+        <h1>Propiedades de <span>la convolución</span></h1>
+        <p>Elige una propiedad y cambia las señales para comprobar su significado. La gráfica del resultado superpone ambos miembros de la igualdad: si coinciden, las líneas recorren la misma curva.</p>
+        <p>El símbolo * representa la convolución, no el producto punto a punto. En los desplazamientos, un retardo positivo mueve la señal a la derecha. Las flechas de Dirac indican el peso del impulso; su altura es simbólica.</p>
+      </section>
+      <section class="plot-card cp-card" aria-labelledby="cp-choose-title">
+        <h2 id="cp-choose-title">Elige una propiedad</h2>
+        <div class="cp-properties" role="group" aria-label="Propiedad de la convolución">
+          <button class="game-button" type="button" data-cp-property="commutative" aria-pressed="true">1 · Conmutativa</button>
+          <button class="game-button" type="button" data-cp-property="associative" aria-pressed="false">2 · Asociativa</button>
+          <button class="game-button" type="button" data-cp-property="distributive" aria-pressed="false">3 · Distributiva</button>
+          <button class="game-button" type="button" data-cp-property="identity" aria-pressed="false">4 · Con δ(t)</button>
+          <button class="game-button" type="button" data-cp-property="impulse-shift" aria-pressed="false">5 · Con δ(t − t₀)</button>
+          <button class="game-button" type="button" data-cp-property="time-shift" aria-pressed="false">6 · Desplazamiento temporal</button>
+          <button class="game-button" type="button" data-cp-property="derivative" aria-pressed="false">7 · Derivación</button>
+        </div>
+      </section>
+      <section class="cp-workspace" aria-label="Controles y explicación de la propiedad">
+        <aside class="plot-card cp-card cp-controls" aria-labelledby="cp-controls-title">
+          <h2 id="cp-controls-title">Señales</h2>
+          <label for="cp-x">Señal x(t)<select id="cp-x"></select></label>
+          <label for="cp-h1" id="cp-h1-control"><span id="cp-h1-label">Señal h(t)</span><select id="cp-h1"></select></label>
+          <label for="cp-h2" id="cp-h2-control" hidden>Señal h₂(t)<select id="cp-h2"></select></label>
+          <div id="cp-impulse-control" hidden>
+            <label class="range-control" for="cp-impulse-shift"><span>Retardo t₀ <output id="cp-impulse-shift-value" for="cp-impulse-shift">1,0 s</output></span><input id="cp-impulse-shift" type="range" min="-2" max="2" step="0.1" value="1" /></label>
+          </div>
+          <div id="cp-shifts-control" hidden>
+            <label class="range-control" for="cp-shift-a"><span>Retardo de x: a <output id="cp-shift-a-value" for="cp-shift-a">0,5 s</output></span><input id="cp-shift-a" type="range" min="-1" max="1" step="0.1" value="0.5" /></label>
+            <label class="range-control" for="cp-shift-b"><span>Retardo de h: b <output id="cp-shift-b-value" for="cp-shift-b">0,5 s</output></span><input id="cp-shift-b" type="range" min="-1" max="1" step="0.1" value="0.5" /></label>
+          </div>
+          <p id="cp-input-note"></p>
+        </aside>
+        <article class="plot-card cp-card">
+          <h2 id="cp-property-title">Conmutativa</h2>
+          <p id="cp-explanation"></p>
+          <div id="cp-equation" class="rc-formulas"></div>
+          <p id="cp-recipe"></p>
+          <p id="cp-status" role="status" aria-live="polite"></p>
+        </article>
+      </section>
+      <section class="plot-card cp-card" aria-labelledby="cp-blocks-title">
+        <h2 id="cp-blocks-title">La misma propiedad por bloques</h2>
+        <p id="cp-blocks-description"></p>
+        <div class="cp-blocks-scroll" role="region" tabindex="0" aria-label="Diagramas de bloques equivalentes; desplazamiento horizontal en pantallas pequeñas">
+          <svg id="cp-blocks-diagram" class="cp-blocks-diagram" viewBox="0 0 900 420" role="img" aria-labelledby="cp-blocks-svg-title cp-blocks-svg-description"></svg>
+        </div>
+        <p>Las flechas indican el sentido de la señal. Cada bloque h representa un sistema lineal e invariante en el tiempo cuya salida es la convolución de su entrada con h. El círculo + suma sus entradas.</p>
+      </section>
+      <section class="plot-card cp-card" aria-labelledby="cp-inputs-title">
+        <h2 id="cp-inputs-title">Señales de entrada</h2>
+        <div class="plot-legend" id="cp-input-legend"></div>
+        <svg class="time-plot" id="cp-input-plot" viewBox="0 0 900 240" role="img" aria-label="Señales de entrada, tiempo en segundos"></svg>
+      </section>
+      <section class="plot-card cp-card" id="cp-intermediate-card" aria-labelledby="cp-intermediate-title" hidden>
+        <h2 id="cp-intermediate-title">Resultados intermedios</h2>
+        <div class="plot-legend" id="cp-intermediate-legend"></div>
+        <svg class="time-plot" id="cp-intermediate-plot" viewBox="0 0 900 240" role="img" aria-label="Resultados intermedios de las convoluciones"></svg>
+      </section>
+      <section class="plot-card cp-card" aria-labelledby="cp-result-title">
+        <h2 id="cp-result-title">Compara ambos miembros</h2>
+        <div class="plot-legend" id="cp-result-legend"></div>
+        <svg class="time-plot" id="cp-result-plot" viewBox="0 0 900 260" role="img" aria-label="Comparación de ambos miembros de la igualdad"></svg>
+        <p id="cp-error"></p>
+      </section>
+      <section class="plot-card cp-card" aria-labelledby="cp-notes-title">
+        <h2 id="cp-notes-title">Cómo se hace la comparación</h2>
+        <p>Las señales están acotadas en el tiempo. Se calculan convoluciones lineales, sin repetir periódicamente las curvas, con paso temporal de 0,02 s. Cada gráfica usa un único eje para todas las curvas que compara.</p>
+        <p>La delta se aplica mediante su propiedad de selección, sin sustituirla por un pico de altura finita. En la derivación se compara la derivada numérica del resultado con la convolución usando la derivada de cada entrada; los saltos del pulso rectangular aportan impulsos de Dirac. Para derivar el resultado se utiliza una cuadratura más fina y diferencias centradas con paso de 0,0001 s. Las pequeñas diferencias numéricas dependen de la discretización.</p>
+        <p>Las entradas ordinarias se expresan en u.a.; una convolución de dos entradas tiene unidades u.a.²·s y una convolución de tres, u.a.³·s². Al derivar el resultado de dos entradas se obtienen u.a.². Con una delta de peso 1 se conservan las unidades de x(t).</p>
+        <a href="convolucion.html">Explorar la convolución continua paso a paso →</a>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

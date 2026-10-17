@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Acorta una rampa que pasa de 0 a 1 y observa cómo su derivada se aproxima a una delta de Dirac de peso 1." />
+  <title>Origen de la delta de Dirac — Sistemas y señales</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="origen-delta-dirac.js" defer></script>
+  <script src="projector-mode.js" defer></script>
+</head>
+<body class="demo-page calculus-page dirac-origin-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Demo · Delta de Dirac</p>
+        <h1>El origen de la <span>delta de Dirac</span></h1>
+        <p>La señal vale 0 antes de t = 0, sube en línea recta hasta alcanzar 1 en t = T y permanece en 1 desde ese instante. Mueve T hacia cero y observa debajo cómo cambia su derivada.</p>
+        <p>Al acortar la rampa, la derivada se hace más estrecha y más alta, pero conserva su área: 1. Las dos gráficas comparten el eje temporal y la escala vertical de la derivada permanece fija para ver ese crecimiento.</p>
+      </section>
+      <section class="calculus-workspace" aria-label="De una rampa al impulso de Dirac">
+        <section class="calculus-row" aria-label="Señal que pasa de cero a uno">
+          <div class="plot-card calculus-controls">
+            <h2>Señal de origen</h2>
+            <label class="range-control" for="dirac-duration">
+              <span>Fin de la rampa T <output id="dirac-duration-value" for="dirac-duration">1,0 s</output></span>
+              <input id="dirac-duration" type="range" min="0" max="1" step="0.1" value="1" aria-describedby="dirac-duration-help" />
+            </label>
+            <p id="dirac-duration-help">Desplaza el instante en que la señal llega a 1. En T = 0 se muestra el límite ideal: un escalón.</p>
+            <div id="dirac-source-equation" class="rc-formulas"></div>
+          </div>
+          <article class="plot-card calculus-chart">
+            <h2 id="dirac-source-title">Rampa de 0 a 1</h2>
+            <svg id="dirac-source-plot" class="time-plot" viewBox="0 0 800 260" role="img" aria-label="Señal que alcanza el nivel uno en el instante T"></svg>
+          </article>
+        </section>
+        <section class="calculus-row" aria-label="Derivada y área del pulso">
+          <div class="plot-card calculus-controls">
+            <h2>Su derivada</h2>
+            <div id="dirac-derivative-equation" class="rc-formulas"></div>
+            <dl class="dirac-measures">
+              <div><dt>Anchura</dt><dd id="dirac-width">1,0 s</dd></div>
+              <div><dt>Altura</dt><dd id="dirac-height">1,0 u.a./s</dd></div>
+              <div><dt id="dirac-area-label">Área</dt><dd id="dirac-area">1,0 u.a.</dd></div>
+            </dl>
+            <p id="dirac-status" role="status" aria-live="polite"></p>
+          </div>
+          <article class="plot-card calculus-chart">
+            <h2 id="dirac-result-title">Pulso de área 1</h2>
+            <p id="dirac-result-note">El sombreado representa el área del pulso. Las líneas verticales completan su contorno.</p>
+            <svg id="dirac-result-plot" class="time-plot" viewBox="0 0 800 260" role="img" aria-label="Derivada rectangular, altura inversa a T y área uno"></svg>
+          </article>
+        </section>
+      </section>
+      <section class="plot-card" aria-labelledby="dirac-limit-title">
+        <h2 id="dirac-limit-title">¿Qué ocurre cuando T tiende a cero?</h2>
+        <p>La señal original se aproxima al escalón unitario. Su derivada concentra un área de 1 en un intervalo cada vez menor: en el límite, se obtiene la delta de Dirac, entendida como una distribución.</p>
+        <div id="dirac-limit-equation" class="rc-formulas">\[x_T(t)\longrightarrow u(t),\qquad x_T'(t)\xrightarrow[T\to0^+]{}\delta(t)\]\[\int_{-\infty}^{\infty}\delta(t)\,dt=1\]</div>
+        <p>En T = 0 la flecha representa el peso 1 de la delta. Su altura dibujada es simbólica: la delta no es un pulso de amplitud finita. En el escalón ideal se toma u(0) = 1; ese valor aislado no cambia el límite de su derivada.</p>
+      </section>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>

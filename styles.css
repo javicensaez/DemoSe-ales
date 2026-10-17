@@ -3820,3 +3820,55 @@ h2 {
   font-weight: 700;
   box-shadow: inset 0 -3px 0 currentColor;
 }
+
+.dirac-origin-page .dirac-measures { display: grid; gap: 10px; margin: 0; }
+.dirac-origin-page .dirac-measures > div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.dirac-origin-page .dirac-measures dt { color: var(--muted); }
+.dirac-origin-page .dirac-measures dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.dirac-origin-page #dirac-limit-equation { overflow-x: auto; }
+
+.rectangles-page .rectangles-card { display: grid; gap: 14px; margin: 20px 0; min-width: 0; }
+.rectangles-page .rectangles-card h2,
+.rectangles-page .rectangles-card p { margin: 0; }
+.rectangles-page .time-plot { height: 230px; min-height: 230px; aspect-ratio: auto; }
+.rectangles-page .range-control output { min-width: 7ch; text-align: right; font-variant-numeric: tabular-nums; }
+.rectangles-page input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.rectangles-page .rectangles-range-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; }
+.rectangles-page .rectangles-measures { display: flex; flex-wrap: wrap; gap: 12px 32px; font-variant-numeric: tabular-nums; }
+.rectangles-page .rectangles-reference-key { display: inline-block; width: 22px; border-top: 2px dashed var(--wave); }
+.rectangles-page .rc-formulas { min-width: 0; max-width: 100%; overflow-x: auto; }
+.rectangles-page .answer-swatch { background: var(--answer); }
+
+.convolution-properties-page .cp-card { display: grid; gap: 14px; margin: 20px 0; min-width: 0; align-content: start; }
+.convolution-properties-page .cp-card h2,
+.convolution-properties-page .cp-card p { margin: 0; }
+.convolution-properties-page .cp-properties { display: flex; flex-wrap: wrap; gap: 8px; }
+.convolution-properties-page .cp-properties [aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); box-shadow: inset 0 -3px 0 currentColor; font-weight: 700; }
+.convolution-properties-page .cp-workspace { display: grid; grid-template-columns: minmax(260px, .85fr) minmax(0, 2fr); gap: 20px; }
+.convolution-properties-page .cp-workspace > * { min-width: 0; margin: 0; }
+.convolution-properties-page .cp-controls label { display: grid; gap: 8px; color: var(--muted); }
+.convolution-properties-page .cp-controls [hidden],
+.convolution-properties-page #cp-intermediate-card[hidden] { display: none; }
+.convolution-properties-page select { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 7px; color: var(--foreground); background: var(--background); font: inherit; }
+.convolution-properties-page select:focus-visible,
+.convolution-properties-page input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.convolution-properties-page .range-control output { min-width: 6ch; text-align: right; font-variant-numeric: tabular-nums; }
+.convolution-properties-page #cp-shifts-control { display: grid; gap: 14px; }
+.convolution-properties-page .cp-controls #cp-shifts-control[hidden] { display: none; }
+.convolution-properties-page .rc-formulas { min-width: 0; max-width: 100%; overflow-x: auto; }
+.convolution-properties-page .time-plot { height: 230px; min-height: 230px; aspect-ratio: auto; }
+.convolution-properties-page .cp-swatch { display: inline-block; width: 22px; }
+.convolution-properties-page #cp-error { font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) {
+  .convolution-properties-page .cp-workspace { grid-template-columns: 1fr; }
+}
+
+.convolution-properties-page .cp-blocks-scroll { max-width: 100%; overflow-x: auto; }
+.convolution-properties-page .cp-blocks-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.convolution-properties-page .cp-blocks-diagram { display: block; width: 100%; min-width: 620px; height: auto; }
+.convolution-properties-page .cp-system-block,
+.convolution-properties-page .cp-block-summer { fill: var(--background); stroke: var(--accent); stroke-width: 2.5; }
+.convolution-properties-page .cp-block-wire { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.convolution-properties-page .cp-block-junction { fill: var(--accent); }
+.convolution-properties-page .cp-block-label { fill: var(--foreground); font: 22px var(--font-mono); }
+.convolution-properties-page .cp-block-caption { fill: var(--muted); font: 18px var(--font-mono); }
