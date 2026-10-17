@@ -13,7 +13,7 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 ## Demos
 
 - **Señales básicas** (`senales-basicas.html`): explora señales elementales como la delta, el escalón, pulsos, la sinc, ondas periódicas y la exponencial compleja.
-- **Adivina la expresión** (`juego-expresiones.html`): interpreta una gráfica, escribe la expresión de la señal y comprueba la respuesta.
+- **Adivina la expresión** (`juego-expresiones.html`): empieza con un modo de dibujo libre sin referencia; después interpreta una gráfica y escribe la expresión de la señal en una casilla o como suma de varias casillas y comprueba la respuesta.
 - **Transforma la señal** (`juego-transformaciones.html`): practica desplazamientos, inversión temporal y escalado de señales.
 - **Señales pares e impares** (`juego-simetria.html`): predice las componentes par e impar y comprueba la solución.
 - **Potencia y valores de señales periódicas** (`potencia-senales-periodicas.html`): compara cinco formas de onda y consulta su valor medio, la potencia media, el valor eficaz y el valor eficaz de alterna.
@@ -35,7 +35,7 @@ El botón **Modo proyector**, disponible en la navegación de la página princip
 
 - **Transformada de Fourier** (`transformada-fourier.html`): señales habituales con transformadas analíticas, módulo y fase; retraso, amplitud, escala temporal e inversión, con representación de los espectros de impulsos.
 
-- **Adivina la transformada de Fourier** (`juego-transformada-fourier.html`): siete retos de pulsos, triángulos, sumas y diferencias, entrada segura de expresiones complejas, reconstrucción temporal por transformada inversa y comparación del espectro.
+- **Adivina la transformada de Fourier** (`juego-transformada-fourier.html`): ocho retos de pulsos, triángulos, sumas y diferencias, entrada segura de expresiones complejas, reconstrucción temporal por transformada inversa y comparación del espectro.
 
 - **Diagrama de Bode** (`bode.html`): nueve sistemas con magnitud y fase exactas, parámetros configurables y medidas en un cursor de frecuencia logarítmico.
 

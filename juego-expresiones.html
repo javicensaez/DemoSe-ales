@@ -12,7 +12,7 @@
     <script src="juego-expresiones.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page expression-game-page">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -33,7 +33,8 @@
         <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Exprésalo</p>
         <h1>Adivina la <span>expresión</span></h1>
         <p>
-          Mira la señal objetivo y escribe una expresión de x(t) que la genere.
+          Empieza dibujando tu propia señal en el modo libre. Después, mira la señal objetivo de cada reto y escribe una expresión de x(t) que la genere.
+          Puedes escribirla en una sola casilla o sumar términos en varias casillas.
           Prueba, compara las gráficas y avanza por los retos.
         </p>
       </section>
@@ -49,7 +50,7 @@
               </div>
               <h2 id="challenge-title"></h2>
             </div>
-            <span class="plot-badge">Señal objetivo</span>
+            <span class="plot-badge" id="challenge-badge">Exploración libre</span>
           </div>
           <p class="signal-equation-display" id="challenge-clue"></p>
           <p class="signal-description" id="challenge-hint" hidden></p>
@@ -64,6 +65,8 @@
             <span class="plot-badge">Variable: t</span>
           </div>
           <form id="answer-form" novalidate>
+            <button class="game-button" id="expression-mode" type="button" aria-pressed="false" aria-controls="single-expression expression-terms">Usar varias casillas</button>
+            <div id="single-expression">
             <label class="expression-label" for="expression-input">x(t) =</label>
             <div class="expression-entry">
               <input
@@ -77,7 +80,17 @@
                 aria-describedby="expression-help game-feedback"
                 required
               />
-              <button class="game-button primary-game-button" type="submit">Comprobar</button>
+              <button class="game-button primary-game-button" id="single-submit" type="submit">Dibujar</button>
+            </div>
+            </div>
+            <div id="expression-terms" hidden>
+              <p class="expression-help" id="terms-help">x(t) es la suma de las casillas. Para restar, escribe un término negativo. Las casillas vacías no se suman. Usa «Ver» a la izquierda para dibujar un término y «Ocultar» para ocultarlo; esto no cambia la suma. Marca «Incluir en la suma» para elegir qué términos se suman.</p>
+              <div id="term-list"></div>
+              <div class="game-actions">
+                <button class="game-button" id="add-term" type="button">Añadir término</button>
+                <button class="game-button primary-game-button" id="terms-submit" type="submit">Dibujar suma</button>
+                <button class="game-button" id="clear-sum" type="button" disabled>Borrar suma</button>
+              </div>
             </div>
             <p class="expression-help" id="expression-help">
               Operaciones: + − * / ^ &nbsp; Funciones: u(x), ramp(x), rect(x),
@@ -107,15 +120,16 @@
         <article class="plot-card combined-plot-card">
           <div class="plot-heading">
             <div>
-              <p class="eyebrow">Comparación en tiempo real</p>
-              <h2>Superposición de señales</h2>
+              <p class="eyebrow" id="comparison-eyebrow">Dibuja tu expresión</p>
+              <h2 id="comparison-title">Tu señal</h2>
             </div>
             <span class="plot-badge">t (s)</span>
           </div>
           <div class="plot-legend">
-            <span class="legend-item"><span class="legend-swatch"></span>Señal objetivo</span>
+            <span class="legend-item" id="target-legend" hidden><span class="legend-swatch"></span>Señal objetivo</span>
             <span class="legend-item"><span class="legend-swatch answer-swatch"></span>Tu expresión</span>
           </div>
+          <div class="plot-legend" id="term-legend" aria-label="Términos visibles"></div>
           <svg
             class="time-plot game-plot"
             id="comparison-plot"

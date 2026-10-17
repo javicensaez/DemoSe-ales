@@ -3645,3 +3645,53 @@ h2 {
 .blocks-rule-diagram { width: 100%; height: auto; display: block; }
 .blocks-rule-diagram .blocks-label { font-size: 20px; }
 .blocks-rules-table td > p { overflow-x: auto; margin: .5rem 0; font-size: .9rem; }
+
+/* Entrada por suma de términos del juego de expresiones. */
+.expression-game-page #expression-mode {
+  margin-bottom: 12px;
+}
+
+.expression-game-page .expression-term {
+  margin-top: 12px;
+}
+
+.expression-game-page #target-legend[hidden] {
+  display: none;
+}
+
+.expression-game-page .expression-term .expression-entry {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+@media (max-width: 480px) {
+  .expression-game-page .expression-term .remove-term {
+    grid-column: 3 / -1;
+    justify-self: end;
+  }
+}
+
+.expression-game-page .term-inclusion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.expression-game-page .expression-entry .include-term {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  align-self: center;
+  accent-color: var(--accent);
+}
+
+.expression-game-page .include-term:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
