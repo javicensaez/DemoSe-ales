@@ -3872,3 +3872,32 @@ h2 {
 .convolution-properties-page .cp-block-junction { fill: var(--accent); }
 .convolution-properties-page .cp-block-label { fill: var(--foreground); font: 22px var(--font-mono); }
 .convolution-properties-page .cp-block-caption { fill: var(--muted); font: 18px var(--font-mono); }
+
+/* Juego de dibujo de señales */
+.draw-signal #drawing-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-block: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+.draw-signal #drawing-plot text { fill: var(--muted); font-size: 15px; font-family: var(--font-mono); }
+.draw-signal .draw-grid { stroke: var(--grid-major); stroke-width: 1; }
+.draw-signal .draw-axis { stroke: var(--axis); stroke-width: 2; }
+.draw-signal .draw-line { fill: none; stroke: var(--wave); stroke-width: 4; stroke-linejoin: round; }
+.draw-signal .draw-point { fill: var(--wave); stroke: var(--surface); stroke-width: 1.5; }
+.draw-signal .draw-solution { fill: none; stroke: var(--foreground); stroke-width: 3; stroke-dasharray: 9 7; }
+.draw-signal .draw-cursor { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-dasharray: 3 3; }
+.draw-signal .draw-point-form { display: flex; align-items: end; flex-wrap: wrap; gap: 16px; margin-block: 20px; }
+.draw-signal .draw-point-form label { display: grid; gap: 6px; font-weight: 600; }
+.draw-signal input { width: 130px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--foreground); font: inherit; }
+.draw-signal :is(button, input, svg):focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.draw-signal #drawing-feedback { min-height: 3em; font-weight: 700; }
+.draw-signal #drawing-points { overflow-wrap: anywhere; color: var(--muted); }
+.draw-signal button:disabled { opacity: .5; cursor: default; }
+
+.draw-signal .draw-formula { overflow-x: auto; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 1.15rem; }

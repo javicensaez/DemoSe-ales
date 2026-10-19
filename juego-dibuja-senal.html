@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Dibuja señales por tramos sobre una cuadrícula y comprueba tu respuesta."
+    />
+    <title>Dibuja la señal — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+    <script src="juego-dibuja-senal.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page draw-signal">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main game-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow">Juego · Señales por tramos</p>
+        <h1>Dibuja la <span>señal</span></h1>
+        <p>Practica cómo representar pulsos, rampas y saltos a partir de expresiones con escalones unitarios.</p>
+        <p>Marca puntos enteros en la cuadrícula: cada punto se une al anterior con una recta horizontal, vertical o inclinada.
+          Avanza de izquierda a derecha, desde t = −2 s hasta t = 8 s. Para un salto, marca dos amplitudes en el mismo instante.
+          Después pulsa «Comparar». Se evalúan todos los tramos, incluidos los de amplitud cero.</p>
+      </section>
+      <section class="plot-card" aria-label="Reto de dibujo">
+        <div class="challenge-navigation" aria-label="Navegación entre retos">
+          <button class="challenge-nav-button" id="previous-challenge" aria-label="Reto anterior">←</button>
+          <p class="eyebrow" id="challenge-progress" aria-live="polite"></p>
+          <button class="challenge-nav-button" id="next-challenge" aria-label="Reto siguiente">→</button>
+        </div>
+        <h2 id="challenge-title"></h2>
+        <p>Dibuja la siguiente señal en todo el intervalo mostrado:</p>
+        <div id="challenge-formula" class="draw-formula" aria-label="Expresión de la señal"></div>
+        <p>u(t) es el escalón unitario: vale 0 antes de t = 0 y 1 después. Representa los saltos mediante rectas verticales; no se evalúa el valor aislado en la discontinuidad.</p>
+        <p id="drawing-help">Pulsa sobre los cruces para añadir puntos. Con teclado: enfoca la cuadrícula, mueve el cursor con las flechas y pulsa Intro o Espacio para añadir. Escape oculta la solución.</p>
+        <svg id="drawing-plot" viewBox="0 0 800 460" role="group" tabindex="0" aria-label="Cuadrícula para dibujar la señal" aria-describedby="drawing-help cursor-status"></svg>
+        <p id="cursor-status" role="status"></p>
+        <form id="point-form" class="draw-point-form">
+          <label for="point-time">Tiempo (s)<input id="point-time" type="number" min="-2" max="8" step="1" value="-2" required></label>
+          <label for="point-amplitude">Amplitud (V)<input id="point-amplitude" type="number" min="-3" max="4" step="1" value="0" required></label>
+          <button class="game-button" type="submit">Añadir punto</button>
+        </form>
+        <div class="game-actions">
+          <button class="game-button primary-game-button" id="compare">Comparar</button>
+          <button class="game-button" id="undo">Deshacer punto</button>
+          <button class="game-button" id="clear">Borrar dibujo</button>
+          <button class="game-button" id="solution" aria-pressed="false">Ver solución</button>
+        </div>
+        <p id="drawing-feedback" role="status" aria-live="polite"></p>
+        <p id="drawing-points">Todavía no has añadido puntos.</p>
+        <p id="drawing-legend" hidden>Tu dibujo: línea continua y puntos. Solución: línea discontinua.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
