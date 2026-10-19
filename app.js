@@ -1,5 +1,12 @@
 const demos = [
   {
+    category: "Juego · Dibujo de señales",
+    title: "Dibuja la señal",
+    description: "Traza pulsos, rampas y saltos sobre una cuadrícula de coordenadas enteras y compara tu dibujo con el reto.",
+    href: "juego-dibuja-senal.html",
+    topics: ["senales"],
+  },
+  {
     category: "Señales básicas",
     title: "Señales básicas",
     description:

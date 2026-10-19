@@ -32,6 +32,17 @@ const challenges = [
     value: q => q < .5 ? 1 - 2 * q : 2 * q - 1,
     steps: 'V_{\\mathrm{medio}}=\\frac{0+1}{2}=\\frac{1}{2}\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=\\frac{0^2+0\\cdot1+1^2}{3}=\\frac{1}{3}\\,\\mathrm{V}^2',
   },
+
+  {
+    title: 'Rampa con mesetas de 2 y −1 V',
+    description: 'Señal de la imagen, interpretando el tiempo en ms y la tensión en V: 2 V de 0 a 1 ms, −1 V de 1 a 2 ms y una rampa de 0 a 2 V de 2 a 4 ms. Se repite con T = 4 ms.',
+    equation: 'v(t)=\\begin{cases}2\\,\\mathrm{V}&0\\le q<1/4\\\\-1\\,\\mathrm{V}&1/4\\le q<1/2\\\\(4q-2)\\,\\mathrm{V}&1/2\\le q<1\\end{cases}',
+    mean: 3 / 4, square: 23 / 12, resistance: 1, period: 4, duration: 8,
+    plotMin: -2, plotMax: 3,
+    plotPoints: [[0, 2], [1, 2], [1, -1], [2, -1], [2, 0], [4, 2], [5, 2], [5, -1], [6, -1], [6, 0], [8, 2]],
+    value: q => q < .25 ? 2 : q < .5 ? -1 : 4 * q - 2,
+    steps: 'V_{\\mathrm{medio}}=\\frac{2\\cdot1-1\\cdot1+\\frac{1}{2}\\cdot2\\cdot2}{4}=\\frac{3}{4}\\,\\mathrm{V},\\qquad \\langle v^2\\rangle=\\frac{2^2\\cdot1+(-1)^2\\cdot1+\\int_0^2 u^2\\,du}{4}=\\frac{23}{12}\\,\\mathrm{V}^2',
+  },
 ];
 const metrics = [ ['mean', 'Valor medio / componente DC', 'V'], ['power', 'Potencia media', 'W'], ['rms', 'RMS total', 'V'], ['dc', 'RMS de continua (DC)', 'V'], ['ac', 'RMS de alterna (AC)', 'V'] ];
 const states = challenges.map(() => ({ answers: {}, solved: false, revealed: false, checked: false }));
@@ -46,18 +57,19 @@ function typeset(element, content) {
 }
 function draw(c) {
   const period = c.period ?? 1;
-  const duration = 2;
+  const duration = c.duration ?? 2;
   const values = Array.from({length: 801}, (_, i) => c.value(((i / 800) * duration / period) % 1));
   const low = c.plotMin ?? Math.floor(Math.min(0, ...values)) - 1;
   const high = c.plotMax ?? Math.ceil(Math.max(0, ...values)) + 1;
-  const x = t => 65 + t / 2 * 705;
+  const x = t => 65 + t / duration * 705;
   const y = v => 30 + (high - v) / (high - low) * 270;
   let svg = `<title>${duration / period} periodos de la tensión del reto, T = ${format(period)} ms</title>`;
   for (let v = low; v <= high; v++) svg += `<line class="${v === 0 ? 'plot-axis-line' : 'plot-grid-line'}" x1="65" x2="770" y1="${y(v)}" y2="${y(v)}"/><text class="plot-tick-label" x="52" y="${y(v)+4}" text-anchor="end">${v}</text>`;
-  for (let t = 0; t <= 2; t += .25) svg += `<line class="${t === 0 ? 'plot-axis-line' : 'plot-grid-line'}" x1="${x(t)}" x2="${x(t)}" y1="30" y2="300"/><text class="plot-tick-label" x="${x(t)}" y="325" text-anchor="middle">${format(t)}</text>`;
-  svg += `<path d="${values.map((v,i) => `${i ? 'L' : 'M'}${x(i/400)},${y(v)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="3"/><text class="plot-axis-label" x="65" y="18">Tensión (V)</text><text class="plot-axis-label" x="770" y="350" text-anchor="end">Tiempo (ms)</text>`;
+  for (let t = 0; t <= duration; t += duration / 8) svg += `<line class="${t === 0 ? 'plot-axis-line' : 'plot-grid-line'}" x1="${x(t)}" x2="${x(t)}" y1="30" y2="300"/><text class="plot-tick-label" x="${x(t)}" y="325" text-anchor="middle">${format(t)}</text>`;
+  const points = c.plotPoints ?? values.map((v, i) => [i / 800 * duration, v]);
+  svg += `<path d="${points.map(([t, v], i) => `${i ? 'L' : 'M'}${x(t)},${y(v)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="3"/><text class="plot-axis-label" x="65" y="18">Tensión (V)</text><text class="plot-axis-label" x="770" y="350" text-anchor="end">Tiempo (ms)</text>`;
   $('#game-plot').innerHTML = svg;
-  $('#game-plot').setAttribute('aria-label', `${c.title}. ${c.description} Eje temporal de 0 a 2 ms; tensión en voltios.`);
+  $('#game-plot').setAttribute('aria-label', `${c.title}. ${c.description} Eje temporal de 0 a ${format(duration)} ms; tensión en voltios.`);
 }
 function render() {
   const c = challenges[current], state = states[current];
@@ -101,7 +113,7 @@ function check() {
 function showSolution() {
   const c = challenges[current], r = results(c);
   const tex = n => String(Number(n.toFixed(4)));
-  typeset($('#solution-content'), `\\[${c.steps}\\] \\[\\overline P=\\frac{\\langle v^2\\rangle}{R}\\approx ${tex(r.power)}\\,\\mathrm{W}\\] \\[V_{\\mathrm{RMS}}=\\sqrt{\\langle v^2\\rangle}\\approx ${tex(r.rms)}\\,\\mathrm{V}\\] \\[V_{\\mathrm{RMS,DC}}=|${tex(c.mean)}|=${tex(r.dc)}\\,\\mathrm{V}\\] \\[V_{\\mathrm{RMS,AC}}=\\sqrt{\\langle v^2\\rangle-(${tex(c.mean)})^2}\\approx ${tex(r.ac)}\\,\\mathrm{V}\\]`);
+  typeset($('#solution-content'), `\\[${c.steps}\\] \\[\\overline P=\\frac{\\langle v^2\\rangle}{R}\\approx ${tex(r.power)}\\,\\mathrm{W}\\] \\[V_{\\mathrm{RMS}}=\\sqrt{\\langle v^2\\rangle}\\approx ${tex(r.rms)}\\,\\mathrm{V}\\] \\[V_{\\mathrm{RMS,AC}}=\\sqrt{\\langle v^2\\rangle-(${tex(c.mean)})^2}\\approx ${tex(r.ac)}\\,\\mathrm{V}\\]`);
 }
 $('#answer-form').addEventListener('input', event => {
   const key = event.target.dataset.metric;
