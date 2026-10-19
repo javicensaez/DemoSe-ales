@@ -1,20 +1,20 @@
 (() => {
   'use strict';
   const challenges = [
-    { title: 'Reto 1', formula: 'x(t) = (1-t)u(t+2) + t u(t) - (t-2)u(t-2) + (t-3)u(t-3)', points: [[-2,0],[-2,3],[0,1],[2,1],[3,0],[8,0]] },
-    { title: 'Reto 2', formula: 'x(t) = 3u(t) - 3u(t-3)', points: [[-2,0],[0,0],[0,3],[3,3],[3,0],[8,0]] },
-    { title: 'Reto 3', formula: 'x(t) = 2t u(t) - 4(t-2)u(t-2) + 2(t-4)u(t-4)', points: [[-2,0],[0,0],[2,4],[4,0],[8,0]] },
-    { title: 'Reto 4', formula: 'x(t) = t u(t) - (t-2)u(t-2) - (t-4)u(t-4) + (t-6)u(t-6)', points: [[-2,0],[0,0],[2,2],[4,2],[6,0],[8,0]] },
-    { title: 'Reto 5', formula: 'x(t) = -2u(t-1) + 2u(t-5)', points: [[-2,0],[1,0],[1,-2],[5,-2],[5,0],[8,0]] },
-    { title: 'Reto 6', formula: 'x(t) = t u(t) - (t-3)u(t-3) - 5u(t-3) + (t-3)u(t-3) - (t-5)u(t-5)', points: [[-2,0],[0,0],[3,3],[3,-2],[5,0],[8,0]] },
-    { title: 'Reto 7', formula: 'x(t) = u(t) + 2u(t-2) - 4u(t-4) + u(t-6)', points: [[-2,0],[0,0],[0,1],[2,1],[2,3],[4,3],[4,-1],[6,-1],[6,0],[8,0]] },
+    { title: 'Reto 1', formula: 'x(t) = (1-t)u(t+2) + t u(t) - (t-2)u(t-2) + (t-3)u(t-3)', points: [[-4,0],[-2,0],[-2,3],[0,1],[2,1],[3,0],[8,0]] },
+    { title: 'Reto 2', formula: 'x(t) = 3u(t) - 3u(t-3)', points: [[-4,0],[0,0],[0,3],[3,3],[3,0],[8,0]] },
+    { title: 'Reto 3', formula: 'x(t) = 2t u(t) - 4(t-2)u(t-2) + 2(t-4)u(t-4)', points: [[-4,0],[0,0],[2,4],[4,0],[8,0]] },
+    { title: 'Reto 4', formula: 'x(t) = t u(t) - (t-2)u(t-2) - (t-4)u(t-4) + (t-6)u(t-6)', points: [[-4,0],[0,0],[2,2],[4,2],[6,0],[8,0]] },
+    { title: 'Reto 5', formula: 'x(t) = -2u(t-1) + 2u(t-5)', points: [[-4,0],[1,0],[1,-2],[5,-2],[5,0],[8,0]] },
+    { title: 'Reto 6', formula: 'x(t) = t u(t) - (t-3)u(t-3) - 5u(t-3) + (t-3)u(t-3) - (t-5)u(t-5)', points: [[-4,0],[0,0],[3,3],[3,-2],[5,0],[8,0]] },
+    { title: 'Reto 7', formula: 'x(t) = u(t) + 2u(t-2) - 4u(t-4) + u(t-6)', points: [[-4,0],[0,0],[0,1],[2,1],[2,3],[4,3],[4,-1],[6,-1],[6,0],[8,0]] },
   ];
   const $ = id => document.getElementById(id);
   const svg = $('drawing-plot');
   const ns = 'http://www.w3.org/2000/svg';
-  const x = t => 70 + (t + 2) * 66;
-  const y = a => 390 - (a + 3) * 48;
-  let index = 0, points = [], cursor = [-2,0], reveal = false;
+  const x = t => 70 + (t + 4) * 55;
+  const y = a => 390 - (a + 4) * 42;
+  let index = 0, points = [], cursor = [-4,0], reveal = false;
   const saved = challenges.map(() => []);
   const solved = new Set();
   function element(tag, attrs, parent = svg, text) {
@@ -26,13 +26,13 @@
   }
   function render() {
     svg.replaceChildren();
-    element('title', {}, svg, 'Dibujo de señal: tiempo de −2 a 8 segundos y amplitud de −3 a 4 voltios');
-    for (let t = -2; t <= 8; t++) {
-      element('line', {x1:x(t), x2:x(t), y1:y(4), y2:y(-3), class:t === 0 ? 'draw-axis' : 'draw-grid'});
+    element('title', {}, svg, 'Dibujo de señal: tiempo de −4 a 8 segundos y amplitud de −4 a 4 voltios');
+    for (let t = -4; t <= 8; t++) {
+      element('line', {x1:x(t), x2:x(t), y1:y(4), y2:y(-4), class:t === 0 ? 'draw-axis' : 'draw-grid'});
       element('text', {x:x(t), y:414, 'text-anchor':'middle'}, svg, t);
     }
-    for (let a = -3; a <= 4; a++) {
-      element('line', {x1:x(-2), x2:x(8), y1:y(a), y2:y(a), class:a === 0 ? 'draw-axis' : 'draw-grid'});
+    for (let a = -4; a <= 4; a++) {
+      element('line', {x1:x(-4), x2:x(8), y1:y(a), y2:y(a), class:a === 0 ? 'draw-axis' : 'draw-grid'});
       element('text', {x:55, y:y(a)+5, 'text-anchor':'end'}, svg, a);
     }
     element('text', {x:400, y:448, 'text-anchor':'middle'}, svg, 'Tiempo t (s)');
@@ -76,35 +76,35 @@
   svg.addEventListener('pointerdown', event => {
     if (event.button !== 0) return;
     const pt = new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse());
-    if (pt.x < x(-2)-10 || pt.x > x(8)+10 || pt.y < y(4)-10 || pt.y > y(-3)+10) return;
+    if (pt.x < x(-4)-10 || pt.x > x(8)+10 || pt.y < y(4)-10 || pt.y > y(-4)+10) return;
     svg.focus();
-    add([Math.max(-2, Math.min(8,Math.round((pt.x-70)/66-2))), Math.max(-3,Math.min(4,Math.round((390-pt.y)/48-3)))]);
+    add([Math.max(-4, Math.min(8,Math.round((pt.x-70)/55-4))), Math.max(-4,Math.min(4,Math.round((390-pt.y)/42-4)))]);
   });
   svg.addEventListener('keydown', event => {
     const moves = {ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,1],ArrowDown:[0,-1]};
     if (moves[event.key]) {
       event.preventDefault(); const d = moves[event.key];
-      cursor = [Math.max(-2,Math.min(8,cursor[0]+d[0])),Math.max(-3,Math.min(4,cursor[1]+d[1]))]; render();
+      cursor = [Math.max(-4,Math.min(8,cursor[0]+d[0])),Math.max(-4,Math.min(4,cursor[1]+d[1]))]; render();
     } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); add(cursor); }
     else if (event.key === 'Escape') { reveal = false; render(); }
   });
   $('point-form').addEventListener('submit', event => {
     event.preventDefault();
     const p = [$('point-time').valueAsNumber, $('point-amplitude').valueAsNumber];
-    if (!p.every(Number.isInteger) || p[0]<-2 || p[0]>8 || p[1]<-3 || p[1]>4) { feedback('Introduce valores enteros: tiempo entre −2 y 8 s, amplitud entre −3 y 4 V.'); return; }
+    if (!p.every(Number.isInteger) || p[0]<-4 || p[0]>8 || p[1]<-4 || p[1]>4) { feedback('Introduce valores enteros: tiempo entre −4 y 8 s, amplitud entre −4 y 4 V.'); return; }
     add(p);
   });
   $('compare').addEventListener('click', () => {
     const correct = JSON.stringify(simplify(points)) === JSON.stringify(simplify(challenges[index].points));
     if (correct) { solved.add(index); updateProgress(); }
-    feedback(correct ? '¡Correcto! Todos los tramos coinciden con la señal pedida.' : 'Todavía no coincide. Revisa los tiempos, las amplitudes y los saltos; incluye el dibujo completo de −2 a 8 s.');
+    feedback(correct ? '¡Correcto! Todos los tramos coinciden con la señal pedida.' : 'Todavía no coincide. Revisa los tiempos, las amplitudes y los saltos; incluye el dibujo completo de −4 a 8 s.');
   });
   $('undo').addEventListener('click', () => { points.pop(); reveal = false; feedback('Último punto eliminado.'); render(); });
-  $('clear').addEventListener('click', () => { points.length = 0; reveal = false; feedback('Dibujo borrado. Vuelve a empezar en t = −2 s.'); render(); });
+  $('clear').addEventListener('click', () => { points.length = 0; reveal = false; feedback('Dibujo borrado. Vuelve a empezar en t = −4 s.'); render(); });
   $('solution').addEventListener('click', () => { reveal = !reveal; render(); });
   function updateProgress() { $('challenge-progress').textContent = `Reto ${index+1} de ${challenges.length} · ${solved.size} superados`; }
   function load(next) {
-    saved[index] = points; index = next; points = saved[index]; cursor = points.length ? [...points.at(-1)] : [-2,0]; reveal = false;
+    saved[index] = points; index = next; points = saved[index]; cursor = points.length ? [...points.at(-1)] : [-4,0]; reveal = false;
     $('challenge-title').textContent = challenges[index].title;
     const formula = challenges[index].formula;
     const container = $('challenge-formula');

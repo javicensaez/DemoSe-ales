@@ -35,7 +35,7 @@
         <h1>Dibuja la <span>señal</span></h1>
         <p>Practica cómo representar pulsos, rampas y saltos a partir de expresiones con escalones unitarios.</p>
         <p>Marca puntos enteros en la cuadrícula: cada punto se une al anterior con una recta horizontal, vertical o inclinada.
-          Avanza de izquierda a derecha, desde t = −2 s hasta t = 8 s. Para un salto, marca dos amplitudes en el mismo instante.
+          Avanza de izquierda a derecha, desde t = −4 s hasta t = 8 s. Para un salto, marca dos amplitudes en el mismo instante.
           Después pulsa «Comparar». Se evalúan todos los tramos, incluidos los de amplitud cero.</p>
       </section>
       <section class="plot-card" aria-label="Reto de dibujo">
@@ -52,8 +52,8 @@
         <svg id="drawing-plot" viewBox="0 0 800 460" role="group" tabindex="0" aria-label="Cuadrícula para dibujar la señal" aria-describedby="drawing-help cursor-status"></svg>
         <p id="cursor-status" role="status"></p>
         <form id="point-form" class="draw-point-form">
-          <label for="point-time">Tiempo (s)<input id="point-time" type="number" min="-2" max="8" step="1" value="-2" required></label>
-          <label for="point-amplitude">Amplitud (V)<input id="point-amplitude" type="number" min="-3" max="4" step="1" value="0" required></label>
+          <label for="point-time">Tiempo (s)<input id="point-time" type="number" min="-4" max="8" step="1" value="-4" required></label>
+          <label for="point-amplitude">Amplitud (V)<input id="point-amplitude" type="number" min="-4" max="4" step="1" value="0" required></label>
           <button class="game-button" type="submit">Añadir punto</button>
         </form>
         <div class="game-actions">
