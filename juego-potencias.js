@@ -113,7 +113,7 @@ function check() {
 function showSolution() {
   const c = challenges[current], r = results(c);
   const tex = n => String(Number(n.toFixed(4)));
-  typeset($('#solution-content'), `\\[${c.steps}\\] \\[\\overline P=\\frac{\\langle v^2\\rangle}{R}\\approx ${tex(r.power)}\\,\\mathrm{W}\\] \\[V_{\\mathrm{RMS}}=\\sqrt{\\langle v^2\\rangle}\\approx ${tex(r.rms)}\\,\\mathrm{V}\\] \\[V_{\\mathrm{RMS,DC}}=|${tex(c.mean)}|=${tex(r.dc)}\\,\\mathrm{V}\\] \\[V_{\\mathrm{RMS,AC}}=\\sqrt{\\langle v^2\\rangle-(${tex(c.mean)})^2}\\approx ${tex(r.ac)}\\,\\mathrm{V}\\]`);
+  typeset($('#solution-content'), `\\[${c.steps}\\] \\[\\overline P=\\frac{\\langle v^2\\rangle}{R}\\approx ${tex(r.power)}\\,\\mathrm{W}\\] \\[V_{\\mathrm{RMS}}=\\sqrt{\\langle v^2\\rangle}\\approx ${tex(r.rms)}\\,\\mathrm{V}\\] \\[V_{\\mathrm{RMS,AC}}=\\sqrt{\\langle v^2\\rangle-(${tex(c.mean)})^2}\\approx ${tex(r.ac)}\\,\\mathrm{V}\\]`);
 }
 $('#answer-form').addEventListener('input', event => {
   const key = event.target.dataset.metric;
