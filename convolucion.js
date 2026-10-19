@@ -56,6 +56,13 @@ const signalOptions = {
     max: 1,
     causal: false,
   },
+  "reversed-bipolar-pulse": {
+    name: "Pulso bipolar invertido: −1 en [−1, 0), +1 en [0, 1)",
+    value: (time) => (time >= -1 && time < 0 ? -1 : time >= 0 && time < 1 ? 1 : 0),
+    min: -1,
+    max: 1,
+    causal: false,
+  },
   "centered-pulse": {
     name: "Pulso de anchura 2 centrado en 0",
     value: (time) => (time >= -1 && time < 1 ? 1 : 0),
