@@ -3901,3 +3901,167 @@ h2 {
 .draw-signal button:disabled { opacity: .5; cursor: default; }
 
 .draw-signal .draw-formula { overflow-x: auto; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 1.15rem; }
+.basic-signals-page .range-control[hidden] { display: none; }
+
+/* Conserva el desplazamiento sin mostrar la barra lateral del navegador. */
+html:has(.basic-signals-page) { scrollbar-width: none; }
+html:has(.basic-signals-page)::-webkit-scrollbar { display: none; }
+
+/* Demo 01: zona de trabajo compacta para pantallas panorámicas.
+   En móvil se conserva el flujo vertical y el desplazamiento natural. */
+@media (min-width: 1000px) {
+  .basic-signals-page .site-header { height: 64px; }
+  .basic-signals-page .demo-main {
+    width: min(1600px, calc(100% - 48px));
+    min-height: calc(100vh - 64px);
+    padding: 12px 0 24px;
+  }
+  .basic-signals-page .back-link { margin-bottom: 8px; }
+  .basic-signals-page .demo-intro { max-width: none; margin-bottom: 16px; }
+  .basic-signals-page .demo-intro .eyebrow { margin-bottom: 4px; }
+  .basic-signals-page .demo-intro h1 { font-size: 30px; margin-bottom: 4px; }
+  .basic-signals-page .demo-intro > p:last-child { max-width: none; line-height: 1.5; }
+  .basic-signals-page .signal-workspace {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .basic-signals-page .signal-controls { gap: 10px; }
+  .basic-signals-page .control-card { padding: 12px; }
+  .basic-signals-page .control-card h2 { margin-bottom: 10px; }
+  .basic-signals-page .signal-option {
+    min-height: 40px;
+    flex-direction: row;
+    gap: 6px;
+    padding: 6px;
+  }
+  .basic-signals-page .signal-option-symbol { font-size: 14px; }
+  .basic-signals-page .parameter-card { gap: 10px; }
+  .basic-signals-page .parameter-card h2 { margin-bottom: 0; }
+  .basic-signals-page .parameter-note { padding-top: 6px; }
+  .basic-signals-page .plot-column {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  .basic-signals-page .plot-column:has(.complex-card:not([hidden])) {
+    grid-template-columns: minmax(0, 1.8fr) minmax(230px, 1fr);
+  }
+  .basic-signals-page .plot-card { padding: 14px; }
+  .basic-signals-page .plot-heading { margin-bottom: 8px; }
+  .basic-signals-page .plot-heading h2 { font-size: 19px; }
+  .basic-signals-page .time-plot,
+  .basic-signals-page .complex-plot {
+    height: clamp(210px, calc(100vh - 405px), 440px);
+    aspect-ratio: auto;
+  }
+  .basic-signals-page .signal-description { font-size: 12px; line-height: 1.5; }
+  .basic-signals-page .signal-option:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Aumenta la legibilidad y ocupa la altura disponible en monitores grandes. */
+@media (min-width: 1440px) and (min-height: 850px) {
+  .basic-signals-page .site-header,
+  .basic-signals-page .demo-main { width: min(1800px, calc(100% - 64px)); }
+  .basic-signals-page .site-header { height: 76px; }
+  .basic-signals-page .demo-main { min-height: calc(100vh - 76px); padding-top: 16px; }
+  .basic-signals-page .back-link { font-size: 14px; margin-bottom: 12px; }
+  .basic-signals-page .demo-intro h1 { font-size: 38px; }
+  .basic-signals-page .demo-intro > p:last-child { font-size: 17px; }
+  .basic-signals-page .signal-workspace {
+    grid-template-columns: 380px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .basic-signals-page .signal-controls { gap: 16px; }
+  .basic-signals-page .control-card,
+  .basic-signals-page .plot-card { padding: 20px; }
+  .basic-signals-page .control-card h2 { font-size: 17px; margin-bottom: 16px; }
+  .basic-signals-page .signal-picker { gap: 10px; }
+  .basic-signals-page .signal-option { min-height: 62px; font-size: 14px; gap: 8px; }
+  .basic-signals-page .signal-option-symbol { font-size: 18px; }
+  .basic-signals-page .parameter-card { gap: 16px; }
+  .basic-signals-page .parameter-card h2 { margin-bottom: 0; }
+  .basic-signals-page .range-control { font-size: 16px; gap: 8px; }
+  .basic-signals-page .range-control output { font-size: 15px; }
+  .basic-signals-page .range-control input { min-height: 24px; }
+  .basic-signals-page .parameter-note,
+  .basic-signals-page .legend-item { font-size: 14px; }
+  .basic-signals-page .plot-heading h2 { font-size: 26px; }
+  .basic-signals-page .plot-heading .eyebrow { font-size: 12px; }
+  .basic-signals-page .plot-badge { font-size: 14px; }
+  .basic-signals-page .signal-equation-display { font-size: 16px; min-height: 28px; }
+  .basic-signals-page .time-plot,
+  .basic-signals-page .complex-plot { height: clamp(350px, calc(100vh - 450px), 720px); }
+  .basic-signals-page .signal-description { font-size: 16px; }
+}
+
+html:has(.draw-signal) { scrollbar-width: none; }
+html:has(.draw-signal)::-webkit-scrollbar { display: none; }
+.draw-signal .drawing-challenge,
+.draw-signal .drawing-canvas,
+.draw-signal .drawing-controls { min-width: 0; }
+@media (min-width: 1000px) {
+  .draw-signal .site-header { height: 64px; }
+  .draw-signal .site-header,
+  .draw-signal .demo-main { width: min(1800px, calc(100% - 48px)); }
+  .draw-signal .demo-main { padding: 10px 0 24px; }
+  .draw-signal .back-link { margin-bottom: 6px; }
+  .draw-signal .demo-intro { max-width: none; margin-bottom: 12px; }
+  .draw-signal .demo-intro .eyebrow { margin-bottom: 4px; }
+  .draw-signal .demo-intro h1 { font-size: 30px; margin-bottom: 4px; }
+  .draw-signal .demo-intro p { max-width: none; font-size: 13px; line-height: 1.4; margin-bottom: 6px; }
+  .draw-signal .drawing-workspace {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-areas: "challenge challenge" "controls canvas";
+    gap: 8px 20px;
+    padding: 14px;
+  }
+  .draw-signal .drawing-challenge { grid-area: challenge; }
+  .draw-signal .drawing-canvas { grid-area: canvas; }
+  .draw-signal .drawing-controls { grid-area: controls; }
+  .draw-signal .drawing-challenge .challenge-navigation { float: right; margin: 0 0 8px 16px; }
+  .draw-signal #challenge-title { font-size: 20px; margin-bottom: 4px; }
+  .draw-signal .drawing-challenge p,
+  .draw-signal #drawing-help,
+  .draw-signal #cursor-status,
+  .draw-signal .drawing-controls p { font-size: 12px; line-height: 1.4; margin-block: 6px; }
+  .draw-signal .draw-formula { padding: 8px 12px; margin-block: 6px; font-size: 1rem; }
+  .draw-signal #drawing-plot { height: clamp(210px, calc(100vh - 440px), 700px); margin-block: 8px; }
+  .draw-signal .draw-point-form { margin-block: 8px 14px; gap: 10px; }
+  .draw-signal .draw-point-form label { font-size: 13px; }
+  .draw-signal input { width: 135px; padding: 7px; }
+  .draw-signal .game-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .draw-signal .game-button { padding: 9px 12px; }
+  .draw-signal #drawing-feedback { min-height: 2.8em; }
+}
+@media (min-width: 1440px) and (min-height: 850px) {
+  .draw-signal .site-header { height: 76px; }
+  .draw-signal .demo-main { padding-top: 16px; }
+  .draw-signal .back-link { font-size: 14px; margin-bottom: 12px; }
+  .draw-signal .demo-intro h1 { font-size: 38px; }
+  .draw-signal .demo-intro p { font-size: 17px; }
+  .draw-signal .drawing-workspace { grid-template-columns: 380px minmax(0, 1fr); padding: 20px; gap: 12px 24px; }
+  .draw-signal #challenge-title { font-size: 26px; }
+  .draw-signal .drawing-challenge p,
+  .draw-signal #drawing-help,
+  .draw-signal #cursor-status,
+  .draw-signal .drawing-controls p,
+  .draw-signal .draw-point-form label { font-size: 16px; }
+  .draw-signal .draw-formula { font-size: 1.25rem; padding: 12px; }
+  .draw-signal #drawing-plot { height: clamp(300px, calc(100vh - 590px), 700px); }
+  .draw-signal input { width: 160px; padding: 10px; }
+  .draw-signal .game-button { font-size: 15px; padding: 12px; }
+}
+
+.draw-signal .draw-point-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.draw-signal .draw-point-form label { min-width: 0; }
+.draw-signal .draw-point-form input { width: 100%; box-sizing: border-box; min-width: 0; }
+.draw-signal .draw-point-form > button { grid-column: 1 / -1; width: 100%; }

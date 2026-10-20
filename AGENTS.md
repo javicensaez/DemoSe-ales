@@ -20,6 +20,16 @@ Estas pautas se aplican a las demos nuevas y a los cambios en demos existentes. 
 - En juegos, explica la tarea y deja claro qué debe hacer el alumno antes de mostrar una solución. Conserva la navegación entre retos cuando corresponda.
 - Usa LaTeX con MathJax para ecuaciones matemáticas. Si las fórmulas cambian dinámicamente, actualiza el contenido de forma segura y vuelve a ejecutar el renderizado de MathJax sin acumular nodos renderizados.
 
+## Ajuste a pantallas 16:9
+
+- Sigue el diseño acordado en la rama `pruebas/resolucion-demos`, tomando como referencia `senales-basicas.html` y `juego-dibuja-senal.html`.
+- En escritorio, procura que la zona principal de trabajo (controles, gráficas, comentarios y resultados) quede visible en una pantalla 16:9 sin necesidad de desplazarse. La información complementaria y el pie pueden quedar debajo.
+- Comprueba el ajuste a 1280 × 720 y 1920 × 1080. En pantallas grandes, aumenta textos, botones, campos y gráficas para aprovechar el espacio; evita dejar la interfaz pequeña rodeada de grandes márgenes vacíos.
+- Distribuye los controles a la izquierda y las gráficas a la derecha cuando ayude a aprovechar la pantalla. Da suficiente anchura a la selección para que los nombres sean legibles. En móvil, conserva el flujo vertical y el desplazamiento natural.
+- Oculta la barra de desplazamiento visible de las páginas adaptadas, manteniendo el desplazamiento mediante rueda, teclado y gestos. No recortes contenido con `overflow: hidden`.
+- Aprovecha el área interior de las gráficas sin deformar letras, puntos o etiquetas. No uses `preserveAspectRatio="none"` para estirar SVG con texto; adapta el `viewBox` y las coordenadas al espacio disponible, actualizando también la conversión de las interacciones con el ratón.
+- En el juego de dibujo, alinea los campos de tiempo y amplitud con las dos columnas de botones inferiores, con la misma separación. El botón «Añadir punto» debe ocupar ambas columnas.
+
 ## Interacción y visualizaciones
 
 - Usa HTML semántico: botones para acciones, enlaces para navegación, etiquetas asociadas a campos y regiones con nombres accesibles.

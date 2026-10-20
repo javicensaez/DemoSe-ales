@@ -12,7 +12,9 @@
   const $ = id => document.getElementById(id);
   const svg = $('drawing-plot');
   const ns = 'http://www.w3.org/2000/svg';
-  const x = t => 70 + (t + 4) * 55;
+  let plotWidth = 800;
+  const timeStep = () => (plotWidth - 140) / 12;
+  const x = t => 70 + (t + 4) * timeStep();
   const y = a => 390 - (a + 4) * 42;
   let index = 0, points = [], cursor = [-4,0], reveal = false;
   const saved = challenges.map(() => []);
@@ -25,6 +27,9 @@
     return el;
   }
   function render() {
+    const bounds = svg.getBoundingClientRect();
+    plotWidth = bounds.height > 0 ? Math.max(800, 460 * bounds.width / bounds.height) : 800;
+    svg.setAttribute('viewBox', `0 0 ${plotWidth} 460`);
     svg.replaceChildren();
     element('title', {}, svg, 'Dibujo de señal: tiempo de −4 a 8 segundos y amplitud de −4 a 4 voltios');
     for (let t = -4; t <= 8; t++) {
@@ -35,7 +40,7 @@
       element('line', {x1:x(-4), x2:x(8), y1:y(a), y2:y(a), class:a === 0 ? 'draw-axis' : 'draw-grid'});
       element('text', {x:55, y:y(a)+5, 'text-anchor':'end'}, svg, a);
     }
-    element('text', {x:400, y:448, 'text-anchor':'middle'}, svg, 'Tiempo t (s)');
+    element('text', {x:plotWidth / 2, y:448, 'text-anchor':'middle'}, svg, 'Tiempo t (s)');
     element('text', {x:20, y:220, transform:'rotate(-90 20 220)', 'text-anchor':'middle'}, svg, 'Amplitud (V)');
     if (reveal) element('polyline', {points:challenges[index].points.map(p=>`${x(p[0])},${y(p[1])}`).join(' '), class:'draw-solution'});
     element('polyline', {points:points.map(p=>`${x(p[0])},${y(p[1])}`).join(' '), class:'draw-line'});
@@ -78,7 +83,7 @@
     const pt = new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse());
     if (pt.x < x(-4)-10 || pt.x > x(8)+10 || pt.y < y(4)-10 || pt.y > y(-4)+10) return;
     svg.focus();
-    add([Math.max(-4, Math.min(8,Math.round((pt.x-70)/55-4))), Math.max(-4,Math.min(4,Math.round((390-pt.y)/42-4)))]);
+    add([Math.max(-4, Math.min(8,Math.round((pt.x-70)/timeStep()-4))), Math.max(-4,Math.min(4,Math.round((390-pt.y)/42-4)))]);
   });
   svg.addEventListener('keydown', event => {
     const moves = {ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,1],ArrowDown:[0,-1]};
@@ -127,5 +132,6 @@
   }
   $('previous-challenge').addEventListener('click', () => load(Math.max(0,index-1)));
   $('next-challenge').addEventListener('click', () => load(Math.min(challenges.length-1,index+1)));
+  new ResizeObserver(() => render()).observe(svg);
   load(0);
 })();
