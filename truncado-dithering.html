@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Compara espectros al reducir bits con y sin dithering."
+    />
+    <title>Truncado y dithering — Sistemas y señales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="truncado-dithering.js" defer></script>
+    <script src="projector-mode.js" defer></script>
+  </head>
+  <body class="demo-page adc-page truncation-page">
+    <header class="site-header">
+      <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
+        <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
+        <span class="brand-separator" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <nav class="site-nav demo-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="index.html#inicio">Inicio</a>
+        <a class="nav-link is-active" href="index.html#demos">Demos</a>
+        <button class="projector-toggle" type="button" aria-pressed="false">Activar modo proyector</button>
+      </nav>
+    </header>
+
+    <main class="demo-main power-main">
+      <a class="back-link" href="index.html#demos">← Volver a las demos</a>
+      <section class="demo-intro">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Conversión digital</p>
+        <h1>Truncado de datos <span>con y sin dithering</span></h1>
+        <p>Observa qué ocurre al eliminar bits de una señal digital: aparecen error, continua y armónicos. El dithering añade un pequeño ruido antes de truncar para reducir la estructura del error, a costa de aumentar el ruido total.</p>
+        <p>Indica los bits y el SNR de origen, elige los bits de destino y compara los espectros. Activa el dithering y cambia su distribución para observar las diferencias.</p>
+      </section>
+      <section class="plot-card truncation-spectrum" aria-labelledby="audio-heading">
+        <h2 id="audio-heading">Escuchar la salida</h2>
+        <p>Pulsa reproducir y activa o desactiva el dithering para comparar la salida con el mismo volumen. También puedes cambiar la frecuencia y los bits mientras escuchas.</p>
+        <div class="truncation-audio-controls">
+          <button id="audio-play" class="game-button" type="button">▶ Reproducir salida</button>
+          <button id="audio-stop" class="game-button secondary-game-button" type="button" disabled>Detener</button>
+          <label for="audio-volume">Volumen: <output id="audio-volume-value" for="audio-volume">30 %</output>
+            <input id="audio-volume" type="range" min="0" max="100" step="1" value="30" />
+          </label>
+        </div>
+        <p id="audio-state" role="status">Reproducción detenida.</p>
+        <p>Se generan muestras nuevas continuamente a 8192 muestras/s, conservando la fase de la sinusoide y renovando el ruido y el dither. El motor de audio mantiene el flujo continuo e interpola las muestras a la frecuencia de salida del dispositivo. El volumen se aplica por igual con y sin dithering, sin normalizar cada señal. El espectro muestra un bloque de referencia reproducible; el audio utiliza ruido nuevo con la misma distribución y potencia esperada.</p>
+      </section>
+      <section class="power-workspace truncation-workspace" aria-label="Parámetros y espectro">
+        <article class="plot-card">
+          <h2>Parámetros</h2>
+          <form id="truncation-form" class="adc-fields" novalidate>
+            <label for="tone-frequency">Frecuencia de la sinusoide: <output id="frequency-value" for="tone-frequency">148 Hz</output>
+              <input id="tone-frequency" type="range" min="4" max="4092" step="4" value="148" aria-describedby="frequency-help truncation-error" />
+            </label>
+            <small id="frequency-help">De 4 a 4092 Hz, en pasos de 4 Hz para mantener periodos completos y evitar fuga espectral.</small>
+            <label for="source-bits">Bits de origen<input id="source-bits" type="number" min="2" max="24" step="1" value="16" aria-describedby="truncation-error" /></label>
+            <label for="source-snr">SNR antes de cuantificar el origen (dB)<input id="source-snr" type="number" min="0" max="160" step="any" value="90" aria-describedby="truncation-error snr-help" /></label>
+            <small id="snr-help">Ruido blanco respecto a la senoide. Los bits de origen limitan el SNR efectivo que se muestra en resultados.</small>
+            <label for="target-bits">Bits de destino<input id="target-bits" type="number" min="2" max="24" step="1" value="8" aria-describedby="truncation-error" /></label>
+            <label class="dither-check" for="dither-enabled"><input id="dither-enabled" type="checkbox" /> Activar dithering antes del truncado</label>
+            <label for="dither-type">Tipo de dither<select id="dither-type" disabled><option value="triangular">Triangular (TPDF): ±1 LSB</option><option value="rectangular">Rectangular (RPDF): ±½ LSB</option><option value="gaussian">Gaussiano: σ = ½ LSB</option></select></label>
+            <p id="truncation-error" role="status"></p>
+          </form>
+        </article>
+        <section class="plot-card truncation-spectrum" aria-labelledby="spectrum-heading">
+        <h2 id="spectrum-heading">Espectros de origen y destino</h2>
+        <p>Origen: línea azul discontinua. Destino: línea continua. Ambos comparten escala y referencia; la continua también aparece en 0 Hz.</p>
+        <svg id="truncation-spectrum" class="time-plot" viewBox="0 0 800 380" preserveAspectRatio="none" role="img" aria-label="Comparación del espectro de origen y de destino" aria-describedby="spectrum-state"></svg>
+        <p id="spectrum-state" role="status"></p>
+        <p>Senoide de frecuencia ajustable a −12,04 dBFS (amplitud 0,25), muestreo de 8192 muestras/s y 2048 muestras. FFT unilateral sin ventana: periodos completos, bins de 4 Hz. 0 dBFS equivale a la potencia de una senoide de amplitud 1. Suelo visual: −180 dBFS/bin. Ruido reproducible para comparar ajustes.</p>
+      </section>
+      </section>
+        <article class="plot-card truncation-results-card" aria-labelledby="results-heading">
+          <h2 id="results-heading">Resultados de la simulación</h2>
+          <div id="truncation-results" class="adc-fields" aria-live="polite"></div>
+          <p>El indicador señal/(ruido + distorsión) compara la potencia del tono seleccionado con el resto de la banda, excluyendo la continua. La continua y las saturaciones se muestran por separado.</p>
+        </article>
+      <aside class="power-note">
+        <strong>Modelo de truncado</strong>
+        <span>\(\Delta=2/2^{N_{\mathrm{destino}}},\qquad y[n]=\Delta\left\lfloor\frac{x[n]+d[n]}{\Delta}\right\rfloor\)</span>
+        <p>Rango normalizado bipolar [−1, 1). El origen se cuantifica por redondeo; el destino elimina bits mediante truncado hacia −∞, como al descartar bits de una palabra con signo en complemento a dos. Puede introducir un sesgo cercano a −½ LSB. Se limita la salida al rango representable.</p>
+        <p>El dither se mide en LSB de destino y no se resta de la salida. El rectangular es uniforme; el triangular suma dos uniformes independientes; el gaussiano no tiene límite de amplitud. No se aplica modelado de ruido. Si los bits coinciden y el dithering está desactivado, la salida es idéntica al origen.</p>
+      </aside>
+    </main>
+    <footer class="site-footer demo-footer">
+      <a class="brand footer-brand" href="index.html#inicio">
+        <span class="brand-mark" aria-hidden="true">s(t)</span>
+        <span>Sistemas <span class="brand-amp">&</span> señales</span>
+      </a>
+      <p>Aprender también es experimentar.</p>
+      <a class="back-to-top" href="index.html#demos">Todas las demos ↑</a>
+    </footer>
+  </body>
+</html>
