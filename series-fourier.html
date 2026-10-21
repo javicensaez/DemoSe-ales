@@ -30,6 +30,7 @@
     </header>
 
     <main class="demo-main fourier-main">
+      <div class="series-primary">
       <a class="back-link" href="index.html#demos">← Volver a las demos</a>
       <section class="demo-intro">
         <p class="eyebrow"><span class="eyebrow-dot"></span> Demo · Análisis de señales</p>
@@ -41,6 +42,7 @@
       </section>
 
       <div class="panoramic-stage">
+<div class="series-sidebar">
 <section class="panoramic-part-1 fourier-controls plot-card" aria-label="Controles de la serie de Fourier">
         <label for="fourier-signal">
           Forma de onda
@@ -57,7 +59,7 @@
         </label>
         <label class="fourier-range" for="fourier-terms">
           <span>Términos N <output id="fourier-terms-value" for="fourier-terms"></output></span>
-          <input id="fourier-terms" type="range" min="0" max="25" step="1" value="5" />
+          <input id="fourier-terms" type="range" min="0" max="15" step="1" value="5" />
         </label>
         <label class="fourier-range" for="fourier-frequency">
           <span>Frecuencia fundamental f₀ <output id="fourier-frequency-value" for="fourier-frequency"></output></span>
@@ -69,16 +71,18 @@
         </label>
       </section>
 
-      <section class="panoramic-part-2 fourier-formula plot-card" aria-label="Forma trigonométrica de Fourier">
+
+
+      <section class="fourier-formula plot-card" aria-label="Forma trigonométrica de Fourier">
         <span>\(f(t)=\dfrac{a_0}{2}+\displaystyle\sum_{n=1}^{N}\left[a_n\cos(n\omega_0t)+b_n\sin(n\omega_0t)\right]\)</span>
         <p>Convención: la componente continua es a₀/2; N es el armónico más alto incluido.</p>
       </section>
-
       <section class="panoramic-part-3 fourier-status plot-card" aria-live="polite">
         <strong id="fourier-error"></strong>
         <span id="fourier-period"></span>
       </section>
 
+</div>
       <section class="panoramic-part-4 fourier-panels" aria-label="Análisis de la señal">
         <article class="plot-card fourier-chart-card">
           <div class="plot-heading">
@@ -100,7 +104,9 @@
           <svg class="time-plot fourier-spectrum" id="fourier-spectrum" viewBox="0 0 800 190" role="img" aria-label="Espectro de amplitud de Fourier"></svg>
         </article>
 
-        <article class="plot-card fourier-chart-card">
+
+      </section>
+        <article class="plot-card fourier-chart-card series-coefficients">
           <div class="plot-heading">
             <div><p class="eyebrow">Coeficientes</p><h2>Forma trigonométrica</h2></div>
             <span class="plot-badge">a₀ / 2 como continua</span>
@@ -112,8 +118,9 @@
             </table>
           </div>
         </article>
-      </section>
 </div>
+</div>
+
     </main>
 
     <footer class="site-footer demo-footer">

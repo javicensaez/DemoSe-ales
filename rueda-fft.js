@@ -125,13 +125,13 @@ function niceTicks(min, max, count = 6) {
   return ticks;
 }
 
-function chartMarkup({ curves, xMax, xMin = 0, yRange, xLabel, yLabel, frequencyMarker = null, stems = false }) {
-  const left = 70, right = 775, top = 50, bottom = 249;
+function chartMarkup({ curves, xMax, xMin = 0, yRange, xLabel, yLabel, frequencyMarker = null, stems = false, height = 300 }) {
+  const left = 70, right = 775, top = 50, bottom = height - 51;
   const x = value => left + (value - xMin) / (xMax - xMin) * (right - left);
   const y = value => top + (yRange[1] - value) / (yRange[1] - yRange[0]) * (bottom - top);
   const parts = [];
   for (const tick of niceTicks(xMin, xMax)) {
-    parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="${x(tick)}" y1="${top}" x2="${x(tick)}" y2="${bottom}" /><text class="plot-tick-label" x="${x(tick)}" y="271" text-anchor="middle">${formatNumber(tick)}</text>`);
+    parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="${x(tick)}" y1="${top}" x2="${x(tick)}" y2="${bottom}" /><text class="plot-tick-label" x="${x(tick)}" y="${bottom + 22}" text-anchor="middle">${formatNumber(tick)}</text>`);
   }
   for (const tick of niceTicks(yRange[0], yRange[1])) {
     parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="${left}" y1="${y(tick)}" x2="${right}" y2="${y(tick)}" /><text class="plot-tick-label" x="${left - 10}" y="${y(tick) + 4}" text-anchor="end">${formatNumber(tick)}</text>`);
@@ -152,7 +152,7 @@ function chartMarkup({ curves, xMax, xMin = 0, yRange, xLabel, yLabel, frequency
       parts.push(`<line x1="${position}" y1="${top}" x2="${position}" y2="${bottom}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 5" /><text class="plot-annotation" x="${position + 4}" y="40">${order}×</text>`);
     }
   }
-  parts.push(`<text class="plot-axis-label" x="${right}" y="297" text-anchor="end">${xLabel}</text><text class="plot-axis-label" x="12" y="16">${yLabel}</text>`);
+  parts.push(`<text class="plot-axis-label" x="${right}" y="${height - 3}" text-anchor="end">${xLabel}</text><text class="plot-axis-label" x="12" y="16">${yLabel}</text>`);
   return parts.join("");
 }
 
@@ -185,7 +185,10 @@ function renderSpectrum(){
  const realAmplitude=(bin,i)=>power?amplitude(bin.amplitude/((i===0||i===capture.count/2)?1:Math.sqrt(2))):amplitude(bin.amplitude);
  const points=s=>s.map(b=>({x:b.frequency,y:amplitude(b.amplitude)}));
  document.querySelector('#wheel-spectrum-plot').innerHTML=chartMarkup({curves:[{points:capture.cosSpectrum.map((b,i)=>({x:b.frequency,y:realAmplitude(b,i)})),color:'var(--answer)'},{points:capture.sinSpectrum.map((b,i)=>({x:b.frequency,y:realAmplitude(b,i)})),color:'#d97706',dashed:true}],xMax:limit,yRange,xLabel:'Frecuencia (Hz)',yLabel,frequencyMarker:capture.meanFrequency!==0?Math.abs(capture.meanFrequency):null});
- document.querySelector('#wheel-complex-plot').innerHTML=chartMarkup({curves:[{points:points(capture.complex),color:'var(--wave)'}],xMin:-limit,xMax:limit,yRange,xLabel:'Frecuencia con signo (Hz)',yLabel,frequencyMarker:capture.meanFrequency!==0?(capture.connection==='yx'?-1:1)*capture.meanFrequency:null});
+ const complexPlot=document.querySelector('#wheel-complex-plot'),bounds=complexPlot.getBoundingClientRect();
+ const height=bounds.width>0?Math.max(200,800*bounds.height/bounds.width):300;
+ complexPlot.setAttribute('viewBox',`0 0 800 ${height}`);
+ complexPlot.innerHTML=chartMarkup({height,curves:[{points:points(capture.complex),color:'var(--wave)'}],xMin:-limit,xMax:limit,yRange,xLabel:'Frecuencia con signo (Hz)',yLabel,frequencyMarker:capture.meanFrequency!==0?(capture.connection==='yx'?-1:1)*capture.meanFrequency:null});
  document.querySelector('#wheel-spectrum-plot').setAttribute('aria-label',`FFT unilateral de los canales del encoder, rango 0 a ${limit} Hz`);
  document.querySelector('#wheel-complex-plot').setAttribute('aria-label',`FFT compleja bilateral, rango menos ${limit} a ${limit} Hz, conexión ${capture.connection==='yx'?'real seno, imaginaria coseno':'real coseno, imaginaria seno'}`);
 }
@@ -268,3 +271,12 @@ function loadSlideExample(displacementMm){
 document.querySelector('#wheel-slide-example').addEventListener('click',()=>loadSlideExample(100));
 document.querySelector('#wheel-slide-small-example').addEventListener('click',()=>loadSlideExample(10));
 updatePauseButton();renderCapture();requestAnimationFrame(animationFrame);
+
+let wheelSpectrumSize='';
+new ResizeObserver(()=>{
+ const bounds=document.getElementById('wheel-complex-plot').getBoundingClientRect();
+ const size=`${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+ if(size===wheelSpectrumSize)return;
+ wheelSpectrumSize=size;
+ renderSpectrum();
+}).observe(document.getElementById('wheel-complex-plot'));

@@ -1,5 +1,6 @@
 'use strict';
 const controls=Object.fromEntries(['signal','delay','amplitude','scale','invert'].map(name=>[name,document.querySelector(`#tf-${name}`)]));
+const combineControl=document.querySelector('#tf-combine');
 const format=new Intl.NumberFormat('es',{maximumFractionDigits:3});
 const sinc=x=>Math.abs(x)<1e-12?1:Math.sin(Math.PI*x)/(Math.PI*x);
 const signalDefinitions={
@@ -32,6 +33,7 @@ function timeImagValue(p,t){return p.amplitude*(signalDefinitions[p.kind].timeIm
 function timeValue(p,t){return p.amplitude*signalDefinitions[p.kind].time(p.a*(t-p.delay));}
 const bounds={left:74,right:770,top:35,bottom:245};
 function chartFrame(ymin,ymax,xlabel,ylabel,phase=false){
+ if(combineControl.checked&&!phase&&xlabel==='Frecuencia f (Hz)')ymin=-ymax;
  const {left,right,top,bottom}=bounds;
  const x=v=>left+(v+6)/12*(right-left),y=v=>bottom-(v-ymin)/(ymax-ymin)*(bottom-top);
  let markup='';
@@ -75,12 +77,28 @@ function render(){
  document.querySelector('#tf-summary').textContent=`A = ${format.format(p.amplitude)} · a = ${format.format(p.a)} · τ = ${format.format(p.delay)} s. ${p.amplitude===0?'Señal nula: módulo cero y fase no definida.':p.a<0?'Se aplica inversión temporal.':'Sin inversión temporal.'}`;
  const definition=signalDefinitions[p.kind],samples=2400,locations=Array.from({length:samples+1},(_,i)=>-6+12*i/samples);
  const timeWeight=p.amplitude/Math.abs(p.a),timeMax=p.kind==='delta'?Math.max(1,2/Math.abs(p.a))*1.25:2.5;
+ bounds.right=770;
  const timeChart=chartFrame(-timeMax,timeMax,'Tiempo t (s)',p.kind==='delta'?'Impulso: peso (u.a.·s)':'Amplitud (u.a.)');
  document.querySelector('#tf-time').innerHTML=timeChart.markup+(p.kind==='delta'?impulseMarkup(timeChart,p.delay,timeWeight,`peso ${format.format(timeWeight)}`):curve(locations.map(t=>({x:t,y:timeValue(p,t)})),timeChart));
  if(definition.timeImag)document.querySelector('#tf-time').innerHTML+=curve(locations.map(t=>({x:t,y:timeImagValue(p,t)})),timeChart,{color:'#d97706',dashed:true});
  document.querySelector('#tf-complex-legend').hidden=!definition.timeImag;
  document.querySelector('#tf-time').setAttribute('aria-label',definition.timeImag?'Parte real e imaginaria de la exponencial compleja superpuestas entre −6 y 6 segundos':'Señal temporal entre −6 y 6 segundos');
+ const combined=combineControl.checked;
+ const spectrumPlot=document.getElementById('tf-magnitude'),plotBounds=spectrumPlot.getBoundingClientRect();
+ const spectrumWidth=plotBounds.height>0?Math.max(320,310*plotBounds.width/plotBounds.height):800;
+ spectrumPlot.setAttribute('viewBox',`0 0 ${spectrumWidth} 310`);
+ const phasePlot=document.getElementById('tf-phase'),phaseBounds=phasePlot.getBoundingClientRect();
+ const phaseWidth=phaseBounds.height>0?Math.max(320,310*phaseBounds.width/phaseBounds.height):spectrumWidth;
+ phasePlot.setAttribute('viewBox',`0 0 ${phaseWidth} 310`);
+ bounds.right=spectrumWidth-(combined?90:30);
+ document.body.classList.toggle('tf-combined',combined);
+ document.getElementById('tf-phase-card').hidden=combined;
+ document.getElementById('tf-combined-legend').hidden=!combined;
+ document.getElementById('tf-spectrum-title').textContent=combined?'Módulo y fase de Fourier':'Módulo de Fourier';
+ const magnitudeRight=bounds.right;
+ if(!combined)bounds.right=phaseWidth-30;
  const phaseChart=chartFrame(-Math.PI,Math.PI,'Frecuencia f (Hz)','Fase (rad)',true);
+ bounds.right=magnitudeRight;
  let magnitudeMarkup,phaseMarkup;
  if(definition.atoms){
   const atoms=spectralAtoms(p),max=Math.max(1,...spectralAtoms({...p,amplitude:2}).map(z=>Math.hypot(z.re,z.im)))*1.3;
@@ -96,8 +114,30 @@ function render(){
   phaseMarkup=phaseChart.markup+curve(spectrum.map(z=>({x:z.x,y:Math.hypot(z.re,z.im)>Math.max(1e-12,max*1e-6)?Math.atan2(z.im,z.re):null})),phaseChart,{phase:true});
   document.querySelector('#tf-impulse-note').textContent=p.kind==='sinc'?'El espectro rectangular tiene bordes en f = ±|a|/2.':'Módulo de la transformada analítica; los ejes horizontales permanecen fijos para comparar los cambios.';
  }
+ if(combined){
+  const phaseTrace=phaseMarkup.slice(phaseChart.markup.length).replaceAll('var(--wave)','#b45309').replaceAll('<path ', '<path stroke-dasharray="7 5" ');
+  magnitudeMarkup+=phaseTrace;
+  for(let i=0;i<=4;i++){
+   const value=-Math.PI+i*Math.PI/2;
+   magnitudeMarkup+=`<text class="tf-phase-label" x="${bounds.right+10}" y="${phaseChart.y(value)+4}" fill="#b45309" font-size="11" font-family="var(--font-mono)">${['−π','−π/2','0','π/2','π'][i]}</text>`;
+  }
+  magnitudeMarkup+=`<text x="${bounds.right+10}" y="18" fill="#b45309" font-size="11" font-family="var(--font-mono)">Fase (rad)</text>`;
+ }
  document.querySelector('#tf-magnitude').innerHTML=magnitudeMarkup;document.querySelector('#tf-phase').innerHTML=phaseMarkup;updatePair(p.kind);
 }
+combineControl.addEventListener('change',render);
 Object.values(controls).forEach(input=>input.addEventListener(input.tagName==='SELECT'||input.type==='checkbox'?'change':'input',render));
 document.querySelector('#tf-reset').addEventListener('click',()=>{controls.delay.value=0;controls.amplitude.value=1;controls.scale.value=1;controls.invert.checked=false;render();});
 render();
+
+let tfPlotSizes='';
+const tfPlotObserver=new ResizeObserver(()=>{
+ const sizes=['tf-magnitude','tf-phase'].map(id=>{
+  const rect=document.getElementById(id).getBoundingClientRect();
+  return `${rect.width.toFixed(1)}:${rect.height.toFixed(1)}`;
+ }).join('|');
+ if(sizes===tfPlotSizes)return;
+ tfPlotSizes=sizes;
+ render();
+});
+for(const id of ['tf-magnitude','tf-phase'])tfPlotObserver.observe(document.getElementById(id));
