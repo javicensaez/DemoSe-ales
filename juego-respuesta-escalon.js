@@ -105,23 +105,27 @@ function renderPlot(answer = null) {
   const padding = (maximum - minimum) * 0.12;
   const yMin = minimum - padding;
   const yMax = maximum + padding;
-  const x = time => 62 + time / target.duration * 714;
+  const bounds = plot.getBoundingClientRect();
+  const width = bounds.height > 0 ? Math.max(320, 480 * bounds.width / bounds.height) : 800;
+  const right = width - 24;
+  plot.setAttribute("viewBox", `0 0 ${width} 480`);
+  const x = time => 62 + time / target.duration * (right - 62);
   const y = value => 22 + (yMax - value) / (yMax - yMin) * 416;
   const parts = [];
   for (const tick of niceTicks(0, target.duration)) {
     parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="${x(tick)}" y1="22" x2="${x(tick)}" y2="438" /><text class="plot-tick-label" x="${x(tick)}" y="458" text-anchor="middle">${formatNumber(tick)}</text>`);
   }
   for (const tick of niceTicks(yMin, yMax)) {
-    parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="62" y1="${y(tick)}" x2="776" y2="${y(tick)}" /><text class="plot-tick-label" x="52" y="${y(tick) + 4}" text-anchor="end">${formatNumber(tick)}</text>`);
+    parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="62" y1="${y(tick)}" x2="${right}" y2="${y(tick)}" /><text class="plot-tick-label" x="52" y="${y(tick) + 4}" text-anchor="end">${formatNumber(tick)}</text>`);
   }
   for (const [samples, color, dash] of [[targetSamples, "var(--answer)", ""], [answerSamples, "#d97706", 'stroke-dasharray="8 5"']]) {
     if (!samples.length) continue;
     const path = samples.map((value, i) => `${i ? "L" : "M"}${x(target.duration * i / 1600).toFixed(2)},${y(value).toFixed(2)}`).join(" ");
     parts.push(`<path d="${path}" fill="none" stroke="${color}" stroke-width="3" ${dash} vector-effect="non-scaling-stroke" />`);
   }
-  parts.push('<text class="plot-axis-label" x="776" y="478" text-anchor="end">t (s)</text><text class="plot-axis-label" x="14" y="22">y(t) (adimensional)</text>');
+  parts.push(`<text class="plot-axis-label" x="${right}" y="478" text-anchor="end">t (s)</text><text class="plot-axis-label" x="14" y="22">y(t) (adimensional)</text>`);
   parts.push('<g id="step-game-cursor" visibility="hidden" pointer-events="none"><line id="step-game-cursor-line" y1="22" y2="438" stroke="var(--muted)" stroke-dasharray="4 4"/><circle id="step-game-target-dot" r="5" fill="var(--answer)" stroke="var(--surface)" stroke-width="2"/><circle id="step-game-answer-dot" r="5" fill="#d97706" stroke="var(--surface)" stroke-width="2"/></g>');
-  plotInspection = { target, answer, x, y };
+  plotInspection = { target, answer, x, y, right };
   inspectedTime = 0;
   cursorValues.textContent = 'Sitúa el cursor sobre la gráfica para consultar los valores.';
   plot.innerHTML = parts.join("");
@@ -153,11 +157,11 @@ function inspectPointer(event) {
   const matrix = plot.getScreenCTM();
   if (!matrix || !plotInspection) return;
   const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
-  if (point.x < 62 || point.x > 776 || point.y < 22 || point.y > 438) {
+  if (point.x < 62 || point.x > plotInspection.right || point.y < 22 || point.y > 438) {
     document.querySelector('#step-game-cursor').setAttribute('visibility', 'hidden');
     return;
   }
-  inspectPlot((point.x - 62) / 714 * plotInspection.target.duration);
+  inspectPlot((point.x - 62) / (plotInspection.right - 62) * plotInspection.target.duration);
 }
 plot.addEventListener('pointermove', inspectPointer);
 plot.addEventListener('pointerdown', inspectPointer);
@@ -254,3 +258,13 @@ document.querySelector("#step-game-solution-button").addEventListener("click", (
 });
 
 nextChallenge();
+
+let plotSize = "";
+new ResizeObserver(() => {
+  const bounds = plot.getBoundingClientRect();
+  const size = `${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+  if (size === plotSize) return;
+  plotSize = size;
+  const answer = plotInspection?.answer;
+  renderPlot(answer);
+}).observe(plot);

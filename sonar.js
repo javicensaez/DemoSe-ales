@@ -85,8 +85,12 @@ function rangeFor(values, extra = []) {
   return [min - padding, max + padding];
 }
 
-function chartMarkup({ curves, durationMs, yRange, yLabel, markers = [], searchRange = null, threshold = null }) {
-  const left = 66, right = 775, top = 34, bottom = 230;
+function chartMarkup({ curves, durationMs, yRange, yLabel, markers = [], searchRange = null, threshold = null, plotId }) {
+  const plot = document.getElementById(plotId);
+  const bounds = plot.getBoundingClientRect();
+  const width = bounds.height > 0 ? Math.max(320, 280 * bounds.width / bounds.height) : 800;
+  plot.setAttribute("viewBox", `0 0 ${width} 280`);
+  const left = 66, right = width - 25, top = 34, bottom = 230;
   const x = time => left + time / durationMs * (right - left);
   const y = value => top + (yRange[1] - value) / (yRange[1] - yRange[0]) * (bottom - top);
   const parts = [];
@@ -192,13 +196,14 @@ function render() {
   const signal = simulate(model, baseNoise);
   const correlation = crossCorrelation(signal.received);
   const estimate = detectEcho(correlation, model.baseline, model.noise);
-  document.querySelector("#sonar-emitted-plot").innerHTML = chartMarkup({ curves: [{ values: [...chirpSamples, 0], color: "var(--wave)" }], durationMs: 3, yRange: [-1.2, 1.2], yLabel: "Amplitud" });
   document.querySelector("#sonar-received-plot").innerHTML = chartMarkup({
+    plotId: "sonar-received-plot",
     curves: [{ values: signal.received, color: "var(--answer)", width: 1.2 }, { values: signal.clean, color: "#d97706", width: 2.5, dashed: true }],
     durationMs: 35, yRange: rangeFor(signal.received, signal.clean), yLabel: "Amplitud",
     markers: [{ time: signal.directDelay, label: "Sonido directo", color: "var(--muted)" }, { time: signal.delay, label: "Eco real", labelY: 32 }],
   });
   document.querySelector("#sonar-correlation-plot").innerHTML = chartMarkup({
+    plotId: "sonar-correlation-plot",
     curves: [{ values: correlation, color: "var(--wave)" }], durationMs: 35,
     yRange: rangeFor(correlation, [estimate.threshold]), yLabel: "C (normalizada)",
     searchRange: [estimate.minDelay * 1000, estimate.maxDelay * 1000], threshold: estimate.threshold,
@@ -225,3 +230,15 @@ function render() {
 Object.values(fields).forEach(input => input.addEventListener("input", render));
 document.querySelector("#sonar-emit").addEventListener("click", () => { baseNoise = randomNoise(baseNoise.length); render(); if (currentModel) animateEmission(); });
 render();
+
+let sonarPlotSizes = "";
+const sonarPlotObserver = new ResizeObserver(() => {
+  const sizes = ['sonar-received-plot', 'sonar-correlation-plot'].map(id => {
+    const bounds = document.getElementById(id).getBoundingClientRect();
+    return `${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+  }).join('|');
+  if (sizes === sonarPlotSizes) return;
+  sonarPlotSizes = sizes;
+  render();
+});
+for (const id of ['sonar-received-plot', 'sonar-correlation-plot']) sonarPlotObserver.observe(document.getElementById(id));

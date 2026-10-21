@@ -16,7 +16,7 @@
     <script src="circuito-rc.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-circuito-rc">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -44,28 +44,31 @@
         </p>
       </section>
 
-      <section class="plot-card rc-model" aria-label="Circuito y ecuaciones del sistema">
-        <svg class="rc-schematic" id="rc-schematic" viewBox="0 0 360 150" role="img" aria-label="Esquema del circuito"></svg>
-        <div class="rc-equations" id="rc-equations" aria-live="polite"></div>
-      </section>
-
-      <form class="plot-card rc-form" id="rc-form" novalidate>
-        <div class="rc-form-grid">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card rc-model" aria-label="Circuito, esquema y parámetros R y C">
           <label class="convolution-signal-select" for="rc-circuit">
             Circuito
-            <select id="rc-circuit">
+            <select id="rc-circuit" form="rc-form">
               <option value="rc">RC · salida en el condensador (paso bajo)</option>
               <option value="cr">CR · salida en la resistencia (paso alto)</option>
             </select>
           </label>
+        <svg class="rc-schematic" id="rc-schematic" viewBox="0 0 360 150" role="img" aria-label="Esquema del circuito"></svg>
+        <div class="rc-form-grid">
           <label class="convolution-signal-select" for="rc-resistance">
             Resistencia R (kΩ)
-            <input id="rc-resistance" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rc-error" />
+            <input id="rc-resistance" form="rc-form" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rc-error" />
           </label>
           <label class="convolution-signal-select" for="rc-capacitance">
             Capacidad C (µF)
-            <input id="rc-capacitance" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rc-error" />
+            <input id="rc-capacitance" form="rc-form" type="number" inputmode="decimal" step="any" min="0.01" max="1000" value="1" aria-describedby="rc-error" />
           </label>
+        </div>
+
+      </section>
+
+      <form class="panoramic-part-2 plot-card rc-form" id="rc-form" aria-label="Señal de entrada y sus parámetros" novalidate>
+        <div class="rc-form-grid">
           <label class="convolution-signal-select" for="rc-input">
             Señal de entrada x(t)
             <select id="rc-input">
@@ -87,10 +90,10 @@
             <input id="rc-width" type="number" inputmode="decimal" step="any" min="0.01" value="5" aria-describedby="rc-error" />
           </label>
           <label class="convolution-signal-select" for="rc-period-unit" data-square-field data-pulse-field hidden>
-            Unidad de tiempo (T y anchura)
+            Unidad de tiempo
             <select id="rc-period-unit">
-              <option value="ms">milisegundos (ms)</option>
-              <option value="us">microsegundos (µs)</option>
+              <option value="ms">ms</option>
+              <option value="us">us</option>
             </select>
           </label>
           <label class="convolution-signal-select" for="rc-duty" data-square-field hidden>
@@ -98,21 +101,11 @@
             <input id="rc-duty" type="number" inputmode="decimal" step="any" min="1" max="99" value="50" aria-describedby="rc-error" />
           </label>
         </div>
-        <p class="discrete-sequence-help">
-          Rangos: R y C entre 0,01 y 1000 · A entre 0,1 y 50 V · T y anchura del pulso entre 10 µs y 100 s · ciclo de trabajo entre 1 % y 99 %. El resultado se actualiza al cambiar cualquier valor.
-        </p>
+
         <p class="rc-validation" id="rc-error" role="alert" hidden></p>
       </form>
 
-      <section class="rc-workspace" aria-label="Gráficas de entrada y salida">
-        <article class="plot-card">
-          <div class="plot-heading">
-            <div><p class="eyebrow">Entrada</p><h2>Señal x(t)</h2></div>
-            <span class="plot-badge" id="rc-input-badge">Escalón unitario</span>
-          </div>
-          <svg class="time-plot rc-plot" id="rc-input-plot" viewBox="0 0 800 300" role="img"></svg>
-        </article>
-
+      <section class="panoramic-part-3 rc-workspace" aria-label="Respuesta del circuito con la entrada como referencia">
         <article class="plot-card">
           <div class="plot-heading">
             <div><p class="eyebrow">Salida</p><h2>Respuesta y(t)</h2></div>
@@ -122,10 +115,24 @@
             <span><span class="rc-swatch rc-swatch-output"></span>y(t) salida</span>
             <span><span class="rc-swatch rc-swatch-input"></span>x(t) entrada, como referencia (discontinua)</span>
           </div>
+          <label class="rc-axis-lock" for="rc-lock-axes">
+            <input id="rc-lock-axes" type="checkbox" aria-describedby="rc-lock-help" />
+            Bloquear ejes
+          </label>
+          <p class="discrete-plot-note" id="rc-lock-help">Conserva los rangos y las unidades actuales de tiempo y amplitud.</p>
           <svg class="time-plot rc-plot" id="rc-output-plot" viewBox="0 0 800 300" role="img"></svg>
           <dl class="rc-readouts" aria-live="polite" id="rc-readouts"></dl>
         </article>
       </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>Notas de la demostración</summary>
+<p class="discrete-sequence-help">
+          Rangos: R y C entre 0,01 y 1000 · A entre 0,1 y 50 V · T y anchura del pulso entre 10 µs y 100 s · ciclo de trabajo entre 1 % y 99 %. El resultado se actualiza al cambiar cualquier valor.
+        </p>
+</details>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<div class="rc-equations" id="rc-equations" aria-live="polite"></div>
+</details>
     </main>
 
     <footer class="site-footer demo-footer">

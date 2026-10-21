@@ -16,7 +16,7 @@
     <script src="convolucion.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-convolucion">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -42,12 +42,10 @@
         </p>
       </section>
 
-      <section class="convolution-formula plot-card" aria-label="Definición de la convolución">
-        <span id="convolution-definition">\(y(t)=x(t)*h(t)=\displaystyle\int_{-\infty}^{\infty}x(\tau)\,h(t-\tau)\,\mathrm{d}\tau\)</span>
-        <p id="convolution-definition-note">Como h(t) es causal, la integral puede terminar en t. El área coloreada representa el valor aproximado de la integral.</p>
-      </section>
+      <div class="panoramic-stage">
 
-      <section class="convolution-plots" aria-label="Gráficas de la convolución">
+
+      <section class="panoramic-part-2 convolution-plots" aria-label="Gráficas de la convolución">
         <div class="convolution-row convolution-input-row" aria-label="Señales originales">
           <article class="plot-card convolution-plot-card">
             <label class="convolution-signal-select" for="x-signal">
@@ -132,6 +130,13 @@
           </label>
         </section>
       </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>Definición de la convolución</summary>
+<section class="panoramic-part-1 convolution-formula plot-card" aria-label="Definición de la convolución">
+        <span id="convolution-definition">\(y(t)=x(t)*h(t)=\displaystyle\int_{-\infty}^{\infty}x(\tau)\,h(t-\tau)\,\mathrm{d}\tau\)</span>
+        <p id="convolution-definition-note">Como h(t) es causal, la integral puede terminar en t. El área coloreada representa el valor aproximado de la integral.</p>
+      </section>
+</details>
     </main>
 
     <footer class="site-footer demo-footer">

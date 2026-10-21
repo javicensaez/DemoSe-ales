@@ -40,7 +40,7 @@ const signalDefinitions = {
 };
 
 const timeRange = [-1.5, 1.5];
-const plotWidth = 800;
+let plotWidth = 800;
 const plotHeight = 320;
 const margins = { top: 24, right: 24, bottom: 42, left: 58 };
 const sampleCount = 601;
@@ -52,7 +52,6 @@ const samplingFrequency = document.querySelector("#sampling-frequency");
 const signalFrequencyOutput = document.querySelector("#signal-frequency-value");
 const samplingFrequencyOutput = document.querySelector("#sampling-frequency-value");
 const sampledPlot = document.querySelector("#sampled-plot");
-const reconstructedPlot = document.querySelector("#reconstructed-plot");
 
 function formatNumber(value, digits = 2) {
   return Number(value.toFixed(digits)).toString();
@@ -124,6 +123,9 @@ function createChartMarkup({ curves, samples = [], yRange, yTicks }) {
 }
 
 function render() {
+  const bounds = sampledPlot.getBoundingClientRect();
+  plotWidth = bounds.height > 0 ? Math.max(320, plotHeight * bounds.width / bounds.height) : 800;
+  sampledPlot.setAttribute("viewBox", `0 0 ${plotWidth} ${plotHeight}`);
   const selectedSignal = signalDefinitions[signalSelect.value];
   const baseFrequency = Number(signalFrequency.value);
   const sampleRate = Number(samplingFrequency.value);
@@ -199,7 +201,10 @@ function render() {
         : "Al no cumplirse Nyquist, las muestras también son compatibles con frecuencias más bajas: la reconstrucción puede parecer una señal distinta.";
 
   sampledPlot.innerHTML = createChartMarkup({
-    curves: [{ value: analogSignal, color: "#164b8c" }],
+    curves: [
+      { value: analogSignal, color: "#164b8c" },
+      { value: reconstructedSignal, color: "#15803d", dash: "8 5" },
+    ],
     samples,
     yRange,
     yTicks,
@@ -208,18 +213,7 @@ function render() {
     "aria-label",
     `${selectedSignal.name} de ${formatNumber(baseFrequency)} Hz con muestras a ${formatNumber(sampleRate)} Hz`,
   );
-  reconstructedPlot.innerHTML = createChartMarkup({
-    curves: [
-      { value: reconstructedSignal, color: "#1479bd", width: 3 },
-      { value: analogSignal, color: "#164b8c", width: 2, dash: "7 5" },
-    ],
-    yRange,
-    yTicks,
-  });
-  reconstructedPlot.setAttribute(
-    "aria-label",
-    `Reconstrucción sinc de la señal muestreada a ${formatNumber(sampleRate)} Hz comparada con la señal original`,
-  );
+
 }
 
 signalSelect.addEventListener("change", render);
@@ -227,3 +221,12 @@ signalFrequency.addEventListener("input", render);
 samplingFrequency.addEventListener("input", render);
 
 render();
+
+let samplingPlotSize = "";
+new ResizeObserver(() => {
+  const bounds = sampledPlot.getBoundingClientRect();
+  const size = `${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+  if (size === samplingPlotSize) return;
+  samplingPlotSize = size;
+  render();
+}).observe(sampledPlot);

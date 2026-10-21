@@ -10,7 +10,7 @@
   <script src="operaciones-senales.js" defer></script>
   <script src="projector-mode.js" defer></script>
 </head>
-<body class="demo-page signal-operations-page">
+<body class="demo-page signal-operations-page panoramic-page view-operaciones-senales">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -33,7 +33,8 @@
         <p>Explora cómo se suman, restan o multiplican dos señales en cada instante. Elige una señal en cada desplegable y después la operación. Las tres gráficas comparten los mismos ejes para facilitar la comparación.</p>
         <p><span id="operations-shift-help">Desplaza cada señal entre −2 y 2 s: los valores positivos la mueven a la derecha y los negativos a la izquierda.</span> La resta calcula la primera señal menos la segunda. La multiplicación es punto a punto. El tiempo se mide en segundos y las amplitudes se muestran en unidades arbitrarias (u.a.).</p>
       </section>
-      <section class="operations-workspace" aria-label="Señales de entrada y operación">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 operations-workspace" aria-label="Señales de entrada y operación">
         <section class="operations-row" aria-label="Primera señal">
           <div class="plot-card operations-controls">
             <h2>Primera señal</h2>
@@ -77,6 +78,7 @@
           </article>
         </section>
       </section>
+</div>
     </main>
     <footer class="site-footer demo-footer">
       <a class="brand footer-brand" href="index.html#inicio">

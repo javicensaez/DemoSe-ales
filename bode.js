@@ -2,6 +2,7 @@
 const bodeFields=Object.fromEntries(['gain','frequency','damping','zero','pole','delay','probe'].map(name=>[name,document.querySelector(`#bode-${name}`)]));
 const magnitudeScaleSelect=document.querySelector('#bode-magnitude-scale'),frequencyScaleSelect=document.querySelector('#bode-frequency-scale');
 const bodeSelect=document.querySelector('#bode-system');
+const bodeCombine=document.getElementById('bode-combine');
 const bodeFormat=new Intl.NumberFormat('es',{maximumFractionDigits:3});
 const bodeModels={
  low:{formula:String.raw`H(s)=\frac{K}{1+s/\omega_c}`,explanation:'Paso bajo de primer orden: conserva las frecuencias bajas. En ωc el módulo vale K/√2 y la fase es −45°.'},
@@ -42,19 +43,39 @@ function bodeTicks(min,max){
  const raw=(max-min)/5,power=10**Math.floor(Math.log10(raw)),normalized=raw/power,step=(normalized<=1?1:normalized<=2?2:normalized<=5?5:10)*power;
  const ticks=[];for(let v=Math.ceil(min/step)*step;v<=max+step*1e-8;v+=step)ticks.push(Math.abs(v)<1e-10?0:v);return ticks;
 }
-function bodeChart(points,property,range,probe){
- const logarithmic=frequencyScaleSelect.value==='log';
- const left=80,right=770,top=32,bottom=248,x=w=>left+(logarithmic?(Math.log10(w)+2)/5:(w-.01)/(1000-.01))*(right-left),y=v=>bottom-(v-range[0])/(range[1]-range[0])*(bottom-top);
+function bodeChart(points,property,range,probe,phaseRange=null){
+ const combined=phaseRange!==null,logarithmic=frequencyScaleSelect.value==='log';
+ const plot=document.getElementById(property==='phase'?'bode-phase':'bode-magnitude');
+ const bounds=plot.getBoundingClientRect(),height=310,width=bounds.height>0?height*bounds.width/bounds.height:800;
+ plot.setAttribute('viewBox',`0 0 ${width} ${height}`);
+ const left=combined?Math.min(80,width*.2):80;
+ const right=width-(combined?Math.min(90,width*.28):30),top=32,bottom=height-62;
+ const x=w=>left+(logarithmic?(Math.log10(w)+2)/5:(w-.01)/(1000-.01))*(right-left);
+ const y=v=>bottom-(v-range[0])/(range[1]-range[0])*(bottom-top);
+ const phaseY=v=>bottom-(v-phaseRange[0])/(phaseRange[1]-phaseRange[0])*(bottom-top);
+ const magnitudeColor='var(--wave)',phaseColor='#b45309';
+ const tickY=height-38;
  let markup='';
- if(logarithmic)for(let decade=-2;decade<=3;decade++){
-  const frequency=10**decade;
-  markup+=`<line class="plot-grid-line" x1="${x(frequency)}" x2="${x(frequency)}" y1="${top}" y2="${bottom}"/><text class="plot-tick-label" x="${x(frequency)}" y="272" text-anchor="middle">${bodeFormat.format(frequency)}</text>`;
-  if(decade<3)for(let m=2;m<=9;m++)markup+=`<line class="plot-grid-line" opacity=".35" x1="${x(m*frequency)}" x2="${x(m*frequency)}" y1="${top}" y2="${bottom}"/>`;
+ const frequencies=logarithmic?Array.from({length:6},(_,i)=>10**(i-2)):[.01,...bodeTicks(.01,1000)];
+ for(const frequency of frequencies){
+  markup+=`<line class="plot-grid-line" x1="${x(frequency)}" x2="${x(frequency)}" y1="${top}" y2="${bottom}"/><text class="plot-tick-label" x="${x(frequency)}" y="${tickY}" text-anchor="middle">${bodeFormat.format(frequency)}</text>`;
+  if(logarithmic&&frequency<1000)for(let m=2;m<=9;m++)markup+=`<line class="plot-grid-line" opacity=".35" x1="${x(m*frequency)}" x2="${x(m*frequency)}" y1="${top}" y2="${bottom}"/>`;
  }
- else for(const frequency of [.01,...bodeTicks(.01,1000)])markup+=`<line class="plot-grid-line" x1="${x(frequency)}" x2="${x(frequency)}" y1="${top}" y2="${bottom}"/><text class="plot-tick-label" x="${x(frequency)}" y="272" text-anchor="middle">${bodeFormat.format(frequency)}</text>`;
- for(const v of bodeTicks(...range))markup+=`<line class="${v===0?'plot-axis-line':'plot-grid-line'}" x1="${left}" x2="${right}" y1="${y(v)}" y2="${y(v)}"/><text class="plot-tick-label" x="${left-10}" y="${y(v)+4}" text-anchor="end">${bodeFormat.format(v)}</text>`;
- const path=points.map((p,n)=>`${n?'L':'M'}${x(p.w).toFixed(2)},${y(p[property]).toFixed(2)}`).join(' ');
- markup+=`<path d="${path}" fill="none" stroke="var(--wave)" stroke-width="2.5"/><line x1="${x(probe.w)}" x2="${x(probe.w)}" y1="${top}" y2="${bottom}" stroke="#d97706" stroke-dasharray="5 4"/><circle cx="${x(probe.w)}" cy="${y(probe[property])}" r="5" fill="#d97706" stroke="var(--foreground)"/><text class="plot-axis-label" x="${right}" y="301" text-anchor="end">Frecuencia angular ω (rad/s) · escala ${logarithmic?'log':'lineal'}</text><text class="plot-axis-label" x="12" y="18">${property==='db'?'Magnitud (dB)':property==='linear'?'Magnitud (V/V)':'Fase (°)'}</text>`;
+ for(const v of bodeTicks(...range))markup+=`<line class="${v===0?'plot-axis-line':'plot-grid-line'}" x1="${left}" x2="${right}" y1="${y(v)}" y2="${y(v)}"/><text class="plot-tick-label" ${combined?`style="fill:${magnitudeColor}"`:''} x="${left-10}" y="${y(v)+4}" text-anchor="end">${bodeFormat.format(v)}</text>`;
+ if(combined){
+  markup+=`<line x1="${left}" x2="${left}" y1="${top}" y2="${bottom}" stroke="${magnitudeColor}"/><line x1="${right}" x2="${right}" y1="${top}" y2="${bottom}" stroke="${phaseColor}"/>`;
+  for(const v of bodeTicks(...phaseRange))markup+=`<line x1="${right}" x2="${right+5}" y1="${phaseY(v)}" y2="${phaseY(v)}" stroke="${phaseColor}"/><text class="plot-tick-label bode-phase-tick" style="fill:${phaseColor}" x="${width-8}" y="${phaseY(v)+4}" text-anchor="end">${bodeFormat.format(v)}</text>`;
+ }
+ const pathFor=(key,mapY)=>points.map((p,n)=>`${n?'L':'M'}${x(p.w).toFixed(2)},${mapY(p[key]).toFixed(2)}`).join(' ');
+ const clipId=`bode-${property}-clip`;
+ markup+=`<defs><clipPath id="${clipId}"><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top}"/></clipPath></defs><g clip-path="url(#${clipId})"><path class="bode-magnitude-trace" d="${pathFor(property,y)}" fill="none" stroke="${magnitudeColor}" stroke-width="2.5"/>`;
+ if(combined)markup+=`<path class="bode-phase-trace" d="${pathFor('phase',phaseY)}" fill="none" stroke="${phaseColor}" stroke-width="2.5" stroke-dasharray="10 5"/>`;
+ markup+=`<line x1="${x(probe.w)}" x2="${x(probe.w)}" y1="${top}" y2="${bottom}" stroke="${combined?'var(--muted)':'#d97706'}" stroke-dasharray="5 4"/><circle class="bode-magnitude-probe" cx="${x(probe.w)}" cy="${y(probe[property])}" r="5" fill="${combined?magnitudeColor:'#d97706'}" stroke="var(--foreground)"/>`;
+ if(combined)markup+=`<circle class="bode-phase-probe" cx="${x(probe.w)}" cy="${phaseY(probe.phase)}" r="5" fill="${phaseColor}" stroke="var(--foreground)"/>`;
+ markup+='</g>';
+ const frequencyLabel=combined?`ω (rad/s) · ${logarithmic?'log':'lineal'}`:`Frecuencia angular ω (rad/s) · escala ${logarithmic?'log':'lineal'}`;
+ markup+=`<text class="plot-axis-label" x="${right}" y="${height-9}" text-anchor="end">${frequencyLabel}</text><text class="plot-axis-label" ${combined?`style="fill:${magnitudeColor}"`:''} x="12" y="18">${property==='db'?'Magnitud (dB)':property==='linear'?'Magnitud (V/V)':'Fase (°)'}</text>`;
+ if(combined)markup+=`<text class="plot-axis-label bode-phase-axis" style="fill:${phaseColor}" x="${width-8}" y="18" text-anchor="end">Fase (°)</text>`;
  return markup;
 }
 function bodeExpressions(kind){
@@ -84,6 +105,11 @@ function updateBodeModel(kind){
  });
 }
 function renderBode(){
+ const combined=bodeCombine.checked;
+ document.body.classList.toggle('bode-combined',combined);
+ document.getElementById('bode-phase-card').hidden=combined;
+ document.getElementById('bode-combined-legend').hidden=!combined;
+ document.getElementById('bode-chart-title').textContent=combined?'Magnitud y fase':'Magnitud';
  const p=readBode(),error=document.querySelector('#bode-error');error.hidden=!!p;
  if(!p){error.textContent='Revisa los parámetros y mantenlos dentro de los rangos indicados.';return;}
  const second=['secondLow','secondHigh'].includes(p.kind);
@@ -100,15 +126,37 @@ function renderBode(){
  const dbMin=Math.floor((Math.min(...reference)-20)/20)*20,dbMax=Math.ceil((Math.max(...reference)+20)/20)*20;
  const minPhase=Math.min(0,...points.map(v=>v.phase)),maxPhase=Math.max(0,...points.map(v=>v.phase)),padding=Math.max(15,(maxPhase-minPhase)*.07);
  const linear=magnitudeScaleSelect.value==='linear';
- document.querySelector('#bode-magnitude').innerHTML=bodeChart(points,linear?'linear':'db',linear?[0,Math.max(...reference.map(db=>10**((db+20)/20)))*1.1]:[dbMin,dbMax],probe);
- document.querySelector('#bode-magnitude').setAttribute('aria-label',`Magnitud en ${linear?'escala lineal V/V':'decibelios'} frente a frecuencia angular en escala ${frequencyScaleSelect.value==='log'?'logarítmica':'lineal'}`);
+ const magnitudeRange=linear?[0,Math.max(...reference.map(db=>10**((db+20)/20)))*1.1]:[dbMin,dbMax];
+ const phaseRange=[minPhase-padding,maxPhase+padding];
+ document.querySelector('#bode-magnitude').innerHTML=bodeChart(points,linear?'linear':'db',magnitudeRange,probe,combined?phaseRange:null);
+ document.querySelector('#bode-magnitude').setAttribute('aria-label',`Magnitud en ${linear?'escala lineal V/V':'decibelios'}${combined?', eje izquierdo; fase en grados, eje derecho':''}, frente a frecuencia angular en escala ${frequencyScaleSelect.value==='log'?'logarítmica':'lineal'}`);
  document.querySelector('#bode-phase').setAttribute('aria-label',`Fase continua en grados frente a frecuencia angular en escala ${frequencyScaleSelect.value==='log'?'logarítmica':'lineal'}`);
- document.querySelector('#bode-phase').innerHTML=bodeChart(points,'phase',[minPhase-padding,maxPhase+padding],probe);
+ if(!combined)document.querySelector('#bode-phase').innerHTML=bodeChart(points,'phase',phaseRange,probe);
  const rows=[['Frecuencia angular',`${bodeFormat.format(p.probe)} rad/s`],['Frecuencia',`${bodeFormat.format(p.probe/(2*Math.PI))} Hz`],['Magnitud',`${bodeFormat.format(probe.db)} dB`],['Ganancia de amplitud',`${bodeFormat.format(10**(probe.db/20))} V/V`],['Fase continua',`${bodeFormat.format(probe.phase)}°`]];
  document.querySelector('#bode-readouts').innerHTML=rows.map(([term,value])=>`<div><dt>${term}</dt><dd>${value}</dd></div>`).join('');
  document.querySelector('#bode-explanation').textContent=bodeModels[p.kind].explanation;updateBodeModel(p.kind);
 }
+bodeCombine.addEventListener('change',renderBode);
 magnitudeScaleSelect.addEventListener('change',renderBode);frequencyScaleSelect.addEventListener('change',renderBode);
 bodeSelect.addEventListener('change',renderBode);Object.values(bodeFields).forEach(input=>input.addEventListener('input',renderBode));
 document.querySelector('#bode-reset').addEventListener('click',()=>{for(const [name,value] of Object.entries({gain:0,frequency:1,damping:.5,zero:0,pole:1,delay:.1,probe:1}))bodeFields[name].value=value;renderBode();});
 renderBode();
+
+
+const bodeShowMeasures=document.getElementById('bode-show-measures');
+bodeShowMeasures.addEventListener('change',()=>{
+ document.getElementById('bode-measures-card').hidden=!bodeShowMeasures.checked;
+ document.body.classList.toggle('bode-measures-hidden',!bodeShowMeasures.checked);
+ renderBode();
+});
+let bodePlotSize='';
+const bodeResizeObserver=new ResizeObserver(()=>{
+ const size=['bode-magnitude','bode-phase'].map(id=>{
+  const box=document.getElementById(id).getBoundingClientRect();
+  return `${box.width.toFixed(2)}:${box.height.toFixed(2)}`;
+ }).join('|');
+ if(size===bodePlotSize)return;
+ bodePlotSize=size;
+ renderBode();
+});
+for(const id of ['bode-magnitude','bode-phase'])bodeResizeObserver.observe(document.getElementById(id));

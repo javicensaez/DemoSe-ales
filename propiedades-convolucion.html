@@ -10,7 +10,7 @@
   <script src="propiedades-convolucion.js" defer></script>
   <script src="projector-mode.js" defer></script>
 </head>
-<body class="demo-page convolution-properties-page">
+<body class="demo-page convolution-properties-page panoramic-page view-propiedades-convolucion">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -33,7 +33,8 @@
         <p>Elige una propiedad y cambia las señales para comprobar su significado. La gráfica del resultado superpone ambos miembros de la igualdad: si coinciden, las líneas recorren la misma curva.</p>
         <p>El símbolo * representa la convolución, no el producto punto a punto. En los desplazamientos, un retardo positivo mueve la señal a la derecha. Las flechas de Dirac indican el peso del impulso; su altura es simbólica.</p>
       </section>
-      <section class="plot-card cp-card" aria-labelledby="cp-choose-title">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card cp-card" aria-labelledby="cp-choose-title">
         <h2 id="cp-choose-title">Elige una propiedad</h2>
         <div class="cp-properties" role="group" aria-label="Propiedad de la convolución">
           <button class="game-button" type="button" data-cp-property="commutative" aria-pressed="true">1 · Conmutativa</button>
@@ -45,7 +46,7 @@
           <button class="game-button" type="button" data-cp-property="derivative" aria-pressed="false">7 · Derivación</button>
         </div>
       </section>
-      <section class="cp-workspace" aria-label="Controles y explicación de la propiedad">
+      <section class="panoramic-part-2 cp-workspace" aria-label="Controles y explicación de la propiedad">
         <aside class="plot-card cp-card cp-controls" aria-labelledby="cp-controls-title">
           <h2 id="cp-controls-title">Señales</h2>
           <label for="cp-x">Señal x(t)<select id="cp-x"></select></label>
@@ -68,7 +69,26 @@
           <p id="cp-status" role="status" aria-live="polite"></p>
         </article>
       </section>
-      <section class="plot-card cp-card" aria-labelledby="cp-blocks-title">
+
+      <section class="panoramic-part-4 plot-card cp-card" aria-labelledby="cp-inputs-title">
+        <h2 id="cp-inputs-title">Señales de entrada</h2>
+        <div class="plot-legend" id="cp-input-legend"></div>
+        <svg class="time-plot" id="cp-input-plot" viewBox="0 0 900 240" role="img" aria-label="Señales de entrada, tiempo en segundos"></svg>
+      </section>
+      <section class="panoramic-part-5 plot-card cp-card" id="cp-intermediate-card" aria-labelledby="cp-intermediate-title" hidden>
+        <h2 id="cp-intermediate-title">Resultados intermedios</h2>
+        <div class="plot-legend" id="cp-intermediate-legend"></div>
+        <svg class="time-plot" id="cp-intermediate-plot" viewBox="0 0 900 240" role="img" aria-label="Resultados intermedios de las convoluciones"></svg>
+      </section>
+      <section class="panoramic-part-6 plot-card cp-card" aria-labelledby="cp-result-title">
+        <h2 id="cp-result-title">Compara ambos miembros</h2>
+        <div class="plot-legend" id="cp-result-legend"></div>
+        <svg class="time-plot" id="cp-result-plot" viewBox="0 0 900 260" role="img" aria-label="Comparación de ambos miembros de la igualdad"></svg>
+        <p id="cp-error"></p>
+      </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>La propiedad por bloques</summary>
+<section class="panoramic-part-3 plot-card cp-card" aria-labelledby="cp-blocks-title">
         <h2 id="cp-blocks-title">La misma propiedad por bloques</h2>
         <p id="cp-blocks-description"></p>
         <div class="cp-blocks-scroll" role="region" tabindex="0" aria-label="Diagramas de bloques equivalentes; desplazamiento horizontal en pantallas pequeñas">
@@ -76,23 +96,8 @@
         </div>
         <p>Las flechas indican el sentido de la señal. Cada bloque h representa un sistema lineal e invariante en el tiempo cuya salida es la convolución de su entrada con h. El círculo + suma sus entradas.</p>
       </section>
-      <section class="plot-card cp-card" aria-labelledby="cp-inputs-title">
-        <h2 id="cp-inputs-title">Señales de entrada</h2>
-        <div class="plot-legend" id="cp-input-legend"></div>
-        <svg class="time-plot" id="cp-input-plot" viewBox="0 0 900 240" role="img" aria-label="Señales de entrada, tiempo en segundos"></svg>
-      </section>
-      <section class="plot-card cp-card" id="cp-intermediate-card" aria-labelledby="cp-intermediate-title" hidden>
-        <h2 id="cp-intermediate-title">Resultados intermedios</h2>
-        <div class="plot-legend" id="cp-intermediate-legend"></div>
-        <svg class="time-plot" id="cp-intermediate-plot" viewBox="0 0 900 240" role="img" aria-label="Resultados intermedios de las convoluciones"></svg>
-      </section>
-      <section class="plot-card cp-card" aria-labelledby="cp-result-title">
-        <h2 id="cp-result-title">Compara ambos miembros</h2>
-        <div class="plot-legend" id="cp-result-legend"></div>
-        <svg class="time-plot" id="cp-result-plot" viewBox="0 0 900 260" role="img" aria-label="Comparación de ambos miembros de la igualdad"></svg>
-        <p id="cp-error"></p>
-      </section>
-      <section class="plot-card cp-card" aria-labelledby="cp-notes-title">
+</details>
+      <section class="panoramic-information plot-card cp-card" aria-labelledby="cp-notes-title">
         <h2 id="cp-notes-title">Cómo se hace la comparación</h2>
         <p>Las señales están acotadas en el tiempo. Se calculan convoluciones lineales, sin repetir periódicamente las curvas, con paso temporal de 0,02 s. Cada gráfica usa un único eje para todas las curvas que compara.</p>
         <p>La delta se aplica mediante su propiedad de selección, sin sustituirla por un pico de altura finita. En la derivación se compara la derivada numérica del resultado con la convolución usando la derivada de cada entrada; los saltos del pulso rectangular aportan impulsos de Dirac. Para derivar el resultado se utiliza una cuadratura más fina y diferencias centradas con paso de 0,0001 s. Las pequeñas diferencias numéricas dependen de la discretización.</p>

@@ -10,7 +10,7 @@
     <script src="segundo-orden.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page second-order-page">
+  <body class="demo-page second-order-page panoramic-page view-segundo-orden">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -33,14 +33,15 @@
         <h1>Sistema de <span>segundo orden</span></h1>
         <p>Explora cómo el factor de amortiguamiento ζ cambia las oscilaciones y cómo la frecuencia natural ω₀ cambia la rapidez de la respuesta. Mueve los dos deslizadores y relaciona la respuesta al escalón con la posición de los polos. El sistema parte en reposo y recibe un escalón unitario en t = 0.</p>
       </section>
-      <section class="plot-card" aria-label="Modelo del sistema">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card" aria-label="Modelo del sistema">
         <div class="rc-equations">
           <p>\(H(s)=\dfrac{\omega_0^2}{s^2+2\zeta\omega_0s+\omega_0^2},\qquad x(t)=u(t)\)</p>
           <p>\(s_{1,2}=-\zeta\omega_0\pm\omega_0\sqrt{\zeta^2-1}\)</p>
         </div>
         <p class="discrete-plot-note">Ganancia estática H(0) = 1. La función de transferencia no tiene ceros finitos.</p>
       </section>
-      <section class="plot-card second-order-controls" aria-label="Parámetros del sistema">
+      <section class="panoramic-part-2 plot-card second-order-controls" aria-label="Parámetros del sistema">
         <label for="so-damping">Factor de amortiguamiento ζ <output id="so-damping-value" for="so-damping">0,50</output>
           <input id="so-damping" type="range" min="0" max="2" step="0.01" value="0.5" aria-describedby="so-controls-note" />
           <span class="second-order-range">0 · sin amortiguamiento / 1 · crítico / 2 · sobreamortiguado</span>
@@ -52,7 +53,7 @@
         <p class="discrete-plot-note" id="so-controls-note">Usa también las flechas del teclado. La gráfica temporal conserva sus escalas al cambiar los parámetros para comparar la rapidez y el sobreimpulso. El plano s mantiene ambos ejes fijos entre −20 y 20 rad/s, con la misma escala en ambos ejes.</p>
         <p class="rc-validation" id="so-error" role="alert" hidden></p>
       </section>
-      <section class="rc-workspace" aria-label="Respuesta al escalón y diagrama de polos y ceros">
+      <section class="panoramic-part-3 rc-workspace" aria-label="Respuesta al escalón y diagrama de polos y ceros">
         <article class="plot-card">
           <div class="plot-heading"><div><p class="eyebrow">Salida</p><h2>Respuesta al escalón y(t)</h2></div><span class="plot-badge" id="so-regime"></span></div>
           <div class="convolution-legend convolution-overlay-legend">
@@ -70,12 +71,17 @@
           <svg class="rlc-polezero" id="so-poles-plot" viewBox="0 0 440 440" role="img" aria-label="Polos del sistema de segundo orden"></svg>
           <p class="discrete-plot-note" id="so-poles-note"></p>
         </article>
-        <article class="plot-card rlc-readouts-card">
+
+
+      </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<article class="plot-card rlc-readouts-card">
           <div class="plot-heading"><div><p class="eyebrow">Medidas</p><h2>Parámetros de la respuesta</h2></div></div>
           <dl class="rc-readouts" id="so-readouts" aria-live="polite"></dl>
           <p class="discrete-plot-note">El tiempo de establecimiento es el instante a partir del cual la salida permanece entre 0,98 y 1,02. Se calcula aunque quede fuera de los 5 s mostrados.</p>
         </article>
-        <article class="plot-card rlc-readouts-card" aria-labelledby="so-formulas-title">
+<article class="plot-card rlc-readouts-card" aria-labelledby="so-formulas-title">
           <div class="plot-heading"><div><p class="eyebrow">Fórmulas</p><h2 id="so-formulas-title">Cálculos del sistema</h2></div></div>
           <div class="rc-equations">
             <p>Modelo: \(H(s)=\dfrac{\omega_0^2}{s^2+2\zeta\omega_0s+\omega_0^2}\).</p>
@@ -94,7 +100,7 @@
           </div>
           <p class="discrete-plot-note">Las respuestas se aplican para t ≥ 0, con condiciones iniciales nulas. Para ζ = 0, y(t) = 1 − cos(ω₀t): no hay valor final ni tiempo de establecimiento. Para ζ ≥ 1 no hay sobreimpulso ni pico.</p>
         </article>
-      </section>
+</details>
     </main>
     <footer class="site-footer demo-footer">
       <a class="brand footer-brand" href="index.html#inicio">

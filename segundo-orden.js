@@ -1,5 +1,6 @@
 const dampingInput = document.querySelector("#so-damping");
 const frequencyInput = document.querySelector("#so-frequency");
+const stepPlot = document.querySelector("#so-step-plot");
 const colors = { input: "var(--answer)", output: "#d97706" };
 const numberFormat = new Intl.NumberFormat("es", { maximumFractionDigits: 3 });
 const formatNumber = (value) => numberFormat.format(Math.abs(value) < 1e-12 ? 0 : value);
@@ -67,8 +68,10 @@ function niceTicks(min, max, target = 6) {
 }
 
 function stepChart({ series, xRange, yRange, xLabel, yLabel, markers = [], settlingMarker = null }) {
-  const width = 800;
-  const height = 480;
+  const bounds = stepPlot.getBoundingClientRect();
+  const width = bounds.width || 800;
+  const height = bounds.height || 480;
+  stepPlot.setAttribute("viewBox", `0 0 ${width} ${height}`);
   const margin = { top: 22, right: 24, bottom: 42, left: 62 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
@@ -202,7 +205,6 @@ function render() {
     return [time, stepValue(model, time)];
   });
   output.unshift([-1, 0]);
-  const stepPlot = document.querySelector("#so-step-plot");
   const peakTime = zeta < 1 ? Math.PI / model.poles[0].im : null;
   const peakValue = peakTime === null ? null : stepValue(model, peakTime);
   const peakDescription = peakTime === null
@@ -254,4 +256,12 @@ function render() {
 
 dampingInput.addEventListener("input", render);
 frequencyInput.addEventListener("input", render);
+let lastPlotSize = "";
+new ResizeObserver(() => {
+  const bounds = stepPlot.getBoundingClientRect();
+  const size = `${bounds.width.toFixed(2)}:${bounds.height.toFixed(2)}`;
+  if (size === lastPlotSize) return;
+  lastPlotSize = size;
+  render();
+}).observe(stepPlot);
 render();

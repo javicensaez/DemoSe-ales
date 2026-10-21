@@ -2,7 +2,6 @@ const sequenceForm = document.querySelector("#sequence-form");
 const xSequenceInput = document.querySelector("#x-sequence");
 const hSequenceInput = document.querySelector("#h-sequence");
 const sequenceError = document.querySelector("#sequence-error");
-const stepSlider = document.querySelector("#step-slider");
 const previousButton = document.querySelector("#previous-step");
 const nextButton = document.querySelector("#next-step");
 const showResultButton = document.querySelector("#show-result");
@@ -46,7 +45,7 @@ function calculateConvolution() {
 
 function renderOverlap() {
   const firstIndex = -hSequence.length + 1;
-  const lastIndex = xSequence.length + hSequence.length - 2;
+  const lastIndex = xSequence.length + hSequence.length - 1;
   const indices = Array.from(
     { length: lastIndex - firstIndex + 1 },
     (_, position) => firstIndex + position,
@@ -58,12 +57,15 @@ function renderOverlap() {
   );
   const outputSequence = calculateConvolution();
   const maxOutputMagnitude = Math.max(1, ...outputSequence.map(Math.abs));
+  const maxProductMagnitude = Math.max(1, ...xSequence.map((value, k) => Math.abs(value * (hSequence[outputIndex - k] ?? 0))));
+  const productScaleY = 36 / maxProductMagnitude;
   const xBaseline = 75;
   const hBaseline = 175;
-  const outputBaseline = 340;
+  const productBaseline = 275;
+  const outputBaseline = 375;
   const scaleY = 36 / maxMagnitude;
   const outputScaleY = 50 / maxOutputMagnitude;
-  const plotLeft = 96;
+  const plotLeft = 135;
   const plotRight = 750;
   const xPosition = (index) =>
     indices.length === 1
@@ -73,9 +75,11 @@ function renderOverlap() {
     `<title>Secuencias x[k] y h[${outputIndex} − k] alineadas en filas separadas</title>`,
     `<line class="plot-axis-line" x1="${plotLeft - 18}" y1="${xBaseline}" x2="${plotRight + 10}" y2="${xBaseline}" />`,
     `<line class="plot-axis-line" x1="${plotLeft - 18}" y1="${hBaseline}" x2="${plotRight + 10}" y2="${hBaseline}" />`,
+    `<line class="plot-axis-line" x1="${plotLeft - 18}" y1="${productBaseline}" x2="${plotRight + 10}" y2="${productBaseline}" />`,
     `<line class="plot-axis-line" x1="${plotLeft - 18}" y1="${outputBaseline}" x2="${plotRight + 10}" y2="${outputBaseline}" />`,
     `<text class="discrete-row-label discrete-x-label" x="8" y="${xBaseline + 4}">x[k]</text>`,
     `<text class="discrete-row-label discrete-h-label" x="8" y="${hBaseline + 4}">h[n−k]</text>`,
+    `<text class="discrete-row-label discrete-product-label" x="8" y="${productBaseline + 4}">x[k]·h[n−k]</text>`,
     `<text class="discrete-row-label discrete-output-label" x="8" y="${outputBaseline + 4}">y[n]</text>`,
   ];
 
@@ -86,32 +90,37 @@ function renderOverlap() {
     const x = xPosition(k);
     const xY = xBaseline - xValue * scaleY;
     const hY = hBaseline - hValue * scaleY;
+    const product = xValue * hValue;
+    const productY = productBaseline - product * productScaleY;
     svgParts.push(
-      `<line class="plot-grid-line" x1="${x}" y1="24" x2="${x}" y2="390" />`,
+      `<line class="plot-grid-line" x1="${x}" y1="24" x2="${x}" y2="425" />`,
       `<line x1="${x}" y1="${xBaseline}" x2="${x}" y2="${xY}" stroke="var(--answer)" stroke-width="3" />`,
       `<circle cx="${x}" cy="${xY}" r="5" fill="var(--answer)"><title>x[${k}] = ${formatNumber(xValue)}</title></circle>`,
       `<text class="discrete-sample-value discrete-x-value" x="${x}" y="${xY + (xValue < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(xValue)}</text>`,
       `<line x1="${x}" y1="${hBaseline}" x2="${x}" y2="${hY}" stroke="var(--wave)" stroke-width="3" />`,
       `<circle cx="${x}" cy="${hY}" r="5" fill="var(--wave)"><title>h[${hIndex}] = ${formatNumber(hValue)}</title></circle>`,
       `<text class="discrete-sample-value discrete-h-value" x="${x}" y="${hY + (hValue < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(hValue)}</text>`,
-      `<text class="discrete-index-label" x="${x}" y="420" text-anchor="middle">${k}</text>`,
+      `<line x1="${x}" y1="${productBaseline}" x2="${x}" y2="${productY}" stroke="var(--accent)" stroke-width="3" />`,
+      `<circle cx="${x}" cy="${productY}" r="5" fill="var(--accent)"><title>x[${k}] · h[${hIndex}] = ${formatNumber(product)}</title></circle>`,
+      `<text class="discrete-sample-value" x="${x}" y="${productY + (product < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(product)}</text>`,
+      `<text class="discrete-index-label" x="${x}" y="450" text-anchor="middle">${k}</text>`,
     );
     if (k >= 0 && k <= outputIndex) {
-      const outputY = outputBaseline - outputSequence[k] * outputScaleY;
+      const outputY = outputBaseline - (outputSequence[k] ?? 0) * outputScaleY;
       svgParts.push(
         `<line x1="${x}" y1="${outputBaseline}" x2="${x}" y2="${outputY}" stroke="var(--highlight)" stroke-width="3" />`,
-        `<circle cx="${x}" cy="${outputY}" r="5" fill="var(--highlight)"><title>y[${k}] = ${formatNumber(outputSequence[k])}</title></circle>`,
-        `<text class="discrete-output-value" x="${x}" y="${outputY + (outputSequence[k] < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(outputSequence[k])}</text>`,
+        `<circle cx="${x}" cy="${outputY}" r="5" fill="var(--highlight)"><title>y[${k}] = ${formatNumber(outputSequence[k] ?? 0)}</title></circle>`,
+        `<text class="discrete-output-value" x="${x}" y="${outputY + (outputSequence[k] < 0 ? 16 : -9)}" text-anchor="middle">${formatNumber(outputSequence[k] ?? 0)}</text>`,
       );
     }
   }
   svgParts.push(
-    `<text class="discrete-index-label" x="764" y="420" text-anchor="end">k</text>`,
+    `<text class="discrete-index-label" x="764" y="450" text-anchor="end">k</text>`,
   );
   overlapPlot.innerHTML = svgParts.join("");
   overlapPlot.setAttribute(
     "aria-label",
-    `Filas de x[k], h[n menos k] y resultado y[n]. Las muestras de salida se muestran hasta n igual a ${outputIndex}.`,
+    `Filas de x[k], h[n menos k], sus productos y resultado y[n]. Las muestras de salida se muestran hasta n igual a ${outputIndex}.`,
   );
 }
 
@@ -145,10 +154,7 @@ function renderProducts() {
 }
 
 function renderStep() {
-  const maxIndex = xSequence.length + hSequence.length - 2;
-  stepSlider.max = String(maxIndex);
-  stepSlider.value = String(outputIndex);
-  document.querySelector("#step-value").textContent = String(outputIndex);
+  const maxIndex = xSequence.length + hSequence.length - 1;
   document.querySelector("#step-number").textContent = String(outputIndex + 1);
   document.querySelector("#step-count").textContent = String(maxIndex + 1);
   previousButton.disabled = outputIndex === 0;
@@ -186,11 +192,6 @@ showResultButton.addEventListener("click", () => {
   finalResultCard.hidden = false;
 });
 
-stepSlider.addEventListener("input", () => {
-  outputIndex = Number(stepSlider.value);
-  renderStep();
-});
-
 previousButton.addEventListener("click", () => {
   if (outputIndex > 0) {
     outputIndex -= 1;
@@ -199,7 +200,7 @@ previousButton.addEventListener("click", () => {
 });
 
 nextButton.addEventListener("click", () => {
-  if (outputIndex < xSequence.length + hSequence.length - 2) {
+  if (outputIndex < xSequence.length + hSequence.length - 1) {
     outputIndex += 1;
     renderStep();
   }

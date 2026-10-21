@@ -441,3 +441,15 @@ function renderBlockRules(){
 }
 
 renderBlockRules();
+
+
+const blockShowRules = document.querySelector('#blocks-show-rules');
+function updateBlockRulesVisibility() {
+ const visible = blockShowRules.checked;
+ document.body.classList.toggle('blocks-rules-hidden', !visible);
+ for (const id of ['blocks-rule-panel', 'blocks-rule-name', 'blocks-explanation', 'blocks-rule-reference']) {
+  document.getElementById(id).hidden = !visible;
+ }
+}
+blockShowRules.addEventListener('change', updateBlockRulesVisibility);
+updateBlockRulesVisibility();

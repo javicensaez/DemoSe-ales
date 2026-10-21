@@ -29,11 +29,12 @@ const timeFields = new Set(["period", "width"]);
 const errorMessage = document.querySelector("#rc-error");
 const schematic = document.querySelector("#rc-schematic");
 const equations = document.querySelector("#rc-equations");
-const inputPlot = document.querySelector("#rc-input-plot");
 const outputPlot = document.querySelector("#rc-output-plot");
-const inputBadge = document.querySelector("#rc-input-badge");
 const outputBadge = document.querySelector("#rc-output-badge");
 const readouts = document.querySelector("#rc-readouts");
+const lockAxes = document.querySelector("#rc-lock-axes");
+let lockedAxes = null;
+let currentAxes = null;
 let displayedCircuit = null;
 
 const numberFormat = new Intl.NumberFormat("es", {
@@ -94,7 +95,8 @@ function niceTicks(min, max, target = 7) {
 function buildSegments(params, tMin, tMax) {
   const segments = [{ t0: tMin, t1: 0, x: 0 }];
   if (params.isPulse) {
-    segments.push({ t0: 0, t1: params.width, x: params.amplitude }, { t0: params.width, t1: tMax, x: 0 });
+    segments.push({ t0: 0, t1: Math.min(params.width, tMax), x: params.amplitude });
+    if (params.width < tMax) segments.push({ t0: params.width, t1: tMax, x: 0 });
     return segments;
   }
   if (!params.isSquare) {
@@ -147,6 +149,32 @@ function solve(params, tMin, tMax) {
   return { inputPoints, outputPoints };
 }
 
+// Si caben miles de periodos en la ventana bloqueada, evalúa la solución
+// analítica en un número acotado de muestras, sin recorrer todos los ciclos.
+function sampleDenseSquare(params, tMin, tMax) {
+  const inputPoints = [], outputPoints = [];
+  const onTime = params.period * params.duty / 100;
+  const gain = params.amplitude * (-Math.expm1(-onTime / params.tau)) *
+    Math.exp(-(params.period - onTime) / params.tau) / (-Math.expm1(-params.period / params.tau));
+  for (let index = 0; index < gridSamples; index += 1) {
+    const time = tMin + (tMax - tMin) * index / (gridSamples - 1);
+    let input = 0, capacitor = 0;
+    if (time >= 0) {
+      const cycle = Math.floor(time / params.period);
+      const phase = time - cycle * params.period;
+      const start = gain * (-Math.expm1(-cycle * params.period / params.tau));
+      input = phase < onTime ? params.amplitude : 0;
+      capacitor = phase < onTime
+        ? params.amplitude + (start - params.amplitude) * Math.exp(-phase / params.tau)
+        : (params.amplitude + (start - params.amplitude) * Math.exp(-onTime / params.tau)) *
+          Math.exp(-(phase - onTime) / params.tau);
+    }
+    inputPoints.push([time, input]);
+    outputPoints.push([time, params.mode === "rc" ? capacitor : input - capacitor]);
+  }
+  return { inputPoints, outputPoints };
+}
+
 function chartMarkup({ series, xRange, yRange, xLabel, yLabel, marker = null }) {
   const width = 800;
   const height = 300;
@@ -170,6 +198,7 @@ function chartMarkup({ series, xRange, yRange, xLabel, yLabel, marker = null }) 
     `);
   }
 
+  parts.push(`<defs><clipPath id="rc-response-clip"><rect x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" /></clipPath></defs><g clip-path="url(#rc-response-clip)">`);
   for (const curve of series) {
     const path = curve.points
       .map(([time, value], index) => `${index === 0 ? "M" : "L"}${x(time).toFixed(2)},${y(value).toFixed(2)}`)
@@ -177,6 +206,8 @@ function chartMarkup({ series, xRange, yRange, xLabel, yLabel, marker = null }) 
     const dash = curve.dashed ? ' stroke-dasharray="8 6"' : "";
     parts.push(`<path d="${path}" fill="none" stroke="${curve.color}" stroke-width="${curve.width}"${dash} stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />`);
   }
+
+  parts.push("</g>");
 
   if (marker && marker.time >= xRange[0] && marker.time <= xRange[1]) {
     parts.push(`
@@ -297,25 +328,28 @@ function render() {
   const padding = (dataMax - dataMin) * 0.12;
   const yRange = [dataMin === 0 ? 0 - padding * 0.4 : dataMin - padding, dataMax + padding];
 
-  const timeUnit = params.isSquare || params.isPulse ? periodUnit.value : span < 1 ? "us" : "ms";
+  const automaticUnit = params.isSquare || params.isPulse ? periodUnit.value : span < 1 ? "us" : "ms";
+  const automaticAxes = { tMin, tMax, timeUnit: automaticUnit, yRange };
+  if (lockAxes.checked && !lockedAxes) lockedAxes = automaticAxes;
+  const axes = lockedAxes || automaticAxes;
+  currentAxes = axes;
+  const timeUnit = axes.timeUnit;
+  const visible = lockedAxes
+    ? (params.isSquare && axes.tMax / params.period > 2000
+      ? sampleDenseSquare(params, axes.tMin, axes.tMax)
+      : solve(params, axes.tMin, axes.tMax))
+    : { inputPoints, outputPoints };
   const toPlot = (points) => points.map(([time, value]) => [time / unitFactor[timeUnit], value]);
-  const xRange = [tMin / unitFactor[timeUnit], tMax / unitFactor[timeUnit]];
+  const xRange = [axes.tMin / unitFactor[timeUnit], axes.tMax / unitFactor[timeUnit]];
   const timeLabel = `t (${unitName[timeUnit]})`;
 
-  inputPlot.innerHTML = chartMarkup({
-    series: [{ points: toPlot(inputPoints), color: colors.input, width: 3 }],
-    xRange,
-    yRange,
-    xLabel: timeLabel,
-    yLabel: "x(t) (V)",
-  });
   outputPlot.innerHTML = chartMarkup({
     series: [
-      { points: toPlot(inputPoints), color: colors.input, width: 2, dashed: true },
-      { points: toPlot(outputPoints), color: colors.output, width: 3 },
+      { points: toPlot(visible.inputPoints), color: colors.input, width: 2, dashed: true },
+      { points: toPlot(visible.outputPoints), color: colors.output, width: 3 },
     ],
     xRange,
-    yRange,
+    yRange: axes.yRange,
     xLabel: timeLabel,
     yLabel: "y(t) (V)",
     marker: { time: params.tau / unitFactor[timeUnit], label: "t = τ" },
@@ -327,13 +361,7 @@ function render() {
     : params.isPulse
       ? `pulso rectangular de anchura ${formatTime(params.width)}`
       : "escalón unitario";
-  inputPlot.setAttribute("aria-label", `Entrada x de t: ${inputName}, amplitud ${formatNumber(params.amplitude)} voltios`);
-  outputPlot.setAttribute("aria-label", `Salida y de t del circuito ${circuitName} para la entrada ${inputName}`);
-  inputBadge.textContent = params.isSquare
-    ? `Cuadrada · T = ${formatTime(params.period)} · ${formatNumber(params.duty)} %`
-    : params.isPulse
-      ? `Pulso · anchura ${formatTime(params.width)}`
-      : "Escalón unitario";
+  outputPlot.setAttribute("aria-label", `Salida y de t del circuito ${circuitName} para la entrada ${inputName}, representada como referencia discontinua`);
   outputBadge.textContent = `τ = ${formatTime(params.tau)}`;
 
   const outputValues = outputPoints.map(([, value]) => value);
@@ -358,6 +386,10 @@ function render() {
 }
 
 document.querySelector("#rc-form").addEventListener("submit", (event) => event.preventDefault());
+lockAxes.addEventListener("change", () => {
+  lockedAxes = lockAxes.checked ? currentAxes : null;
+  render();
+});
 circuitSelect.addEventListener("change", render);
 inputSelect.addEventListener("change", render);
 periodUnit.addEventListener("change", render);

@@ -12,7 +12,7 @@
     <script src="juego-transformaciones.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-juego-transformaciones">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -38,7 +38,8 @@
         </p>
       </section>
 
-      <section class="transform-game-content" aria-label="Juego de transformaciones temporales">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 transform-game-content" aria-label="Juego de transformaciones temporales">
         <article class="plot-card transform-instructions">
           <div class="challenge-navigation" aria-label="Navegación entre retos">
             <button class="challenge-nav-button" id="previous-challenge" type="button" aria-label="Reto anterior">←</button>
@@ -121,6 +122,7 @@
           </div>
         </form>
       </section>
+</div>
     </main>
 
     <footer class="site-footer demo-footer">

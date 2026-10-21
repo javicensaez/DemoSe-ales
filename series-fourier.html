@@ -14,7 +14,7 @@
     <script src="series-fourier.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-series-fourier">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -40,7 +40,8 @@
         </p>
       </section>
 
-      <section class="fourier-controls plot-card" aria-label="Controles de la serie de Fourier">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 fourier-controls plot-card" aria-label="Controles de la serie de Fourier">
         <label for="fourier-signal">
           Forma de onda
           <select id="fourier-signal">
@@ -68,17 +69,17 @@
         </label>
       </section>
 
-      <section class="fourier-formula plot-card" aria-label="Forma trigonométrica de Fourier">
+      <section class="panoramic-part-2 fourier-formula plot-card" aria-label="Forma trigonométrica de Fourier">
         <span>\(f(t)=\dfrac{a_0}{2}+\displaystyle\sum_{n=1}^{N}\left[a_n\cos(n\omega_0t)+b_n\sin(n\omega_0t)\right]\)</span>
         <p>Convención: la componente continua es a₀/2; N es el armónico más alto incluido.</p>
       </section>
 
-      <section class="fourier-status plot-card" aria-live="polite">
+      <section class="panoramic-part-3 fourier-status plot-card" aria-live="polite">
         <strong id="fourier-error"></strong>
         <span id="fourier-period"></span>
       </section>
 
-      <section class="fourier-panels" aria-label="Análisis de la señal">
+      <section class="panoramic-part-4 fourier-panels" aria-label="Análisis de la señal">
         <article class="plot-card fourier-chart-card">
           <div class="plot-heading">
             <div><p class="eyebrow">Síntesis</p><h2>Señal y suma parcial</h2></div>
@@ -112,6 +113,7 @@
           </div>
         </article>
       </section>
+</div>
     </main>
 
     <footer class="site-footer demo-footer">

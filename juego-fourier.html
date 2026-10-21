@@ -14,7 +14,7 @@
     <script src="juego-fourier.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-juego-fourier">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -40,7 +40,8 @@
         </p>
       </section>
 
-      <section class="fourier-game-controls plot-card" aria-label="Configuración del desafío">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 fourier-game-controls plot-card" aria-label="Configuración del desafío">
         <label for="challenge-signal">
           Señal objetivo
           <select id="challenge-signal">
@@ -66,7 +67,7 @@
         <button class="game-button primary-game-button" id="new-challenge" type="button">↻ Nuevo desafío</button>
       </section>
 
-      <section class="fourier-game-layout">
+      <section class="panoramic-part-2 fourier-game-layout">
         <article class="plot-card fourier-answer-card">
           <div class="plot-heading">
             <div><p class="eyebrow">Paso 1</p><h2>Introduce los coeficientes</h2></div>
@@ -115,6 +116,7 @@
           <p class="fourier-input-help">La puntuación compara tus coeficientes con los exactos hasta N; la suma finita mantiene el error propio del truncamiento.</p>
         </article>
       </section>
+</div>
     </main>
 
     <footer class="site-footer demo-footer">

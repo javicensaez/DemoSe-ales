@@ -10,7 +10,7 @@
     <script src="juego-respuesta-escalon.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page step-game-page">
+  <body class="demo-page step-game-page panoramic-page view-juego-respuesta-escalon">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -34,7 +34,8 @@
         <h1>Adivina <span>H(s)</span></h1>
         <p>Identifica la función de transferencia de un sistema a partir de su respuesta al escalón unitario. Elige primer o segundo orden, observa la curva objetivo y rellena las casillas de H(s). Tu respuesta se dibuja sobre la original; pulsa «Comprobar» para conocer el porcentaje de coincidencia. Todos los sistemas parten en reposo.</p>
       </section>
-      <section class="plot-card step-game-settings" aria-label="Selección y navegación de retos">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card step-game-settings" aria-label="Selección y navegación de retos">
         <label class="convolution-signal-select" for="step-game-order">Tipo de sistema
           <select id="step-game-order"><option value="1">Primer orden</option><option value="2">Segundo orden</option></select>
         </label>
@@ -44,7 +45,7 @@
           <button class="game-button primary-game-button" id="step-game-next" type="button">Siguiente reto →</button>
         </div>
       </section>
-      <section class="plot-card" aria-labelledby="step-game-plot-title">
+      <section class="panoramic-part-2 plot-card" aria-labelledby="step-game-plot-title">
         <div class="plot-heading"><div><p class="eyebrow">Observa e identifica</p><h2 id="step-game-plot-title">Respuesta al escalón unitario</h2></div></div>
         <div class="convolution-legend convolution-overlay-legend">
           <span><span class="rc-swatch rc-swatch-input"></span>Respuesta objetivo</span>
@@ -55,7 +56,7 @@
         <p class="step-game-cursor-values" id="step-game-cursor-values">Sitúa el cursor sobre la gráfica para consultar los valores.</p>
         <p class="discrete-plot-note">El escalón se aplica en t = 0. Ambas curvas usan los mismos ejes. La escala temporal se conserva mientras resuelves el reto.</p>
       </section>
-      <form class="plot-card rc-form step-game-answer" id="step-game-form" novalidate aria-labelledby="step-game-answer-title">
+      <form class="panoramic-part-3 plot-card rc-form step-game-answer" id="step-game-form" novalidate aria-labelledby="step-game-answer-title">
         <div class="plot-heading"><div><p class="eyebrow">Construye tu modelo</p><h2 id="step-game-answer-title">Rellena H(s)</h2></div></div>
         <div id="step-game-first-model">
           <p>\(H(s)=\dfrac{K}{\tau s+1}\)</p>
@@ -90,15 +91,22 @@
           <button class="game-button secondary-game-button" type="button" id="step-game-solution-button">Ver solución</button>
         </div>
         <p class="game-feedback" id="step-game-feedback" aria-live="polite">Completa H(s) para visualizar tu respuesta.</p>
-        <p class="discrete-plot-note" id="step-game-score-note">La coincidencia compara ambas respuestas mediante el error RMS relativo en el intervalo mostrado: 100 % significa curvas coincidentes. No es el porcentaje de casillas correctas.</p>
+
         <div class="discrete-plot-note" id="step-game-hint" hidden>
           <p data-order-hint="1">Lee el valor final: \(K=y(\infty)\). La constante de tiempo τ es el instante en que la salida llega al 63,2 % de K.</p>
-          <p data-order-hint="2">\(K=b_0/a_0,\quad\omega_0=\sqrt{a_0},\quad\zeta=a_1/(2\omega_0)\). Si hay sobreimpulso, usa su magnitud y el instante del primer pico para estimar ζ y ω₀. Si no oscila, fíjate en la rapidez y la forma de la subida.</p>
+
           <p data-order-hint="2">\(\zeta=\dfrac{-\ln(M_p/100)}{\sqrt{\pi^2+\ln^2(M_p/100)}},\quad\omega_0=\dfrac{\pi}{t_p\sqrt{1-\zeta^2}}\)</p>
         </div>
         <div class="discrete-plot-note" id="step-game-solution" hidden></div>
       </form>
-      <section class="plot-card" aria-labelledby="step-game-formulas-title">
+</div>
+<details class="panoramic-information panoramic-details"><summary>Notas de la demostración</summary>
+<p data-order-hint="2">\(K=b_0/a_0,\quad\omega_0=\sqrt{a_0},\quad\zeta=a_1/(2\omega_0)\). Si hay sobreimpulso, usa su magnitud y el instante del primer pico para estimar ζ y ω₀. Si no oscila, fíjate en la rapidez y la forma de la subida.</p>
+</details>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<p class="discrete-plot-note" id="step-game-score-note">La coincidencia compara ambas respuestas mediante el error RMS relativo en el intervalo mostrado: 100 % significa curvas coincidentes. No es el porcentaje de casillas correctas.</p>
+</details>
+      <section class="panoramic-information plot-card" aria-labelledby="step-game-formulas-title">
         <div class="plot-heading"><div><p class="eyebrow">Guía de cálculo</p><h2 id="step-game-formulas-title">Fórmulas para identificar H(s)</h2></div></div>
         <p class="discrete-plot-note">Estas fórmulas corresponden a un escalón unitario aplicado en t = 0, con el sistema inicialmente en reposo. Lee los tiempos en segundos y el valor final de la curva objetivo.</p>
         <div class="rc-equations" data-order-formulas="1">

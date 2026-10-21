@@ -11,6 +11,17 @@ const fields = {
   capacitance: document.querySelector("#rlc-capacitance"),
   amplitude: document.querySelector("#rlc-amplitude"),
 };
+const sourceResistance = document.querySelector("#rlc-source-resistance");
+const sourceResistanceOhms = 50;
+const sourceSymbol = document.querySelector("#rlc-source-symbol");
+const sourceWire = document.querySelector("#rlc-source-wire");
+const sourceStatus = document.querySelector("#rlc-source-status");
+const sourceLegend = document.querySelector("#rlc-source-legend");
+const outputLegend = document.querySelector("#rlc-output-legend");
+const circuitSchematic = document.querySelector("#rlc-schematic");
+const lockAxes = document.querySelector("#rlc-lock-axes");
+let lockedAxes = null;
+let currentAxes = null;
 const errorMessage = document.querySelector("#rlc-error");
 const stepPlot = document.querySelector("#rlc-step-plot");
 const polePlot = document.querySelector("#rlc-polezero-plot");
@@ -25,7 +36,7 @@ const numberFormat = new Intl.NumberFormat("es", {
   maximumSignificantDigits: 3,
   useGrouping: false,
 });
-const colors = { input: "var(--answer)", output: "#d97706" };
+const colors = { input: "var(--answer)", output: "#d97706", source: "#7c3aed" };
 
 function formatNumber(value) {
   return numberFormat.format(Math.abs(value) < 1e-12 ? 0 : value).replace("-", "−");
@@ -112,8 +123,10 @@ function niceTicks(min, max, target = 6) {
 }
 
 function stepChart({ series, xRange, yRange, xLabel, yLabel, markers = [] }) {
-  const width = 800;
-  const height = 480;
+  const bounds = stepPlot.getBoundingClientRect();
+  const width = bounds.width || 800;
+  const height = bounds.height || 480;
+  stepPlot.setAttribute("viewBox", `0 0 ${width} ${height}`);
   const margin = { top: 22, right: 24, bottom: 42, left: 62 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
@@ -133,23 +146,26 @@ function stepChart({ series, xRange, yRange, xLabel, yLabel, markers = [] }) {
       <text class="plot-tick-label" x="${margin.left - 10}" y="${y(tick) + 4}" text-anchor="end">${formatNumber(tick)}</text>
     `);
   }
+  parts.push(`<defs><clipPath id="rlc-response-clip"><rect x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" /></clipPath></defs><g clip-path="url(#rlc-response-clip)">`);
   for (const curve of series) {
     const path = curve.points
       .map(([time, value], index) => `${index === 0 ? "M" : "L"}${x(time).toFixed(2)},${y(value).toFixed(2)}`)
       .join(" ");
-    const dash = curve.dashed ? ' stroke-dasharray="8 6"' : "";
+    const dash = curve.dash ? ` stroke-dasharray="${curve.dash}"` : curve.dashed ? ' stroke-dasharray="8 6"' : "";
     parts.push(`<path d="${path}" fill="none" stroke="${curve.color}" stroke-width="${curve.width}"${dash} stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />`);
   }
+  parts.push("</g>");
   if (markers.length) {
     for (const marker of markers) {
+      if (marker.x < xRange[0] || marker.x > xRange[1] || marker.y < yRange[0] || marker.y > yRange[1]) continue;
       const px = x(marker.x);
       const py = y(marker.y);
       const anchor = px > width - margin.right - 220 ? "end" : "start";
       const dx = anchor === "end" ? -14 : 14;
       parts.push(`
-        <line class="rlc-peak-guide" x1="${px}" y1="${py}" x2="${px}" y2="${y(0)}" />
-        <line class="rlc-peak-guide" x1="${margin.left}" y1="${py}" x2="${px}" y2="${py}" />
-        <circle class="rlc-peak-dot" cx="${px}" cy="${py}" r="6" />
+        <line style="stroke:${marker.color || colors.output}" class="rlc-peak-guide" x1="${px}" y1="${py}" x2="${px}" y2="${y(0)}" />
+        <line style="stroke:${marker.color || colors.output}" class="rlc-peak-guide" x1="${margin.left}" y1="${py}" x2="${px}" y2="${py}" />
+        <circle style="fill:${marker.color || colors.output}" class="rlc-peak-dot" cx="${px}" cy="${py}" r="6" />
         <text class="rlc-peak-label" x="${px + dx}" y="${py - 28}" text-anchor="${anchor}">${marker.lines[0]}</text>
         <text class="rlc-peak-label" x="${px + dx}" y="${py - 10}" text-anchor="${anchor}">${marker.lines[1]}</text>
       `);
@@ -162,11 +178,10 @@ function stepChart({ series, xRange, yRange, xLabel, yLabel, markers = [] }) {
   return parts.join("");
 }
 
-function poleZeroChart(model) {
+function poleZeroChart(model, extent = 1.35 * Math.max(...model.poles.map((pole) => Math.hypot(pole.re, pole.im)))) {
   const size = 440;
   const margin = 50;
   const plotSize = size - 2 * margin;
-  const extent = 1.35 * Math.max(...model.poles.map((pole) => Math.hypot(pole.re, pole.im)));
   const scale = plotSize / (2 * extent);
   const px = (value) => margin + (value + extent) * scale;
   const py = (value) => margin + (extent - value) * scale;
@@ -191,6 +206,7 @@ function poleZeroChart(model) {
     <text class="plot-axis-label" x="${margin + 6}" y="${margin - 28}" text-anchor="start">jω (rad/s)</text>
   `);
 
+  parts.push(`<defs><clipPath id="rlc-poles-clip"><rect x="${margin}" y="${margin}" width="${plotSize}" height="${plotSize}" /></clipPath></defs><g clip-path="url(#rlc-poles-clip)">`);
   const double = model.kind === "critical";
   model.poles.forEach((pole, index) => {
     const cx = px(pole.re);
@@ -207,6 +223,7 @@ function poleZeroChart(model) {
     const labelY = above ? cy - 16 : cy + 26;
     parts.push(`<text class="rlc-pole-label" x="${labelX}" y="${labelY}" text-anchor="middle">${name} = ${formatComplex(pole.re, pole.im)}</text>`);
   });
+  parts.push("</g>");
   return parts.join("");
 }
 
@@ -226,42 +243,68 @@ function render() {
   errorMessage.hidden = true;
   errorMessage.textContent = "";
 
-  const model = analyze(params);
+  const includeSource = sourceResistance.checked;
+  const referenceModel = analyze(params);
+  const effectiveResistance = params.resistance + (includeSource ? sourceResistanceOhms : 0);
+  const model = includeSource ? analyze({ ...params, resistance: effectiveResistance }) : referenceModel;
+  sourceSymbol.toggleAttribute("hidden", !includeSource);
+  sourceWire.setAttribute("x2", includeSource ? "36" : "70");
+  sourceLegend.hidden = !includeSource;
+  outputLegend.textContent = includeSource ? "Sin Rs (línea continua)" : "y(t) tensión en el condensador";
+  sourceStatus.textContent = includeSource
+    ? `R total = ${formatNumber(effectiveResistance)} Ω. Polos y medidas con Rs.`
+    : "Rs desactivada: generador ideal.";
+  circuitSchematic.setAttribute("aria-label", `Circuito RLC serie con salida en el condensador${includeSource ? ", con resistencia de generador Rs de 50 ohmios en serie con R" : ", sin resistencia de generador"}`);
+
   const slowest = Math.min(...model.poles.map((pole) => Math.abs(pole.re)));
-  let span = 6 / slowest;
-  if (model.kind === "under") {
-    const period = (2 * Math.PI) / model.poles[0].im;
-    span = Math.min(span, 200 * period);
-    span = Math.max(span, 2 * period);
-  }
-  const unit = span < 1e-3 ? "us" : span < 1 ? "ms" : "s";
+  const models = includeSource ? [referenceModel, model] : [model];
+  let span = Math.max(...models.map((response) => {
+    let duration = 6 / Math.min(...response.poles.map((pole) => Math.abs(pole.re)));
+    if (response.kind === "under") {
+      const period = (2 * Math.PI) / response.poles[0].im;
+      duration = Math.max(Math.min(duration, 200 * period), 2 * period);
+    }
+    return duration;
+  }));
+  if (lockedAxes) span = lockedAxes.span;
+  const unit = lockedAxes ? lockedAxes.unit : span < 1e-3 ? "us" : span < 1 ? "ms" : "s";
   const factor = { us: 1e6, ms: 1e3, s: 1 }[unit];
   const unitLabel = { us: "µs", ms: "ms", s: "s" }[unit];
 
   const tMin = -span / 10;
-  const sampleCount = model.kind === "under"
-    ? Math.min(8000, Math.max(800, Math.ceil((span * model.poles[0].im) / (2 * Math.PI) * 40)))
-    : 800;
-  const output = [];
+  const fastestOscillation = Math.max(...models.map((response) => response.kind === "under" ? response.poles[0].im : 0));
+  const sampleCount = Math.min(8000, Math.max(800, Math.ceil(span * fastestOscillation / (2 * Math.PI) * 40)));
+  const output = [], sourceOutput = [];
   for (let index = 0; index < sampleCount; index += 1) {
     const time = (span * index) / (sampleCount - 1);
-    output.push([time * factor, stepValue(model, time)]);
+    output.push([time * factor, stepValue(referenceModel, time)]);
+    if (includeSource) sourceOutput.push([time * factor, stepValue(model, time)]);
   }
   output.unshift([tMin * factor, 0]);
+  if (includeSource) sourceOutput.unshift([tMin * factor, 0]);
   const input = [[tMin * factor, 0], [0, 0], [0, params.amplitude], [span * factor, params.amplitude]];
 
-  const peak = Math.max(...output.map(([, value]) => value));
+  const peak = Math.max(...output.map(([, value]) => value), ...sourceOutput.map(([, value]) => value));
   const top = Math.max(peak, params.amplitude);
   const padding = top * 0.12;
+  const automaticAxes = {
+    span, unit,
+    yRange: [-padding * 0.4, top + padding],
+    poleExtent: 1.35 * Math.max(...model.poles.map((pole) => Math.hypot(pole.re, pole.im))),
+  };
+  if (lockAxes.checked && !lockedAxes) lockedAxes = automaticAxes;
+  const axes = lockedAxes || automaticAxes;
+  currentAxes = axes;
   const markers = [];
   if (model.kind === "under") {
     const peakTime = Math.PI / model.poles[0].im;
     const overshootPercent = Math.exp((-Math.PI * model.zeta) / Math.sqrt(1 - model.zeta ** 2)) * 100;
     markers.push({
+      color: includeSource ? colors.source : colors.output,
       x: peakTime * factor,
       y: stepValue(model, peakTime),
       lines: [
-        `Sobreimpulso: ${formatNumber(overshootPercent)} %`,
+        `${includeSource ? "Con Rs · " : ""}Sobreimpulso: ${formatNumber(overshootPercent)} %`,
         `${formatNumber(stepValue(model, peakTime))} V en t = ${formatSeconds(peakTime)}`,
       ],
     });
@@ -271,18 +314,19 @@ function render() {
     series: [
       { points: input, color: colors.input, width: 2, dashed: true },
       { points: output, color: colors.output, width: 3 },
+      ...(includeSource ? [{ points: sourceOutput, color: colors.source, width: 3, dash: "12 4 2 4" }] : []),
     ],
     xRange: [tMin * factor, span * factor],
-    yRange: [-padding * 0.4, top + padding],
+    yRange: axes.yRange,
     xLabel: `t (${unitLabel})`,
     yLabel: "y(t) (V)",
   });
   stepPlot.setAttribute(
     "aria-label",
-    `Respuesta al escalón de ${formatNumber(params.amplitude)} voltios del circuito RLC, régimen ${kindNames[model.kind]}`,
+    `Respuesta al escalón de ${formatNumber(params.amplitude)} voltios del circuito RLC, régimen ${kindNames[model.kind]}${includeSource ? "; comparación de la respuesta sin Rs, continua, y con Rs de 50 ohmios, de puntos y rayas" : ""}`,
   );
 
-  polePlot.innerHTML = poleZeroChart(model);
+  polePlot.innerHTML = poleZeroChart(model, axes.poleExtent);
   polePlot.setAttribute(
     "aria-label",
     `Diagrama de polos y ceros: ${model.poles.map((pole, index) => `polo ${index + 1} en ${formatComplex(pole.re, pole.im)} radianes por segundo`).join(", ")}; sin ceros finitos`,
@@ -297,6 +341,7 @@ function render() {
 
   const rows = [
     ["Régimen", kindNames[model.kind]],
+    ["Resistencia total en serie", `${formatNumber(effectiveResistance)} Ω${includeSource ? " (R + Rs)" : ""}`],
     ["Frecuencia natural ω<sub>0</sub>", `${formatNumber(model.omega0)} rad/s (${formatNumber(model.omega0 / (2 * Math.PI))} Hz)`],
     ["Coeficiente de amortiguamiento ζ", formatNumber(model.zeta)],
     ["Valor final", `${formatNumber(params.amplitude)} V`],
@@ -338,5 +383,19 @@ function render() {
 
 document.querySelector("#rlc-form").addEventListener("submit", (event) => event.preventDefault());
 for (const field of Object.values(fields)) field.addEventListener("input", render);
+sourceResistance.addEventListener("change", render);
+lockAxes.addEventListener("change", () => {
+  lockedAxes = lockAxes.checked ? currentAxes : null;
+  render();
+});
+
+let lastPlotSize = "";
+new ResizeObserver(() => {
+  const bounds = stepPlot.getBoundingClientRect();
+  const size = `${bounds.width.toFixed(2)}:${bounds.height.toFixed(2)}`;
+  if (size === lastPlotSize) return;
+  lastPlotSize = size;
+  render();
+}).observe(stepPlot);
 
 render();

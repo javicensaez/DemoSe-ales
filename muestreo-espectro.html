@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora el aliasing de un espectro triangular al variar la frecuencia de muestreo."/><title>Muestreo en frecuencia — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="muestreo-espectro.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page sampling-spectrum-page">    <header class="site-header">
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora el aliasing de un espectro triangular al variar la frecuencia de muestreo."/><title>Muestreo en frecuencia — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="muestreo-espectro.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page sampling-spectrum-page panoramic-page view-muestreo-espectro">    <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
         <span class="brand-separator" aria-hidden="true"></span>
@@ -16,7 +16,8 @@
 <main class="demo-main rc-main">
 <a class="back-link" href="index.html#demos">← Volver a las demos</a>
 <section class="demo-intro"><p class="eyebrow">Demo · Muestreo en frecuencia</p><h1>Muestreo y aliasing <span>en el espectro</span></h1><p>La señal de entrada tiene un espectro triangular centrado en 0 y limitado a ±B Hz. Al muestrearla aparecen copias separadas por fₛ. Mueve la frecuencia de muestreo y observa cuándo empiezan a solaparse: ese solapamiento es el aliasing.</p><p>La primera gráfica muestra el espectro original y la segunda las réplicas y su suma. Ambas usan el mismo eje de frecuencia fijo, de −20 a 20 Hz.</p></section>
-<div class="sampling-spectrum-workspace">
+<div class="panoramic-stage">
+<div class="panoramic-part-1 sampling-spectrum-workspace">
 <section class="plot-card" aria-labelledby="ss-controls-title"><h2 id="ss-controls-title">Controles del muestreo</h2><div class="ss-controls">
 <label for="ss-bandwidth"><span>Ancho de banda B</span><output id="ss-bandwidth-value" for="ss-bandwidth"></output><input id="ss-bandwidth" type="range" min="0.5" max="5" step="0.1" value="2" /></label>
 <label for="ss-rate"><span>Frecuencia de muestreo fₛ</span><output id="ss-rate-value" for="ss-rate"></output><input id="ss-rate" type="range" min="0.5" max="20" step="0.01" value="6" /></label>
@@ -26,9 +27,13 @@
 </div><p id="ss-state" role="status"></p><p id="ss-error" role="alert" hidden></p><dl class="rc-readouts" id="ss-readouts"></dl></section>
 <section class="ss-plots" aria-label="Espectros antes y después del muestreo">
 <article class="plot-card"><h2>Espectro de entrada X(f)</h2><p class="discrete-plot-note">Original: azul continuo · Con el filtro activo, espectro que llega al muestreador: verde discontinuo.</p><svg id="ss-original" viewBox="0 0 800 330" role="img" aria-label="Espectro triangular original limitado a menos B y B hercios"></svg></article>
-<article class="plot-card"><h2>Espectro de la señal muestreada</h2><p class="discrete-plot-note">Copia central: azul continuo · Otras copias: naranja discontinuo · Suma: violeta grueso · Límites ±fₛ/2: verde discontinuo. El sombreado rosado señala zonas donde se superponen dos o más copias.</p><svg id="ss-sampled" viewBox="0 0 800 330" role="img" aria-label="Réplicas del espectro separadas por la frecuencia de muestreo y su suma"></svg><p id="ss-scale-note" class="discrete-plot-note"></p></article>
+<article class="plot-card"><h2>Espectro de la señal muestreada</h2><svg id="ss-sampled" viewBox="0 0 800 330" role="img" aria-label="Réplicas del espectro separadas por la frecuencia de muestreo y su suma"></svg><p id="ss-scale-note" class="discrete-plot-note"></p></article>
 </section></div>
-<section class="plot-card"><h2>Qué ocurre al muestrear</h2><div class="rc-formulas">
+</div>
+<details class="panoramic-information panoramic-details"><summary>Notas de la demostración</summary>
+<p class="discrete-plot-note">Copia central: azul continuo · Otras copias: naranja discontinuo · Suma: violeta grueso · Límites ±fₛ/2: verde discontinuo. El sombreado rosado señala zonas donde se superponen dos o más copias.</p>
+</details>
+<section class="panoramic-information plot-card"><h2>Qué ocurre al muestrear</h2><div class="rc-formulas">
 <p>\[X(f)=\operatorname{tri}\left(\frac{f}{B}\right)=\max\left(1-\frac{|f|}{B},0\right),\qquad x(t)=B\operatorname{sinc}^2(Bt)\]</p>
 <p>\[x_s(t)=\sum_{n=-\infty}^{\infty}x(nT_s)\delta(t-nT_s),\qquad T_s=\frac{1}{f_s}\]</p>
 <p>\[X_s(f)=f_s\sum_{k=-\infty}^{\infty}X(f-kf_s),\qquad T_sX_s(f)=\sum_{k=-\infty}^{\infty}X(f-kf_s)\]</p>

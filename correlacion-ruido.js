@@ -58,13 +58,13 @@ function niceTicks(min, max, count = 6) {
   return ticks;
 }
 
-function chartMarkup({ curves, duration, yRange, yLabel, marker = null, threshold = null, decisions = [] }) {
-  const left = 65, right = 775, top = 24, bottom = 214;
+function chartMarkup({ curves, duration, yRange, yLabel, marker = null, threshold = null, decisions = [], width = 800 }) {
+  const left = 65, right = width - 25, top = 24, bottom = 214;
   const x = value => left + value / duration * (right - left);
   const y = value => top + (yRange[1] - value) / (yRange[1] - yRange[0]) * (bottom - top);
   const parts = [];
   const ticks = duration === 320 ? Array.from({ length: 9 }, (_, i) => 40 * i) : [0, 10, 20, 30, 40];
-  for (const tick of ticks) {
+  for (const tick of ticks.filter((value, index) => width >= 600 || index % 2 === 0)) {
     parts.push(`<line class="${tick === 0 ? "plot-axis-line" : "plot-grid-line"}" x1="${x(tick)}" y1="${top}" x2="${x(tick)}" y2="${bottom}" /><text class="plot-tick-label" x="${x(tick)}" y="236" text-anchor="middle">${formatNumber(tick)}</text>`);
   }
   for (const tick of niceTicks(yRange[0], yRange[1])) {
@@ -150,7 +150,11 @@ function render() {
   document.querySelector("#corr-template-name").textContent = shapes[shapeSelect.value].name;
   document.querySelector("#corr-template-plot").innerHTML = chartMarkup({ curves: [{ values: [0, ...pulse, 0], offset: -0.5, color: "var(--wave)" }], duration: 40, yRange: rangeFor(pulse), yLabel: "Amplitud" });
   document.querySelector("#corr-template-plot").setAttribute("aria-label", `Pulso ${shapes[shapeSelect.value].name}, duración 40 milisegundos`);
-  document.querySelector("#corr-transmitted-plot").innerHTML = chartMarkup({ curves: [{ values: transmitted, offset: 0.5, color: "var(--answer)" }], duration: sampleCount, yRange, yLabel: "Amplitud" });
+  const transmittedPlot = document.querySelector("#corr-transmitted-plot");
+  const transmittedBounds = transmittedPlot.getBoundingClientRect();
+  const transmittedWidth = transmittedBounds.height > 0 ? Math.max(320, 260 * transmittedBounds.width / transmittedBounds.height) : 800;
+  transmittedPlot.setAttribute("viewBox", `0 0 ${transmittedWidth} 260`);
+  transmittedPlot.innerHTML = chartMarkup({ width: transmittedWidth, curves: [{ values: transmitted, offset: 0.5, color: "var(--answer)" }], duration: sampleCount, yRange, yLabel: "Amplitud" });
   document.querySelector("#corr-transmitted-plot").setAttribute("aria-label", `Señal transmitida de 320 milisegundos, secuencia ${bits.join(" ")}`);
   renderBits(decisions.map(decision => decision.bit));
   renderShift();
@@ -162,3 +166,12 @@ shiftInput.addEventListener("input", renderShift);
 document.querySelector("#corr-new-sequence").addEventListener("click", () => { bits = randomBits(); baseNoise = randomNoise(sampleCount); shiftInput.value = 0; render(); });
 document.querySelector("#corr-new-noise").addEventListener("click", () => { baseNoise = randomNoise(sampleCount); render(); });
 render();
+
+let transmittedPlotSize = "";
+new ResizeObserver(() => {
+  const bounds = document.querySelector('#corr-transmitted-plot').getBoundingClientRect();
+  const size = `${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+  if (size === transmittedPlotSize) return;
+  transmittedPlotSize = size;
+  render();
+}).observe(document.querySelector('#corr-transmitted-plot'));
