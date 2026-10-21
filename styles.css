@@ -3455,6 +3455,8 @@ h2 {
 
 .step-game-cursor-values { min-height: 1.5em; font-family: var(--font-mono); color: var(--accent); }
 .step-game-page #step-game-plot { cursor: crosshair; }
+.step-game-page #step-game-plot .plot-tick-label { font-size: 18px; }
+.step-game-page #step-game-plot .plot-axis-label { font-size: 20px; }
 .step-game-page #step-game-plot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* Series exponenciales y dibujo XY. */
@@ -3544,6 +3546,8 @@ h2 {
 .ss-controls output { margin-left: auto; font-family: var(--font-mono); }
 .ss-plots { display: grid; gap: 1rem; min-width: 0; }
 .ss-plots svg { display: block; width: 100%; height: auto; }
+.view-muestreo-espectro .ss-plots .plot-tick-label { font-size: 21px; }
+.view-muestreo-espectro .ss-plots .plot-axis-label { font-size: 23px; }
 .sampling-spectrum-page #ss-state { font-weight: 700; }
 .sampling-spectrum-page #ss-error { color: #b42318; }
 @media (max-width: 850px) { .sampling-spectrum-workspace { grid-template-columns: minmax(0, 1fr); } }
@@ -3901,3 +3905,1557 @@ h2 {
 .draw-signal button:disabled { opacity: .5; cursor: default; }
 
 .draw-signal .draw-formula { overflow-x: auto; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 1.15rem; }
+.basic-signals-page .range-control[hidden] { display: none; }
+
+/* Conserva el desplazamiento sin mostrar la barra lateral del navegador. */
+html:has(.basic-signals-page) { scrollbar-width: none; }
+html:has(.basic-signals-page)::-webkit-scrollbar { display: none; }
+
+/* Demo 01: zona de trabajo compacta para pantallas panorámicas.
+   En móvil se conserva el flujo vertical y el desplazamiento natural. */
+@media (min-width: 1000px) {
+  .basic-signals-page .site-header { height: 64px; }
+  .basic-signals-page .demo-main {
+    width: min(1600px, calc(100% - 48px));
+    min-height: calc(100vh - 64px);
+    padding: 12px 0 24px;
+  }
+  .basic-signals-page .back-link { margin-bottom: 8px; }
+  .basic-signals-page .demo-intro { max-width: none; margin-bottom: 16px; }
+  .basic-signals-page .demo-intro .eyebrow { margin-bottom: 4px; }
+  .basic-signals-page .demo-intro h1 { font-size: 30px; margin-bottom: 4px; }
+  .basic-signals-page .demo-intro > p:last-child { max-width: none; line-height: 1.5; }
+  .basic-signals-page .signal-workspace {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .basic-signals-page .signal-controls { gap: 10px; }
+  .basic-signals-page .control-card { padding: 12px; }
+  .basic-signals-page .control-card h2 { margin-bottom: 10px; }
+  .basic-signals-page .signal-option {
+    min-height: 40px;
+    flex-direction: row;
+    gap: 6px;
+    padding: 6px;
+  }
+  .basic-signals-page .signal-option-symbol { font-size: 14px; }
+  .basic-signals-page .parameter-card { gap: 10px; }
+  .basic-signals-page .parameter-card h2 { margin-bottom: 0; }
+  .basic-signals-page .parameter-note { padding-top: 6px; }
+  .basic-signals-page .plot-column {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  .basic-signals-page .plot-column:has(.complex-card:not([hidden])) {
+    grid-template-columns: minmax(0, 1.8fr) minmax(230px, 1fr);
+  }
+  .basic-signals-page .plot-card { padding: 14px; }
+  .basic-signals-page .plot-heading { margin-bottom: 8px; }
+  .basic-signals-page .plot-heading h2 { font-size: 19px; }
+  .basic-signals-page .time-plot,
+  .basic-signals-page .complex-plot {
+    height: clamp(210px, calc(100vh - 405px), 440px);
+    aspect-ratio: auto;
+  }
+  .basic-signals-page .signal-description { font-size: 12px; line-height: 1.5; }
+  .basic-signals-page .signal-option:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Aumenta la legibilidad y ocupa la altura disponible en monitores grandes. */
+@media (min-width: 1440px) and (min-height: 850px) {
+  .basic-signals-page .site-header,
+  .basic-signals-page .demo-main { width: min(1800px, calc(100% - 64px)); }
+  .basic-signals-page .site-header { height: 76px; }
+  .basic-signals-page .demo-main { min-height: calc(100vh - 76px); padding-top: 16px; }
+  .basic-signals-page .back-link { font-size: 14px; margin-bottom: 12px; }
+  .basic-signals-page .demo-intro h1 { font-size: 38px; }
+  .basic-signals-page .demo-intro > p:last-child { font-size: 17px; }
+  .basic-signals-page .signal-workspace {
+    grid-template-columns: 380px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .basic-signals-page .signal-controls { gap: 16px; }
+  .basic-signals-page .control-card,
+  .basic-signals-page .plot-card { padding: 20px; }
+  .basic-signals-page .control-card h2 { font-size: 17px; margin-bottom: 16px; }
+  .basic-signals-page .signal-picker { gap: 10px; }
+  .basic-signals-page .signal-option { min-height: 62px; font-size: 14px; gap: 8px; }
+  .basic-signals-page .signal-option-symbol { font-size: 18px; }
+  .basic-signals-page .parameter-card { gap: 16px; }
+  .basic-signals-page .parameter-card h2 { margin-bottom: 0; }
+  .basic-signals-page .range-control { font-size: 16px; gap: 8px; }
+  .basic-signals-page .range-control output { font-size: 15px; }
+  .basic-signals-page .range-control input { min-height: 24px; }
+  .basic-signals-page .parameter-note,
+  .basic-signals-page .legend-item { font-size: 14px; }
+  .basic-signals-page .plot-heading h2 { font-size: 26px; }
+  .basic-signals-page .plot-heading .eyebrow { font-size: 12px; }
+  .basic-signals-page .plot-badge { font-size: 14px; }
+  .basic-signals-page .signal-equation-display { font-size: 16px; min-height: 28px; }
+  .basic-signals-page .time-plot,
+  .basic-signals-page .complex-plot { height: clamp(350px, calc(100vh - 450px), 720px); }
+  .basic-signals-page .signal-description { font-size: 16px; }
+}
+
+html:has(.draw-signal) { scrollbar-width: none; }
+html:has(.draw-signal)::-webkit-scrollbar { display: none; }
+.draw-signal .drawing-challenge,
+.draw-signal .drawing-canvas,
+.draw-signal .drawing-controls { min-width: 0; }
+@media (min-width: 1000px) {
+  .draw-signal .site-header { height: 64px; }
+  .draw-signal .site-header,
+  .draw-signal .demo-main { width: min(1800px, calc(100% - 48px)); }
+  .draw-signal .demo-main { padding: 10px 0 24px; }
+  .draw-signal .back-link { margin-bottom: 6px; }
+  .draw-signal .demo-intro { max-width: none; margin-bottom: 12px; }
+  .draw-signal .demo-intro .eyebrow { margin-bottom: 4px; }
+  .draw-signal .demo-intro h1 { font-size: 30px; margin-bottom: 4px; }
+  .draw-signal .demo-intro p { max-width: none; font-size: 13px; line-height: 1.4; margin-bottom: 6px; }
+  .draw-signal .drawing-workspace {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-areas: "challenge challenge" "controls canvas";
+    gap: 8px 20px;
+    padding: 14px;
+  }
+  .draw-signal .drawing-challenge { grid-area: challenge; }
+  .draw-signal .drawing-canvas { grid-area: canvas; }
+  .draw-signal .drawing-controls { grid-area: controls; }
+  .draw-signal .drawing-challenge .challenge-navigation { float: right; margin: 0 0 8px 16px; }
+  .draw-signal #challenge-title { font-size: 20px; margin-bottom: 4px; }
+  .draw-signal .drawing-challenge p,
+  .draw-signal #drawing-help,
+  .draw-signal #cursor-status,
+  .draw-signal .drawing-controls p { font-size: 12px; line-height: 1.4; margin-block: 6px; }
+  .draw-signal .draw-formula { padding: 8px 12px; margin-block: 6px; font-size: 1rem; }
+  .draw-signal #drawing-plot { height: clamp(210px, calc(100vh - 440px), 700px); margin-block: 8px; }
+  .draw-signal .draw-point-form { margin-block: 8px 14px; gap: 10px; }
+  .draw-signal .draw-point-form label { font-size: 13px; }
+  .draw-signal input { width: 135px; padding: 7px; }
+  .draw-signal .game-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .draw-signal .game-button { padding: 9px 12px; }
+  .draw-signal #drawing-feedback { min-height: 2.8em; }
+}
+@media (min-width: 1440px) and (min-height: 850px) {
+  .draw-signal .site-header { height: 76px; }
+  .draw-signal .demo-main { padding-top: 16px; }
+  .draw-signal .back-link { font-size: 14px; margin-bottom: 12px; }
+  .draw-signal .demo-intro h1 { font-size: 38px; }
+  .draw-signal .demo-intro p { font-size: 17px; }
+  .draw-signal .drawing-workspace { grid-template-columns: 380px minmax(0, 1fr); padding: 20px; gap: 12px 24px; }
+  .draw-signal #challenge-title { font-size: 26px; }
+  .draw-signal .drawing-challenge p,
+  .draw-signal #drawing-help,
+  .draw-signal #cursor-status,
+  .draw-signal .drawing-controls p,
+  .draw-signal .draw-point-form label { font-size: 16px; }
+  .draw-signal .draw-formula { font-size: 1.25rem; padding: 12px; }
+  .draw-signal #drawing-plot { height: clamp(300px, calc(100vh - 590px), 700px); }
+  .draw-signal input { width: 160px; padding: 10px; }
+  .draw-signal .game-button { font-size: 15px; padding: 12px; }
+}
+
+.draw-signal .draw-point-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.draw-signal .draw-point-form label { min-width: 0; }
+.draw-signal .draw-point-form input { width: 100%; box-sizing: border-box; min-width: 0; }
+.draw-signal .draw-point-form > button { grid-column: 1 / -1; width: 100%; }
+
+/* Distribución panorámica compartida por las demos y los juegos del catálogo.
+   Las alturas conservan las proporciones de los SVG; el contenido adicional
+   sigue accesible mediante desplazamiento, también con zoom del navegador. */
+html:has(.panoramic-page) { scrollbar-width: none; }
+html:has(.panoramic-page)::-webkit-scrollbar { display: none; }
+.panoramic-stage, .panoramic-stage > * { min-width: 0; }
+.panoramic-information { margin-block: 20px; }
+@media (min-width: 1000px) {
+  .panoramic-page {
+    --demo-text: clamp(12px, 1.5vh, 17px);
+    --demo-small: clamp(11px, 1.3vh, 14px);
+    --demo-gap: clamp(10px, 1.5vh, 18px);
+    --demo-padding: clamp(12px, 1.8vh, 20px);
+    --demo-plot: clamp(160px, calc((100vh - 350px) / 2), 330px);
+    --demo-large-plot: clamp(250px, calc(100vh - 390px), 650px);
+    --demo-sidebar: clamp(290px, 24vw, 380px);
+  }
+  .panoramic-page .site-header,
+  .panoramic-page .demo-main { width: min(1800px, calc(100% - 48px)); max-width: none; }
+  .panoramic-page .site-header { height: clamp(60px, 7vh, 76px); }
+  .panoramic-page .demo-main { padding: 12px 0 24px; min-height: calc(100vh - 76px); }
+  .panoramic-page .back-link { font-size: var(--demo-small); margin-bottom: 8px; }
+  .panoramic-page .demo-intro { max-width: none; margin-bottom: var(--demo-gap); }
+  .panoramic-page .demo-intro .eyebrow { margin-bottom: 4px; }
+  .panoramic-page .demo-intro h1 { font-size: clamp(28px, 3.5vh, 38px); margin-bottom: 6px; }
+  .panoramic-page .demo-intro > p:not(.eyebrow) {
+    max-width: none; margin-bottom: 4px; color: var(--muted);
+    font-size: var(--demo-text); line-height: 1.4;
+  }
+  .panoramic-page :is(.plot-card, .control-card) { padding: var(--demo-padding); }
+  .panoramic-page .panoramic-stage :is(h2, .plot-heading h2) { font-size: clamp(17px, 2.2vh, 24px); margin-bottom: 8px; }
+  .panoramic-page .panoramic-stage h3 { font-size: var(--demo-text); }
+  .panoramic-page .panoramic-stage :is(p, label, select, input, button, td, th, dt, dd) { font-size: var(--demo-text); }
+  .panoramic-page .panoramic-stage :is(.discrete-plot-note, .discrete-sequence-help, .plot-legend, .convolution-legend, .legend-item, .plot-badge, .rc-readouts, .range-control output) { font-size: var(--demo-small); }
+  .panoramic-page .panoramic-stage p { line-height: 1.4; }
+  .panoramic-page .panoramic-stage .eyebrow { font-size: var(--demo-small); }
+  .panoramic-page .panoramic-stage .plot-heading { margin-bottom: 8px; }
+  .panoramic-page .panoramic-stage :is(input, select) { max-width: 100%; min-width: 0; }
+  .panoramic-page .panoramic-stage input[type="range"] { width: 100%; min-height: 20px; }
+  .panoramic-page .panoramic-stage :is(.game-button, .fourier-game-button) { padding: 9px 12px; }
+  .panoramic-page .panoramic-stage :is(.rc-form-grid, .rc-readouts, .power-metrics) { gap: var(--demo-gap); }
+  .panoramic-page .panoramic-stage :is(.time-plot, .game-plot, .transform-plot, .parity-plot, .power-plot, .convolution-plot, .sampling-plot, .fourier-plot) {
+    width: 100%; height: var(--demo-plot); min-height: 0; aspect-ratio: auto;
+  }
+  .panoramic-page .panoramic-stage svg { max-width: 100%; }
+  .panoramic-page .panoramic-stage :is(.rc-formulas, .rc-equations, .math-display) { font-size: var(--demo-text); }
+  .panoramic-page .panoramic-stage :is(.rc-form, .rectangles-card, .cp-card) { margin-block: 0; }
+  .panoramic-page .panoramic-stage :is(.tf-control-card, .bode-controls-card) { position: static; }
+  .panoramic-page :is(.tf-workspace, .fft-workspace, .bode-workspace, .laplace-workspace, .spectrogram-workspace, .sampling-spectrum-workspace) {
+    display: grid; grid-template-columns: var(--demo-sidebar) minmax(0, 1fr);
+    gap: var(--demo-gap); align-items: start; margin: 0;
+  }
+  .panoramic-page :is(.tf-controls, .fft-controls, .bode-controls, .laplace-controls, .sp-controls, .ss-controls, .bode-sidebar, .laplace-sidebar) { gap: 10px; }
+  .panoramic-page :is(.tf-plots, .fft-plots, .bode-plots, .lp-plots, .sp-plots, .ss-plots) {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--demo-gap);
+  }
+  .panoramic-page :is(.tf-plots, .fft-plots, .sp-plots) > :last-child { grid-column: 1 / -1; }
+  .panoramic-page :is(.tf-plots, .fft-plots, .bode-plots, .lp-plots, .sp-plots, .ss-plots) svg {
+    width: 100%; height: var(--demo-plot); aspect-ratio: auto;
+  }
+  .panoramic-page :is(.ss-plots, .lp-plots) { grid-template-columns: minmax(0, 1fr); }
+  .panoramic-page .bode-plots > :first-child { grid-column: 1 / -1; }
+  .panoramic-page .bode-plots > :first-child svg { height: 160px; }
+  .panoramic-page .bode-expression-card { font-size: var(--demo-small); }
+  .panoramic-page .bode-expression-card h3 { margin-top: 8px; }
+  .panoramic-page :is(.operations-workspace, .calculus-workspace) {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; gap: var(--demo-gap);
+  }
+  .panoramic-page .operations-workspace { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .panoramic-page :is(.operations-row, .calculus-row) { display: flex; flex-direction: column; gap: var(--demo-gap); }
+  .panoramic-page :is(.operations-controls, .calculus-controls) { gap: 8px; }
+  .panoramic-page .operations-row > article { flex: 1; }
+  .panoramic-page .operations-row .time-plot { flex: none; height: var(--demo-plot); }
+  .panoramic-page .calculus-chart .time-plot { flex: none; height: var(--demo-plot); }
+  .panoramic-page :is(.view-circuito-rc, .view-circuito-rlc, .view-segundo-orden) { min-width: 0; }
+  .panoramic-page:is(.view-circuito-rc, .view-circuito-rlc, .view-segundo-orden) .panoramic-stage {
+    display: grid; grid-template-columns: var(--demo-sidebar) minmax(0, 1fr);
+    gap: var(--demo-gap); align-items: start;
+  }
+  .panoramic-page:is(.view-circuito-rc, .view-circuito-rlc, .view-segundo-orden) .panoramic-part-1 { grid-column: 1; margin: 0; }
+  .panoramic-page .rc-model { grid-template-columns: 1fr; gap: 8px; }
+  .panoramic-page .rc-schematic { max-height: 150px; }
+  .panoramic-page:is(.view-circuito-rc, .view-circuito-rlc, .view-segundo-orden) .panoramic-part-2 { grid-column: 1; }
+  .panoramic-page:is(.view-circuito-rc, .view-circuito-rlc, .view-segundo-orden) .rc-workspace {
+    grid-column: 2; grid-row: 1 / 3; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--demo-gap);
+  }
+  .panoramic-page.view-circuito-rc .rc-workspace { grid-template-columns: 1fr; }
+  .panoramic-page .rlc-readouts-card { grid-column: auto; }
+  .panoramic-page .rc-readouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panoramic-page .rc-readouts > div { min-width: 0; }
+  .panoramic-page:is(.view-circuito-rc, .view-circuito-rlc) .rc-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .panoramic-page .second-order-controls { grid-template-columns: 1fr; }
+  .panoramic-page .power-workspace { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--demo-gap); }
+  .panoramic-page .power-workspace .power-plot { height: var(--demo-large-plot); }
+  .panoramic-page .power-metric { padding: 10px; }
+  .panoramic-page .power-metric-value { font-size: clamp(22px, 3vh, 32px); }
+  .panoramic-page .power-equation { margin-block: 8px; padding: 10px; }
+  .panoramic-page .power-game-navigation { margin-bottom: var(--demo-gap); }
+  .panoramic-page .power-game-solution { margin-top: var(--demo-gap); }
+  .panoramic-page .game-layout { grid-template-columns: minmax(300px, .8fr) minmax(0, 1.2fr); gap: var(--demo-gap); }
+  .panoramic-page .game-layout .combined-plot-card { grid-column: 2; grid-row: 1 / 3; }
+  .panoramic-page .game-layout .combined-plot-card svg { height: var(--demo-large-plot); }
+  .panoramic-page .game-layout .answer-card { grid-column: 1; }
+  .panoramic-page .game-layout .challenge-card { grid-column: 1; }
+  .panoramic-page .transform-game-content { gap: var(--demo-gap); }
+  .panoramic-page .transform-plots { gap: var(--demo-gap); }
+  .panoramic-page .transform-answer { margin-top: 0; }
+  .panoramic-page .transform-instructions { padding: var(--demo-padding); }
+  .panoramic-page .parity-game-content { display: grid; grid-template-columns: 1fr 1fr; gap: var(--demo-gap); }
+  .panoramic-page .parity-instructions { grid-column: 1 / -1; }
+  .panoramic-page .parity-source-card { width: 100%; align-self: start; }
+  .panoramic-page .parity-solutions { min-width: 0; }
+  .panoramic-page .parity-component-card { width: 100%; }
+  .panoramic-page .parity-self-check { margin-top: var(--demo-gap); }
+  .panoramic-page .fourier-game-layout { grid-template-columns: minmax(340px, .85fr) minmax(0, 1.5fr); gap: var(--demo-gap); }
+  .panoramic-page .fourier-game-controls { margin-bottom: var(--demo-gap); }
+  .panoramic-page .fourier-game-plot-card svg { height: var(--demo-large-plot); }
+  .panoramic-page .fourier-panels { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--demo-gap); }
+  .panoramic-page .fourier-chart-card:first-child { grid-column: 1; grid-row: 1 / 3; }
+  .panoramic-page .fourier-chart-card:first-child svg { height: var(--demo-large-plot); }
+  .panoramic-page .fourier-controls { margin-bottom: 10px; }
+  .panoramic-page :is(.fourier-formula, .fourier-status) { padding-block: 8px; margin-bottom: 10px; }
+  .panoramic-page .sampling-plots { grid-template-columns: 1fr 1fr; gap: var(--demo-gap); }
+  .panoramic-page .sampling-plots svg { height: var(--demo-large-plot); }
+  .panoramic-page :is(.sampling-controls, .sampling-status, .sampling-formula) { margin-bottom: 10px; padding-block: 10px; }
+  .panoramic-page .convolution-plots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--demo-gap); }
+  .panoramic-page .convolution-input-row { display: contents; }
+  .panoramic-page .convolution-result-row { grid-column: 2; grid-row: 2; }
+  .panoramic-page .convolution-slider-card { grid-column: 1 / -1; }
+  .panoramic-page .convolution-formula { margin-bottom: 10px; padding-block: 10px; }
+  .panoramic-page .discrete-workspace { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--demo-gap); }
+  .panoramic-page .discrete-overlap-card { grid-row: 1 / 3; }
+  .panoramic-page .discrete-overlap-card svg { height: var(--demo-large-plot); }
+  .panoramic-page :is(.discrete-formula, .discrete-sequence-form, .discrete-final-result) { margin-bottom: 10px; padding-block: 10px; }
+  .panoramic-page .discrete-step-controls { grid-column: 2; }
+  .panoramic-page .discrete-products-card { grid-column: 2; }
+  .panoramic-page.view-senal-rectangulos .panoramic-stage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--demo-gap); }
+  .panoramic-page.view-senal-rectangulos .panoramic-part-2 { grid-column: 1 / -1; grid-row: 1; }
+  .panoramic-page.view-senal-rectangulos .time-plot { height: var(--demo-large-plot); }
+  .panoramic-page.view-juego-transformada-fourier .panoramic-stage,
+  .panoramic-page.view-juego-respuesta-escalon .panoramic-stage { display: grid; grid-template-columns: var(--demo-sidebar) minmax(0, 1fr); gap: var(--demo-gap); align-items: start; }
+  .panoramic-page:is(.view-juego-transformada-fourier, .view-juego-respuesta-escalon) .panoramic-part-1 { grid-column: 1 / -1; margin: 0; }
+  .panoramic-page:is(.view-juego-transformada-fourier, .view-juego-respuesta-escalon) .panoramic-part-2 { grid-column: 2; grid-row: 2; margin: 0; }
+  .panoramic-page:is(.view-juego-transformada-fourier, .view-juego-respuesta-escalon) .panoramic-part-3 { grid-column: 1; grid-row: 2; margin: 0; }
+  .panoramic-page.view-juego-transformada-fourier #ftg-plot,
+  .panoramic-page.view-juego-respuesta-escalon #step-game-plot { height: var(--demo-large-plot); }
+  .panoramic-page.view-diagrama-bloques .panoramic-stage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--demo-gap); }
+  .panoramic-page.view-diagrama-bloques :is(.panoramic-part-1, .panoramic-part-2) { grid-column: 1 / -1; }
+  .panoramic-page.view-diagrama-bloques .blocks-diagrams-row svg { max-height: var(--demo-plot); }
+  .panoramic-page .fourier-xy-layout { gap: var(--demo-gap); }
+  .panoramic-page .fourier-xy-plots { grid-template-columns: 1fr 1fr; gap: var(--demo-gap); }
+  .panoramic-page .fourier-xy-plots svg { height: var(--demo-large-plot); }
+  .panoramic-page.view-fourier-xy .panoramic-part-1 { margin-bottom: var(--demo-gap); }
+  .panoramic-page .systems-quiz-card { max-width: 1200px; margin-inline: auto; padding: clamp(20px, 4vh, 44px); }
+  .panoramic-page .systems-options { gap: var(--demo-gap); }
+  .panoramic-page .systems-option { min-height: 52px; }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page:is(.view-fft, .view-espectrograma) .panoramic-stage { display: grid; gap: var(--demo-gap); }
+  .panoramic-page.view-adc-enob .panoramic-stage { display: grid; grid-template-columns: var(--demo-sidebar) minmax(0, 1fr); gap: var(--demo-gap); }
+  .panoramic-page.view-adc-enob .adc-modes { grid-column: 1 / -1; }
+  .panoramic-page.view-adc-enob .power-workspace { display: contents; }
+  .panoramic-page.view-adc-enob .power-workspace > :first-child { grid-column: 1; grid-row: 2 / 4; }
+  .panoramic-page.view-adc-enob .adc-spectrum { grid-column: 2; margin: 0; }
+  .panoramic-page.view-adc-enob .adc-fields { grid-template-columns: 1fr 1fr; }
+  .panoramic-page.view-adc-enob .adc-spectrum svg { height: var(--demo-plot); }
+  .panoramic-page.view-propiedades-convolucion .panoramic-stage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--demo-gap); }
+  .panoramic-page.view-propiedades-convolucion .panoramic-part-1 { grid-column: 1 / -1; }
+  .panoramic-page.view-propiedades-convolucion .cp-workspace { grid-column: 1 / 3; grid-template-columns: 1fr 1fr; gap: var(--demo-gap); }
+  .panoramic-page.view-propiedades-convolucion .panoramic-part-3 { grid-column: 3; }
+  .panoramic-page.view-propiedades-convolucion .cp-blocks-diagram { min-width: 0; height: 160px; }
+  .panoramic-page.view-propiedades-convolucion .cp-card { gap: 8px; }
+  .panoramic-page.view-propiedades-convolucion .time-plot { height: var(--demo-plot); }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido, .view-rueda-fft) .panoramic-stage {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--demo-gap); align-items: start;
+  }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-part-1 { grid-column: 1 / -1; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .rc-workspace { display: contents; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage svg { width: 100%; height: var(--demo-plot); }
+  .panoramic-page.view-sonar .rc-workspace > :last-child { grid-column: 1 / -1; }
+  .panoramic-page.view-correlacion-ruido .rc-workspace > :nth-child(n+4) { grid-column: span 1; }
+  .panoramic-page.view-rueda-fft .panoramic-stage { grid-template-columns: var(--demo-sidebar) repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-rueda-fft .panoramic-part-2 { grid-column: 1; grid-row: 1 / 4; }
+  .panoramic-page.view-rueda-fft .rc-form-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .panoramic-page.view-rueda-fft .wheel-actions { gap: 8px; }
+  .panoramic-page.view-rueda-fft .wheel-actions button { flex: 1 1 45%; }
+  .panoramic-page.view-rueda-fft .panoramic-part-1 { grid-column: 2; }
+  .panoramic-page.view-rueda-fft .panoramic-part-3 { grid-column: 3; }
+  .panoramic-page.view-rueda-fft .rc-workspace { display: contents; }
+  .panoramic-page.view-rueda-fft .rc-workspace > :nth-child(3) { grid-column: 2 / 4; }
+  .panoramic-page.view-rueda-fft .rc-workspace > :nth-child(n+4) { grid-column: 1 / -1; }
+  .panoramic-page.view-rueda-fft .wheel-measurements { grid-column: 1 / -1; }
+  .panoramic-page.view-rueda-fft .panoramic-stage svg { height: var(--demo-plot); }
+  .panoramic-page .panoramic-stage [hidden] { display: none; }
+}
+
+.panoramic-details > summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: 12px 0; }
+.panoramic-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.panoramic-details > .plot-card { margin-block: 12px; }
+.panoramic-page .rc-equations,
+.panoramic-page .rc-formulas { max-width: 100%; overflow-x: auto; }
+@media (min-width: 1000px) {
+  .panoramic-page {
+    --demo-plot: clamp(130px, calc((100vh - 500px) / 2), 270px);
+    --demo-large-plot: clamp(220px, calc(100vh - 550px), 530px);
+  }
+  .panoramic-page .panoramic-stage :is(.rc-readouts, .power-metrics) { margin-block: 8px; }
+  .panoramic-page .panoramic-stage .rc-readouts > div { padding-block: 5px; }
+  .panoramic-page .panoramic-stage .rc-readouts :is(dt, dd) { font-size: var(--demo-small); }
+  .panoramic-page .panoramic-stage .plot-card > p { margin-block: 6px; }
+  .panoramic-page .panoramic-stage .plot-heading h2 { margin-bottom: 0; }
+  .panoramic-page .bode-plots > :first-child { grid-column: auto; }
+  .panoramic-page .bode-plots > :last-child { grid-column: 1 / -1; }
+  .panoramic-page .bode-plots > :first-child svg { height: var(--demo-plot); }
+  .panoramic-page .lp-plots { grid-template-columns: 1fr 1fr; }
+  .panoramic-page .lp-plots svg { height: var(--demo-large-plot); }
+  .panoramic-page .ss-plots { grid-template-columns: 1fr 1fr; }
+  .panoramic-page .ss-plots svg { height: var(--demo-large-plot); }
+  .panoramic-page .fourier-spectrum { width: 100%; height: var(--demo-plot); }
+  .panoramic-page .discrete-step-controls { display: flex; flex-direction: column; align-items: stretch; }
+  .panoramic-page .discrete-step-slider { min-width: 0; width: 100%; }
+  .panoramic-page.view-propiedades-convolucion .panoramic-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-propiedades-convolucion .cp-workspace { grid-column: 1 / -1; grid-template-columns: 1fr 2fr; }
+  .panoramic-page.view-propiedades-convolucion .panoramic-part-6 { grid-column: 2; }
+  .panoramic-page.view-propiedades-convolucion:has(#cp-intermediate-card:not([hidden])) .panoramic-stage { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .panoramic-page.view-propiedades-convolucion:has(#cp-intermediate-card:not([hidden])) .panoramic-part-6 { grid-column: 3; }
+  .panoramic-page .calculus-controls { display: grid; grid-template-columns: 1fr 1fr; }
+  .panoramic-page .calculus-controls > :is(h2, p, .rc-formulas, .dirac-measures) { grid-column: 1 / -1; }
+  .panoramic-page .calculus-row .calculus-controls .range-control { display: flex; }
+  .panoramic-page .operations-controls > .rc-formulas { min-height: 1.5em; }
+  .panoramic-page .transform-instructions { grid-template-columns: auto minmax(0, 1fr); }
+  .panoramic-page .transform-reminder { grid-column: 2; }
+  .panoramic-page .transform-answer { padding: 12px; }
+  .panoramic-page .power-explanation { padding: 8px; }
+  .panoramic-page .power-metric-formula { margin-top: 4px; }
+  .panoramic-page .fourier-xy-layout { grid-template-columns: minmax(0, 1fr) minmax(300px, .6fr); }
+  .panoramic-page .fourier-xy-plots svg { height: var(--demo-large-plot); }
+  .panoramic-page .fourier-xy-table :is(th, td) { padding: 3px; font-size: var(--demo-small); }
+  .panoramic-page.view-fourier-xy fieldset { margin-block: 8px; padding: 8px; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page :is(.fft-controls, .sp-controls) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .panoramic-page :is(.fft-controls, .sp-controls) > label { font-size: 11px; }
+  .panoramic-page .fft-controls label:has(input[type="range"]) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "label" "slider" "value"; }
+  .panoramic-page .panoramic-stage :is(select, input[type="number"]) { padding: 5px; }
+  .panoramic-page .panoramic-stage .rc-equations { font-size: 11px; }
+  .panoramic-page .rc-schematic { max-height: 95px; }
+  .panoramic-page .power-metric { padding: 6px; }
+  .panoramic-page .panoramic-stage .power-metric :is(p, dt, dd) { font-size: 11px; }
+  .panoramic-page .power-metric-value { font-size: 20px; }
+  .panoramic-page .fourier-game-layout { grid-template-columns: minmax(340px, 1fr) minmax(0, 1fr); }
+  .panoramic-page .fourier-input-table :is(th, td) { padding: 3px; }
+  .draw-signal #drawing-plot { height: clamp(180px, calc(100vh - 485px), 300px); }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page .panoramic-stage { align-content: start; }
+  .panoramic-page .panoramic-stage .plot-heading .eyebrow { margin: 0 0 4px; }
+  .panoramic-page .panoramic-stage .plot-heading { min-height: 0; }
+  .panoramic-page .panoramic-stage .rlc-polezero { width: 100%; height: var(--demo-plot); }
+  .panoramic-page .panoramic-stage .rc-readouts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .panoramic-page .panoramic-stage .rc-readouts dt { line-height: 1.2; }
+  .panoramic-page .panoramic-stage .rc-readouts dd { margin-top: 3px; }
+  .panoramic-page.view-circuito-rc .rc-workspace { grid-template-columns: 1fr; align-items: start; }
+  .panoramic-page.view-circuito-rc .rc-workspace .rc-readouts { grid-template-columns: 1fr 1fr; }
+  .panoramic-page:is(.view-circuito-rc, .view-circuito-rlc, .view-segundo-orden) .panoramic-stage { grid-template-rows: auto auto; }
+  .panoramic-page.view-senal-rectangulos .panoramic-part-2 { grid-template-columns: 1fr 2fr; gap: 8px 20px; }
+  .panoramic-page.view-senal-rectangulos .panoramic-part-2 > h2 { grid-column: 1; }
+  .panoramic-page.view-senal-rectangulos .panoramic-part-2 > label { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+  .panoramic-page.view-senal-rectangulos .rectangles-range-labels { grid-column: 2; }
+  .panoramic-page.view-senal-rectangulos .time-plot { height: clamp(150px, calc(100vh - 700px), 380px); }
+  .panoramic-page.view-convolucion .convolution-plots { --demo-plot: clamp(110px, calc((100vh - 660px) / 2), 200px); }
+  .panoramic-page.view-convolucion .convolution-signal-select { flex-direction: row; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .panoramic-page.view-convolucion .convolution-signal-select select { flex: 1; width: 0; padding: 6px; }
+  .panoramic-page.view-convolucion .convolution-slider-card { padding-block: 6px; }
+  .panoramic-page.view-propiedades-convolucion .time-plot { height: clamp(110px, calc((100vh - 680px) / 2), 180px); }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metric { min-height: 64px; padding: 6px; }
+  .panoramic-page.view-adc-enob .power-workspace > article { align-self: start; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metric :is(p, h3) { font-size: var(--demo-small); margin-block: 4px; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metric-value { font-size: 22px; }
+  .panoramic-page.view-adc-enob .adc-fields { gap: 8px; }
+  .panoramic-page.view-adc-enob .adc-reference { padding: 8px; }
+  .panoramic-page.view-adc-enob .adc-spectrum svg { height: clamp(120px, calc((100vh - 650px) / 2), 200px); }
+  .panoramic-page.view-muestreo .sampling-plots svg { height: clamp(150px, calc(100vh - 730px), 350px); }
+  .panoramic-page.view-series-fourier .fourier-chart-card:first-child svg { height: clamp(180px, calc(100vh - 700px), 380px); }
+  .panoramic-page.view-series-fourier .fourier-chart-card:not(:first-child) { padding: 10px; }
+  .panoramic-page.view-series-fourier .fourier-spectrum { height: clamp(100px, calc((100vh - 700px) / 2), 160px); }
+  .panoramic-page.view-juego-respuesta-escalon .panoramic-stage { grid-template-columns: minmax(360px, .9fr) minmax(0, 1.5fr); }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-actions { gap: 6px; }
+  .panoramic-page.view-juego-respuesta-escalon .rc-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-juego-respuesta-escalon #step-game-plot { height: clamp(180px, calc(100vh - 650px), 410px); }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-answer { padding: 12px; }
+  .panoramic-page.view-juego-respuesta-escalon .game-feedback { min-height: 0; margin-block: 8px; padding: 8px; }
+  .panoramic-page .panoramic-stage .second-order-controls { gap: 10px; padding: 12px; }
+  .panoramic-page.view-fourier-xy .fourier-xy-controls { gap: 8px 16px; }
+  .panoramic-page.view-fourier-xy .fourier-xy-controls label { gap: 6px; }
+  .panoramic-page.view-fourier-xy .fourier-xy-controls label:has(input[type="range"]) { flex: 1 1 220px; display: grid; grid-template-columns: auto minmax(60px, 1fr) 5ch; }
+  .panoramic-page.view-fourier-xy .fourier-xy-layout { grid-template-columns: 1fr; }
+  .panoramic-page.view-fourier-xy .fourier-xy-plots svg { height: clamp(220px, calc(100vh - 660px), 420px); }
+  .panoramic-page.view-fourier-xy .fourier-xy-layout > section { margin-top: var(--demo-gap); }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage { --demo-plot: clamp(100px, calc((100vh - 720px) / 2), 170px); gap: 10px; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage > .plot-card { margin: 0; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .plot-heading h2 { font-size: var(--demo-text); }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .rc-readouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-rueda-fft .panoramic-stage { --demo-plot: clamp(100px, calc((100vh - 670px) / 2), 190px); }
+  .panoramic-page.view-rueda-fft .panoramic-stage .rc-form :is(label, select, button) { font-size: var(--demo-small); }
+  .panoramic-page.view-rueda-fft .panoramic-stage .rc-form select { min-height: 30px; padding: 4px; }
+  .panoramic-page.view-rueda-fft .panoramic-stage .rc-form-grid { gap: 6px; }
+  .panoramic-page.view-rueda-fft .panoramic-stage .wheel-delay-control { gap: 4px; }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page .power-game-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; margin-block: 12px; }
+  .panoramic-page .power-game-fields input { padding: 8px; }
+  .panoramic-page .power-game-fields small { min-height: 0; }
+  .panoramic-page .panoramic-stage .power-game-fields small:empty { display: none; }
+  .panoramic-page .panoramic-stage .rc-readouts { margin-top: 8px; }
+  .panoramic-page .panoramic-stage .power-metric { min-height: 0; }
+  .panoramic-page.view-convolucion-discreta .panoramic-stage > .panoramic-part-2 { margin-top: 0; }
+  .panoramic-page.view-diagrama-bloques .panoramic-stage { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .panoramic-page.view-diagrama-bloques .panoramic-part-2 { grid-column: 1; }
+  .panoramic-page.view-diagrama-bloques .panoramic-part-3 { grid-column: 2; }
+  .panoramic-page.view-diagrama-bloques .blocks-diagrams-row svg { max-height: clamp(120px, calc(100vh - 660px), 300px); }
+  .panoramic-page.view-diagrama-bloques .blocks-navigation { gap: 8px; }
+  .panoramic-page.view-rueda-fft .rc-workspace > article { grid-column: 2 / 4; }
+  .panoramic-page.view-rueda-fft .panoramic-stage .rc-form { padding: 12px; }
+  .panoramic-page.view-rueda-fft .panoramic-stage .rc-form-grid label { gap: 4px; }
+  .panoramic-page .sp-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .panoramic-page .sp-controls .sp-range { grid-template-columns: 1fr; grid-template-areas: "label" "slider" "value"; }
+  .panoramic-page :is(.bode-controls, .ss-controls) { gap: 6px; }
+  .panoramic-page .calculus-chart .time-plot { height: clamp(110px, calc((100vh - 650px) / 2), 200px); }
+  .panoramic-page.view-juego-transformaciones .transform-game-content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, .7fr); }
+  .panoramic-page.view-juego-transformaciones .transform-instructions { grid-column: 1 / -1; }
+  .panoramic-page.view-juego-transformaciones .transform-plots { grid-template-columns: 1fr; }
+  .panoramic-page.view-juego-transformaciones .transform-plots svg { height: clamp(120px, calc((100vh - 470px) / 2), 250px); }
+  .panoramic-page.view-juego-transformaciones .transform-answer { width: 100%; align-self: start; }
+  .panoramic-page.view-juego-transformaciones .transform-explanation { grid-column: 2; }
+  .panoramic-page .fourier-answer-table :is(th, td) { padding: 4px; }
+  .panoramic-page .fourier-answer-table input { min-height: 28px; padding: 4px; }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page .sampling-plots { display: grid; }
+  .panoramic-page.view-juego-transformaciones .transform-game-content { grid-template-columns: 1fr; }
+  .panoramic-page.view-juego-transformaciones .transform-plots { grid-template-columns: 1fr 1fr; }
+  .panoramic-page.view-juego-transformaciones .transform-plots svg { height: clamp(100px, calc((100vh - 650px) / 2), 200px); }
+  .panoramic-page.view-juego-transformaciones .transform-answer { max-width: none; }
+  .panoramic-page.view-juego-transformaciones .transform-feedback { min-height: 0; margin-block: 8px; padding: 6px; }
+  .panoramic-page.view-juego-potencias .power-workspace .power-plot { height: clamp(170px, calc(100vh - 650px), 430px); }
+  .panoramic-page.view-convolucion .convolution-plots { --demo-plot: clamp(90px, calc((100vh - 730px) / 2), 170px); }
+  .panoramic-page.view-convolucion .convolution-formula { padding-block: 6px; }
+  .panoramic-page.view-propiedades-convolucion .cp-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+  .panoramic-page.view-propiedades-convolucion .cp-controls > :is(h2, p, div) { grid-column: 1 / -1; }
+  .panoramic-page.view-propiedades-convolucion .time-plot { height: clamp(90px, calc((100vh - 730px) / 2), 160px); }
+  .panoramic-page.view-propiedades-convolucion .cp-card { padding: 10px; gap: 6px; }
+  .panoramic-page.view-diagrama-bloques .panoramic-stage > .plot-card { padding: 10px; }
+  .panoramic-page.view-diagrama-bloques .blocks-navigation button { padding: 6px 10px; }
+  .panoramic-page.view-espectrograma .panoramic-stage { --demo-plot: clamp(100px, calc((100vh - 650px) / 2), 200px); }
+  .panoramic-page.view-sonar .rc-workspace > :last-child { grid-column: auto; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .rc-readouts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .plot-card { padding: 10px; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .sampling-range { gap: 4px; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .sonar-actions { margin-top: 8px; gap: 8px; }
+  .panoramic-page .panoramic-stage .correlation-sequences { gap: 8px; }
+  .panoramic-page .panoramic-stage .correlation-sequences h2 { font-size: var(--demo-text); margin: 0; }
+  .panoramic-page .panoramic-stage .correlation-bit { padding: 4px 2px; gap: 2px; }
+  .panoramic-page .panoramic-stage .correlation-bit strong { font-size: 16px; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page .panoramic-stage :is(.plot-heading h2, h2) { font-size: 16px; }
+  .panoramic-page .panoramic-stage .calculus-controls { gap: 6px; padding: 10px; }
+  .panoramic-page .calculus-chart .time-plot { height: 90px; }
+  .panoramic-page .panoramic-stage .second-order-controls { gap: 6px; }
+  .panoramic-page .panoramic-stage .second-order-controls label { gap: 6px; }
+  .panoramic-page .panoramic-stage .second-order-controls > p { font-size: 11px; }
+  .panoramic-page .panoramic-stage .second-order-controls .second-order-range { font-size: 10px; }
+  .panoramic-page.view-convolucion-discreta .discrete-workspace { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .panoramic-page .discrete-overlap-card svg { height: 160px; }
+  .panoramic-page.view-series-fourier .fourier-panels { grid-template-columns: 1fr 1fr 1fr; }
+  .panoramic-page.view-series-fourier .fourier-chart-card:first-child { grid-row: auto; }
+  .panoramic-page.view-series-fourier .fourier-chart-card:first-child svg { height: 160px; }
+  .panoramic-page.view-series-fourier .fourier-table :is(td, th) { padding: 4px; font-size: 11px; }
+  .panoramic-page.view-juego-fourier .fourier-answer-card { padding: 10px; }
+  .panoramic-page.view-juego-fourier .fourier-answer-card > p { font-size: 11px; margin-block: 5px; }
+  .panoramic-page.view-juego-fourier .fourier-answer-table :is(th, td) { padding: 2px; }
+  .panoramic-page.view-fourier-xy .fourier-xy-plots svg { height: 180px; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metric-value { font-size: 16px; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metric { padding: 4px; }
+  .panoramic-page.view-adc-enob .adc-spectrum p { font-size: 10px; }
+  .panoramic-page.view-rueda-fft .panoramic-stage { grid-template-columns: 420px repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-rueda-fft .panoramic-stage .rc-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .panoramic-page.view-rueda-fft .wheel-actions button { font-size: 11px; padding: 6px; }
+}
+
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-juego-transformaciones .transform-instructions { grid-template-columns: auto 1fr 1fr; gap: 8px 16px; }
+  .panoramic-page.view-juego-transformaciones .transform-explanation { grid-column: 3; }
+  .panoramic-page.view-juego-transformaciones .transform-answer { padding: 8px; }
+  .panoramic-page.view-diagrama-bloques .panoramic-stage { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  .panoramic-page.view-diagrama-bloques .blocks-diagrams-row svg { max-height: 95px; }
+  .panoramic-page.view-convolucion-discreta .discrete-products-card .discrete-table-wrap { max-height: 160px; overflow: auto; }
+  .panoramic-page.view-convolucion-discreta .discrete-step-controls { padding: 8px; gap: 6px; }
+  .panoramic-page.view-espectrograma .sp-controls { gap: 5px; }
+  .panoramic-page.view-espectrograma .sp-controls label { font-size: 11px; gap: 3px; }
+  .panoramic-page.view-adc-enob .adc-spectrum .plot-legend { margin-block: 4px; }
+  .panoramic-page.view-adc-enob .adc-spectrum .plot-legend > span { font-size: 10px; }
+  .panoramic-page.view-adc-enob .adc-spectrum svg { height: 100px; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metric :is(p, h3) { margin-block: 2px; font-size: 10px; }
+  .panoramic-page.view-correlacion-ruido .panoramic-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-1 { grid-column: 1; }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-3 { grid-column: 2; grid-row: 1; }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-2 { grid-column: 1; grid-row: 2; }
+  .panoramic-page.view-correlacion-ruido .rc-workspace > :nth-child(3) { grid-column: auto; }
+  .panoramic-page.view-correlacion-ruido .rc-workspace > :nth-child(3) .sampling-range { display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 8px; }
+  .panoramic-page.view-correlacion-ruido .panoramic-stage .correlation-actions { gap: 6px; }
+  .panoramic-page.view-juego-fourier .fourier-a0-input { margin-bottom: 6px; }
+  .panoramic-page.view-juego-fourier .fourier-mode-controls { margin-bottom: 4px; }
+  .panoramic-page.view-juego-fourier .fourier-input-help { font-size: 10px; margin-bottom: 4px; }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .panoramic-part-3 { grid-column: 2 / 4; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page { --demo-padding: 10px; --demo-gap: 8px; }
+  .panoramic-page .panoramic-stage mjx-container[display="true"] { margin: .35em 0; }
+  .panoramic-page .panoramic-stage h2 { margin-bottom: 4px; }
+  .panoramic-page.view-juego-transformaciones .transform-game-content { gap: 6px; }
+  .panoramic-page.view-juego-transformaciones .transform-plot-card { padding: 8px; }
+  .panoramic-page.view-propiedades-convolucion .cp-card { padding: 8px; }
+  .panoramic-page.view-convolucion-discreta .discrete-products-card .discrete-table-wrap { max-height: 130px; scrollbar-width: none; }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage { gap: 6px; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .plot-card { padding: 6px; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .plot-heading .eyebrow { display: none; }
+  .panoramic-page:is(.view-sonar, .view-correlacion-ruido) .panoramic-stage .plot-heading { margin-bottom: 4px; }
+  .panoramic-page.view-correlacion-ruido .correlation-bit { line-height: 1.1; }
+  .panoramic-page.view-correlacion-ruido .correlation-sequences p { font-size: 11px; line-height: 1.2; }
+  .panoramic-page.view-juego-fourier .fourier-a0-input { display: flex; align-items: center; gap: 8px; max-width: none; }
+  .panoramic-page.view-juego-fourier .fourier-a0-input input { width: 110px; margin-top: 0; }
+  .panoramic-page.view-juego-fourier .plot-heading .eyebrow { display: none; }
+}
+
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-diagrama-bloques .panoramic-part-1 { display: grid; grid-template-columns: 1fr 1.5fr; align-items: center; gap: 8px 20px; }
+  .panoramic-page.view-diagrama-bloques .blocks-navigation { flex-wrap: nowrap; }
+  .panoramic-page.view-adc-enob .adc-modes { margin-bottom: 0; }
+  .panoramic-page.view-correlacion-ruido .panoramic-stage .correlation-sequences { gap: 4px; }
+  .panoramic-page.view-correlacion-ruido .panoramic-stage .correlation-sequences h2 { font-size: 14px; line-height: 1.1; }
+  .panoramic-page.view-correlacion-ruido .correlation-bit :is(strong, small) { line-height: 1.1; }
+  .panoramic-page.view-correlacion-ruido #corr-detection-summary { font-size: 10px; line-height: 1.1; margin: 0; }
+}
+
+/* Cálculo de señales: original arriba y resultado debajo, a la derecha. */
+@media (min-width: 1000px) {
+  .calculus-page .calculus-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .calculus-page .calculus-workspace .calculus-row {
+    display: grid;
+    grid-template-columns: var(--demo-sidebar) minmax(0, 1fr);
+    gap: var(--demo-gap);
+    align-items: start;
+  }
+  .calculus-page .calculus-workspace .calculus-controls {
+    display: flex;
+    flex-direction: column;
+  }
+  .calculus-page .calculus-workspace .calculus-chart .time-plot {
+    height: clamp(120px, calc((100vh - 440px) / 2), 285px);
+  }
+}
+
+@media (min-width: 1000px) {
+  .view-derivada-integral .calculus-workspace .calculus-row {
+    grid-template-columns: clamp(330px, 27vw, 420px) minmax(0, 1fr);
+  }
+  .calculus-page .calculus-workspace .calculus-row:first-child {
+    align-items: stretch;
+  }
+  .view-derivada-integral .calculus-workspace .calculus-chart .time-plot {
+    height: clamp(120px, calc((100vh - 480px) / 2), 265px);
+  }
+  .view-derivada-integral .calculus-workspace .calculus-controls {
+    gap: 6px;
+  }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .view-derivada-integral .calculus-workspace .calculus-controls { padding: 8px; gap: 4px; }
+  .view-derivada-integral .calculus-workspace .calculus-controls :is(p, .rc-formulas) {
+    font-size: var(--demo-small);
+    line-height: 1.3;
+  }
+}
+
+@media (min-width: 1000px) {
+  .expression-game-page .game-layout :is(.answer-card, .combined-plot-card) {
+    align-self: stretch;
+  }
+}
+
+/* Transformaciones: controles a la izquierda y señales apiladas a la derecha. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-juego-transformaciones .transform-game-content {
+    grid-template-columns: clamp(330px, 28vw, 450px) minmax(0, 1fr);
+  }
+  .panoramic-page.view-juego-transformaciones .transform-instructions {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-self: stretch;
+    gap: 8px;
+  }
+  .panoramic-page.view-juego-transformaciones .transform-answer {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: stretch;
+  }
+  .panoramic-page.view-juego-transformaciones .transform-plots {
+    display: contents;
+  }
+  .panoramic-page.view-juego-transformaciones .transform-plot-card {
+    grid-column: 2;
+    align-self: stretch;
+  }
+  .panoramic-page.view-juego-transformaciones .transform-plot-card:first-child {
+    grid-row: 1;
+  }
+  .panoramic-page.view-juego-transformaciones .transform-plot-card:last-child {
+    grid-row: 2;
+  }
+  .panoramic-page.view-juego-transformaciones .transform-plots svg {
+    height: clamp(130px, calc((100vh - 440px) / 2), 285px);
+  }
+}
+
+/* Simetría: señal original sobre sus componentes y comprobación a la izquierda. */
+@media (min-width: 1000px) {
+  .panoramic-page .parity-game-content {
+    grid-template-columns: clamp(330px, 28vw, 450px) minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .panoramic-page .parity-instructions {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .panoramic-page .parity-source-card {
+    grid-column: 2;
+    align-self: stretch;
+  }
+  .panoramic-page .parity-solutions:not([hidden]) {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: var(--demo-gap);
+    align-items: stretch;
+  }
+  .panoramic-page .parity-component-card {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+  }
+  .panoramic-page .parity-self-check {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+  }
+  .panoramic-page .parity-game-content .parity-plot {
+    height: clamp(100px, calc((100vh - 640px) / 2), 220px);
+  }
+  .panoramic-page .parity-formulas { margin-block: 6px; gap: 4px 16px; }
+  .panoramic-page .parity-view-controls { margin-top: 6px; }
+}
+
+@media (min-width: 1000px) {
+  .view-potencia-senales-periodicas .power-workspace,
+  .view-juego-potencias .power-workspace {
+    align-items: stretch;
+  }
+}
+
+@media (min-width: 1000px) {
+  .view-circuito-rc .rc-workspace #rc-output-plot {
+    height: clamp(190px, calc(100vh - 550px), 440px);
+  }
+}
+
+.view-circuito-rc .rc-model .rc-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.view-circuito-rc .rc-model .rc-form-grid input { box-sizing: border-box; }
+.view-circuito-rc #rc-form label[for="rc-input"] { grid-column: 1 / -1; }
+
+:is(.view-circuito-rc, .view-circuito-rlc) .rc-axis-lock { display: flex; align-items: center; gap: 8px; margin-top: 8px; cursor: pointer; }
+:is(.view-circuito-rc, .view-circuito-rlc) .rc-axis-lock input { accent-color: var(--accent); }
+:is(.view-circuito-rc, .view-circuito-rlc) .rc-axis-lock input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* RLC y segundo orden: respuesta amplia y plano s a media anchura. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-segundo-orden .second-order-controls {
+    margin: 0;
+  }
+  .panoramic-page:is(.view-circuito-rlc, .view-segundo-orden) .panoramic-stage {
+    align-items: stretch;
+  }
+  .panoramic-page:is(.view-circuito-rlc, .view-segundo-orden) .rc-workspace {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    align-self: stretch;
+    align-items: stretch;
+  }
+  :is(.view-circuito-rlc, .view-segundo-orden) .rc-workspace > .plot-card {
+    display: flex;
+    flex-direction: column;
+  }
+  :is(.view-circuito-rlc, .view-segundo-orden) .rc-workspace :is(#rlc-step-plot, #rlc-polezero-plot, #so-step-plot, #so-poles-plot) {
+    flex: 1 1 auto;
+    min-height: 130px;
+    aspect-ratio: auto;
+  }
+}
+
+.view-circuito-rlc .rlc-source-swatch {
+  border: 0;
+  height: 3px;
+  background: repeating-linear-gradient(to right, #7c3aed 0 12px, transparent 12px 16px, #7c3aed 16px 18px, transparent 18px 22px);
+}
+
+/* Diagramas de bloques: ejemplo y navegación en una misma fila. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-diagrama-bloques .panoramic-part-1 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: 10px 20px;
+    align-items: end;
+  }
+  .view-diagrama-bloques .blocks-example-label { margin: 0; max-width: none; }
+  .panoramic-page.view-diagrama-bloques .blocks-navigation { flex-wrap: nowrap; align-items: end; }
+  .view-diagrama-bloques .blocks-navigation label { display: grid; gap: 8px; }
+  .view-diagrama-bloques .blocks-navigation select { width: 100%; box-sizing: border-box; }
+  .view-diagrama-bloques .blocks-navigation button { white-space: nowrap; }
+  .view-diagrama-bloques #blocks-progress { margin: 0; }
+}
+
+.blocks-view-options { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; }
+.blocks-view-options label { cursor: pointer; }
+.blocks-view-options input { accent-color: var(--accent); }
+.blocks-view-options input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.panoramic-page.view-diagrama-bloques.blocks-rules-hidden .panoramic-part-2 { grid-column: 1 / -1; }
+.panoramic-page.view-diagrama-bloques.blocks-rules-hidden .blocks-diagrams-row svg {
+  max-height: none;
+  min-width: 0;
+}
+.panoramic-page.view-diagrama-bloques.blocks-rules-hidden .blocks-diagrams-row.is-comparing { min-width: 0; }
+
+/* Bode: magnitud y fase apiladas, con las medidas a su derecha. */
+@media (min-width: 1000px) {
+  .panoramic-page .bode-plots {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, .45fr);
+    align-items: stretch;
+  }
+  .panoramic-page .bode-plots > :first-child { grid-column: 1; grid-row: 1; }
+  .panoramic-page .bode-plots > :nth-child(2) { grid-column: 1; grid-row: 2; }
+  .panoramic-page .bode-plots > :last-child { grid-column: 2; grid-row: 1 / 3; }
+  .panoramic-page .bode-plots #bode-readouts { grid-template-columns: 1fr; }
+}
+
+.bode-controls .bode-view-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.bode-view-toggle input { accent-color: var(--accent); }
+.bode-view-toggle input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (min-width: 1000px) {
+  .panoramic-page.bode-measures-hidden .bode-plots { grid-template-columns: minmax(0, 1fr); }
+  .panoramic-page.bode-measures-hidden .bode-plots svg {
+    height: clamp(160px, calc((100vh - 480px) / 2), 290px);
+  }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page .bode-workspace { align-items: stretch; }
+}
+
+
+/* Convolución discreta: controles y cálculos a la izquierda. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-convolucion-discreta .panoramic-stage {
+    display: grid;
+    grid-template-columns: minmax(320px, .8fr) minmax(0, 1.8fr);
+    gap: var(--demo-gap);
+    align-items: stretch;
+  }
+  .panoramic-page.view-convolucion-discreta .discrete-workspace { display: contents; }
+  .panoramic-page.view-convolucion-discreta .discrete-sequence-form {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+  }
+  .panoramic-page.view-convolucion-discreta .discrete-step-controls {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .panoramic-page.view-convolucion-discreta .discrete-products-card {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .panoramic-page.view-convolucion-discreta .discrete-final-result {
+    grid-column: 1;
+    grid-row: 4;
+    margin: 0;
+  }
+  .panoramic-page.view-convolucion-discreta .discrete-overlap-card {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin: 0;
+    contain: size;
+  }
+  .panoramic-page.view-convolucion-discreta .panoramic-stage:has(.discrete-final-result:not([hidden])) .discrete-overlap-card {
+    grid-row: 1 / 5;
+  }
+  .panoramic-page.view-convolucion-discreta .discrete-overlap-card svg {
+    flex: 1;
+    height: 0;
+    min-height: 0;
+  }
+}
+
+.bode-phase-swatch { background: repeating-linear-gradient(to right, #b45309 0 10px, transparent 10px 15px); }
+.bode-combined #bode-magnitude-card { display: flex; flex-direction: column; }
+.bode-combined #bode-combined-legend { margin: 0 0 8px; }
+.bode-combined #bode-magnitude { height: clamp(280px, 50vh, 580px); }
+@media (min-width: 1000px) {
+  .panoramic-page.bode-combined .bode-plots > :first-child { grid-row: 1 / 3; }
+  .panoramic-page.bode-combined .bode-plots #bode-magnitude {
+    flex: 1 1 auto;
+    height: clamp(290px, calc(100vh - 400px), 600px);
+    min-height: 250px;
+  }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page .bode-controls { gap: 3px; }
+}
+
+/* Medidas de Bode: repartir las lecturas por toda la altura disponible. */
+#bode-readouts > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* Adivina H(s): selección y respuesta a la izquierda, gráfica completa a la derecha. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-juego-respuesta-escalon .panoramic-stage {
+    grid-template-rows: auto 1fr;
+    align-items: stretch;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .panoramic-part-1 {
+    grid-column: 1;
+    grid-row: 1;
+    gap: 10px;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-settings > label {
+    width: 100%;
+    max-width: none;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-navigation {
+    gap: 6px;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .panoramic-part-2 {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+  }
+  .panoramic-page.view-juego-respuesta-escalon #step-game-plot {
+    flex: 1 1 auto;
+    height: clamp(220px, calc(100vh - 540px), 540px);
+    min-height: 220px;
+    aspect-ratio: auto;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-answer > p,
+  .panoramic-page.view-juego-respuesta-escalon .step-game-answer > div > p {
+    margin-block: 6px;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-actions {
+    margin-top: 4px;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-navigation {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    width: 100%;
+  }
+  .panoramic-page.view-juego-respuesta-escalon #step-game-progress {
+    justify-self: center;
+    max-width: none;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .panoramic-page.view-juego-respuesta-escalon .step-game-navigation button {
+    padding-inline: 5px;
+  }
+  .panoramic-page.view-juego-respuesta-escalon #step-game-second-model .rc-form-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+  }
+}
+.panoramic-page .panoramic-stage #bode-readouts dt {
+  font-size: clamp(13px, 1.6vh, 18px);
+  line-height: 1.3;
+}
+.panoramic-page .panoramic-stage #bode-readouts dd {
+  font-size: clamp(18px, 2.3vh, 26px);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 1000px) {
+  #bode-measures-card:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+  .panoramic-page .panoramic-stage #bode-readouts {
+    flex: 1;
+    grid-auto-rows: 1fr;
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-convolucion-discreta .discrete-products-card .discrete-table-wrap {
+    max-height: 100px;
+  }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-convolucion-discreta .panoramic-stage { gap: 8px; }
+  .panoramic-page.view-convolucion-discreta .panoramic-stage .plot-card { padding-block: 8px; }
+  .panoramic-page.view-convolucion-discreta .discrete-result { margin-block: 4px; }
+}
+
+.view-muestreo .sampling-reconstruction-swatch {
+  background: repeating-linear-gradient(to right, #15803d 0 8px, transparent 8px 13px);
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-muestreo .panoramic-stage {
+    display: grid;
+    grid-template-columns: var(--demo-sidebar) minmax(0, 1fr);
+    gap: var(--demo-gap);
+    align-items: start;
+  }
+  .panoramic-page.view-muestreo .sampling-controls {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: 1fr;
+    margin: 0;
+  }
+  .panoramic-page.view-muestreo .sampling-status {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+  }
+  .panoramic-page.view-muestreo .sampling-plots {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: flex;
+    align-self: stretch;
+  }
+  .view-muestreo .sampling-plot-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+  }
+  .panoramic-page.view-muestreo .sampling-plots #sampled-plot {
+    flex: 1;
+    height: clamp(240px, calc(100vh - 400px), 650px);
+    min-height: 200px;
+  }
+}
+
+/* Muestreo en frecuencia: entrada arriba y señal muestreada debajo. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-muestreo-espectro .ss-plots {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .panoramic-page.view-muestreo-espectro .ss-plots svg {
+    height: clamp(130px, calc((100vh - 560px) / 2), 260px);
+  }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page.view-muestreo-espectro .sampling-spectrum-workspace {
+    align-items: stretch;
+  }
+}
+
+/* ADC: parámetros, espectro y resultados en tres columnas. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-adc-enob .panoramic-stage {
+    grid-template-columns: minmax(250px, .85fr) minmax(0, 1.7fr) minmax(240px, .8fr);
+    align-items: stretch;
+  }
+  .panoramic-page.view-adc-enob .power-workspace > :first-child {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: stretch;
+  }
+  .panoramic-page.view-adc-enob .power-workspace > :last-child {
+    grid-column: 3;
+    grid-row: 2;
+    align-self: stretch;
+  }
+  .panoramic-page.view-adc-enob .adc-spectrum {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+  }
+  .panoramic-page.view-adc-enob .adc-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .panoramic-page.view-adc-enob .panoramic-stage .power-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .panoramic-page.view-adc-enob .adc-spectrum svg {
+    flex: 1;
+    height: clamp(180px, calc(100vh - 470px), 500px);
+    min-height: 180px;
+  }
+}
+@media (min-width: 1000px) {
+  .view-adc-enob #adc-results strong { font-size: clamp(15px, 1.8vh, 21px); overflow-wrap: anywhere; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-adc-enob #adc-results .power-metric { min-height: 50px; }
+}
+
+/* Detección con ruido: configuración, señales y secuencias. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-correlacion-ruido .panoramic-stage {
+    grid-template-columns: minmax(250px, .85fr) minmax(0, 2fr) minmax(210px, .7fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+  }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-1 { grid-column: 1; grid-row: 1; }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-1 .rc-form-grid { grid-template-columns: 1fr; }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-2 { grid-column: 1; grid-row: 2; }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-3 {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    grid-template-columns: 1fr;
+    align-self: stretch;
+    align-content: start;
+  }
+  .panoramic-page.view-correlacion-ruido .correlation-bits { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-4 {
+    display: grid;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--demo-gap);
+    margin: 0;
+  }
+  .panoramic-page.view-correlacion-ruido .rc-workspace > article { grid-column: 1; }
+  .panoramic-page.view-correlacion-ruido .rc-workspace > :nth-child(3) { grid-column: 1; }
+  .panoramic-page.view-correlacion-ruido .panoramic-stage svg {
+    height: clamp(75px, calc((100vh - 720px) / 3), 150px);
+  }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-2 svg { height: clamp(130px, 20vh, 230px); }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-correlacion-ruido .panoramic-part-1 > .sampling-range { margin-top: 12px; }
+  .panoramic-page.view-correlacion-ruido .correlation-transmitted-panel { min-width: 0; }
+  .panoramic-page.view-correlacion-ruido .panoramic-part-4 svg {
+    height: clamp(120px, calc((100vh - 560px) / 2), 260px);
+  }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-correlacion-ruido #corr-transmitted-plot {
+    height: clamp(140px, 19vh, 210px);
+  }
+}
+
+.sonar-sidebar { display: grid; gap: 16px; min-width: 0; }
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .panoramic-stage {
+    grid-template-columns: minmax(260px, .85fr) minmax(0, 1.8fr) minmax(230px, .8fr);
+    align-items: stretch;
+  }
+  .view-sonar .sonar-sidebar { grid-column: 1; grid-row: 1; gap: var(--demo-gap); align-content: start; }
+  .panoramic-page.view-sonar .sonar-sidebar > * { grid-column: auto; margin: 0; }
+  .panoramic-page.view-sonar .rc-form-grid { grid-template-columns: 1fr; }
+  .panoramic-page.view-sonar .panoramic-part-3 { grid-column: 3; grid-row: 1; }
+  .panoramic-page.view-sonar #sonar-readouts { grid-template-columns: 1fr; }
+  .panoramic-page.view-sonar .panoramic-part-4 {
+    display: grid;
+    grid-column: 2;
+    grid-row: 1;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--demo-gap);
+    margin: 0;
+    align-content: start;
+  }
+  .panoramic-page.view-sonar .rc-workspace > :last-child { grid-column: 1; }
+  .panoramic-page.view-sonar .panoramic-part-4 svg { height: clamp(140px, calc((100vh - 470px) / 2), 300px); }
+  .panoramic-page.view-sonar .sonar-sidebar svg { height: clamp(70px, 9vh, 110px); }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .rc-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panoramic-page.view-sonar #sonar-readouts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .sonar-sidebar {
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: stretch;
+  }
+  .panoramic-page.view-sonar .sonar-sidebar .panoramic-part-2 {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .panoramic-page.view-sonar .sonar-sidebar #sonar-scene {
+    flex: 1;
+    height: clamp(160px, calc(100vh - 530px), 420px);
+    min-height: 140px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .sonar-sidebar .rc-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .panoramic-part-4 {
+    grid-template-rows: 1fr 1fr;
+    align-content: stretch;
+  }
+  .panoramic-page.view-sonar .panoramic-part-4 > article {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .panoramic-page.view-sonar .panoramic-part-4 svg {
+    flex: 1;
+    height: 0;
+    min-height: 120px;
+  }
+}
+
+/* Sonar: mantener las cajas dentro de la altura de pantalla. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .sonar-sidebar #sonar-scene {
+    height: clamp(100px, calc(100vh - 700px), 260px);
+    min-height: 100px;
+  }
+  .panoramic-page.view-sonar #sonar-readouts { gap: 6px; }
+  .panoramic-page.view-sonar #sonar-readouts > div { padding-block: 4px; }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .sonar-sidebar #sonar-scene {
+    height: clamp(70px, calc(100vh - 850px), 180px);
+    min-height: 70px;
+  }
+  .panoramic-page.view-sonar .sonar-sidebar .rc-form-grid { gap: 6px; }
+  .panoramic-page.view-sonar .sonar-sidebar .sampling-range { gap: 4px; }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .panoramic-part-4 { contain: size; min-height: 0; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-sonar #sonar-readouts { gap: 3px; }
+  .panoramic-page.view-sonar #sonar-readouts > div { padding-block: 2px; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-sonar .sonar-sidebar input[type="range"] { min-height: 20px; }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar .sonar-sidebar .panoramic-part-2 {
+    contain: size;
+    min-height: 100px;
+  }
+}
+@media (min-width: 1000px) {
+  .view-sonar .sonar-primary {
+    min-height: calc(100vh - 70px);
+  }
+}
+@media (min-width: 1000px) {
+  .view-sonar .sonar-primary {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px);
+    min-height: 0;
+  }
+  .panoramic-page.view-sonar .sonar-primary .panoramic-stage {
+    flex: 1;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+    align-content: stretch;
+  }
+}
+
+/* Sonar: resultados legibles dentro de su columna. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-sonar #sonar-readouts dt {
+    font-size: clamp(12px, 1.4vh, 16px);
+    line-height: 1.2;
+  }
+  .panoramic-page.view-sonar #sonar-readouts dd {
+    font-size: clamp(16px, 1.9vh, 22px);
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .view-sonar #sonar-readouts > div { min-width: 0; }
+}
+
+.view-sonar .sonar-plot .plot-tick-label { font-size: 13px; }
+.view-sonar .sonar-plot .plot-axis-label { font-size: 14px; }
+.view-sonar .sonar-plot .plot-annotation { font-size: 12px; }
+
+/* FFT de sinusoides: espectro protagonista en la columna central. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-fft .fft-workspace {
+    grid-template-columns: minmax(270px, .9fr) minmax(0, 2fr) minmax(220px, .8fr);
+    align-items: stretch;
+  }
+  .panoramic-page.view-fft .fft-plots { display: contents; }
+  .panoramic-page.view-fft .fft-spectrum-card { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; }
+  .panoramic-page.view-fft .fft-window-card { grid-column: 3; grid-row: 1; }
+  .panoramic-page.view-fft #fft-spectrum-plot { flex: 1; height: clamp(220px, calc(100vh - 390px), 620px); }
+  .panoramic-page.view-fft #fft-window-plot { height: clamp(150px, 24vh, 280px); }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-fft .fft-workspace {
+    grid-template-columns: var(--demo-sidebar) minmax(0, 1fr);
+  }
+}
+.fft-controls .fft-axis-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.fft-axis-toggle input { accent-color: var(--accent); }
+.fft-axis-toggle input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Espectrograma central y vistas de la ventana a la derecha. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-espectrograma .spectrogram-workspace {
+    grid-template-columns: minmax(260px, .85fr) minmax(0, 1.8fr) minmax(240px, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: stretch;
+  }
+  .view-espectrograma .spectrogram-workspace > section:first-child { grid-column: 1; grid-row: 1 / 3; }
+  .panoramic-page.view-espectrograma .sp-plots { display: contents; }
+  .view-espectrograma .sp-plots > :first-child { grid-column: 3; grid-row: 1; }
+  .view-espectrograma .sp-plots > :nth-child(2) {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+  }
+  .panoramic-page.view-espectrograma .sp-plots #sp-slice-card { grid-column: 3; grid-row: 2; }
+  .panoramic-page.view-espectrograma .sp-plots #sp-plot { flex: 1; height: clamp(260px, calc(100vh - 380px), 650px); }
+  .panoramic-page.view-espectrograma .sp-plots #sp-time { height: clamp(85px, 15vh, 170px); }
+  .panoramic-page.view-espectrograma .sp-plots #sp-slice-plot { height: clamp(100px, 18vh, 210px); }
+}
+
+/* Rueda desequilibrada: espectro central, rueda y encoder a la derecha. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-rueda-fft .panoramic-stage {
+    grid-template-columns: minmax(320px, 1fr) minmax(0, 1.7fr) minmax(250px, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: stretch;
+  }
+  .panoramic-page.view-rueda-fft .panoramic-part-2 { grid-column: 1; grid-row: 1 / 3; }
+  .panoramic-page.view-rueda-fft .panoramic-part-3 {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+  }
+  .panoramic-page.view-rueda-fft .panoramic-part-1 { grid-column: 3; grid-row: 1; }
+  .panoramic-page.view-rueda-fft .rc-workspace > article { grid-column: 3; grid-row: 2; }
+  .panoramic-page.view-rueda-fft #wheel-complex-plot { flex: 1; height: clamp(260px, calc(100vh - 400px), 600px); }
+  .panoramic-page.view-rueda-fft .panoramic-part-1 svg,
+  .panoramic-page.view-rueda-fft #wheel-time-plot { height: clamp(110px, 18vh, 220px); }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-rueda-fft .panoramic-part-1 svg,
+  .panoramic-page.view-rueda-fft #wheel-time-plot { height: 95px; }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-rueda-fft .panoramic-stage { grid-template-columns: 420px minmax(0, 1.6fr) minmax(220px, 1fr); }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-rueda-fft .wheel-complex-card {
+    contain: size;
+    min-height: 0;
+  }
+  .panoramic-page.view-rueda-fft #wheel-complex-plot {
+    height: 0;
+    min-height: 0;
+  }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-rueda-fft .wheel-complex-card { margin-block: 0; }
+}
+
+.view-rueda-fft .wheel-scene .plot-axis-label { font-size: 20px; }
+.view-rueda-fft .wheel-scene .plot-annotation { font-size: 18px; }
+
+.tf-sidebar { display: grid; gap: 16px; min-width: 0; align-content: start; }
+@media (min-width: 1000px) {
+  .view-transformada-fourier .tf-sidebar { gap: var(--demo-gap); }
+  .panoramic-page.view-transformada-fourier .tf-plots { grid-template-columns: minmax(0, 1fr); }
+  .panoramic-page.view-transformada-fourier .tf-plots > article { grid-column: 1; }
+  .panoramic-page.view-transformada-fourier #tf-time { width: 100%; height: clamp(90px, 13vh, 150px); }
+  .panoramic-page.view-transformada-fourier .tf-plots svg { height: clamp(130px, calc((100vh - 430px) / 2), 310px); }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-transformada-fourier #tf-time { height: 70px; }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-transformada-fourier.tf-combined #tf-magnitude-card { display: flex; flex-direction: column; }
+  .panoramic-page.view-transformada-fourier.tf-combined #tf-magnitude { flex: 1; height: clamp(260px, calc(100vh - 400px), 620px); }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-transformada-fourier .tf-controls { gap: 5px; }
+  .panoramic-page.view-transformada-fourier .tf-controls label { gap: 4px; }
+}
+
+.view-transformada-fourier #tf-time .plot-tick-label { font-size: 20px; }
+.view-transformada-fourier #tf-time .plot-axis-label { font-size: 22px; }
+.view-transformada-fourier #tf-time .plot-annotation { font-size: 18px; }
+
+/* Fourier: las gráficas toman la altura natural de la columna izquierda. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-transformada-fourier .tf-workspace { align-items: stretch; }
+  .panoramic-page.view-transformada-fourier .tf-plots {
+    contain: size;
+    min-height: 0;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+  .panoramic-page.view-transformada-fourier.tf-combined .tf-plots {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .panoramic-page.view-transformada-fourier .tf-plots > article:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin: 0;
+  }
+  .panoramic-page.view-transformada-fourier .tf-plots svg,
+  .panoramic-page.view-transformada-fourier.tf-combined #tf-magnitude {
+    flex: 1;
+    height: 0;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 1000px) {
+  .panoramic-page.view-juego-transformada-fourier .panoramic-stage { align-items: stretch; }
+}
+@media (min-width: 1000px) {
+  .view-series-fourier .series-primary { min-height: calc(100vh - 70px); }
+}
+
+.series-sidebar { display: grid; gap: 16px; min-width: 0; align-content: start; }
+@media (min-width: 1000px) {
+  .panoramic-page.view-series-fourier .panoramic-stage {
+    display: grid;
+    grid-template-columns: minmax(290px, 1fr) minmax(0, 1.8fr) minmax(270px, 1fr);
+    gap: var(--demo-gap);
+    align-items: start;
+  }
+  .view-series-fourier .series-sidebar { gap: var(--demo-gap); }
+  .panoramic-page.view-series-fourier .series-sidebar > section { margin: 0; }
+  .panoramic-page.view-series-fourier .fourier-controls { grid-template-columns: 1fr; }
+  .panoramic-page.view-series-fourier .fourier-formula { display: block; min-width: 0; }
+  .view-series-fourier .fourier-formula > span { display: block; overflow-x: auto; font-size: 12px; }
+  .panoramic-page.view-series-fourier .fourier-status { flex-direction: column; align-items: start; }
+  .panoramic-page.view-series-fourier .fourier-panels { grid-template-columns: minmax(0, 1fr); }
+  .view-series-fourier .fourier-panels > article { grid-column: 1; grid-row: auto; }
+  .panoramic-page.view-series-fourier .fourier-chart-card:first-child svg { height: clamp(150px, calc((100vh - 440px) / 2), 310px); }
+  .panoramic-page.view-series-fourier .fourier-spectrum { height: clamp(100px, calc((100vh - 560px) / 2), 240px); }
+  .view-series-fourier .series-coefficients { min-width: 0; }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-series-fourier .panoramic-stage { align-items: stretch; }
+  .view-series-fourier .series-sidebar {
+    grid-template-rows: minmax(max-content, 1fr) auto auto;
+    align-content: stretch;
+  }
+}
+@media (min-width: 1000px) {
+  .view-series-fourier .series-sidebar {
+    grid-template-rows: auto minmax(max-content, 1fr) auto;
+  }
+  .view-series-fourier .fourier-formula > span {
+    font-size: clamp(15px, 1.8vh, 20px);
+  }
+  .view-series-fourier .series-sidebar .fourier-formula {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+@media (min-width: 1000px) {
+  .view-series-fourier .fourier-formula > span {
+    font-size: clamp(12px, 1.35vh, 14px);
+  }
+}
+
+/* Plano XY: controles, dibujo y señales temporales. */
+@media (min-width: 1000px) {
+  .panoramic-page.view-fourier-xy .panoramic-stage {
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) minmax(0, 1.6fr) minmax(250px, 1fr);
+    gap: var(--demo-gap);
+    align-items: stretch;
+  }
+  .panoramic-page.view-fourier-xy .panoramic-part-1 { grid-column: 1; margin: 0; }
+  .panoramic-page.view-fourier-xy .fourier-xy-layout,
+  .panoramic-page.view-fourier-xy .fourier-xy-plots { display: contents; }
+  .view-fourier-xy .fourier-xy-plots > article:first-child { grid-column: 2; min-width: 0; }
+  .view-fourier-xy .fourier-xy-plots > article:last-child { grid-column: 3; min-width: 0; }
+  .panoramic-page.view-fourier-xy .fourier-xy-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .panoramic-page.view-fourier-xy .fourier-xy-controls label { min-width: 0; }
+  .panoramic-page.view-fourier-xy .fourier-xy-controls label:has(input[type="range"]) { grid-column: 1 / -1; }
+  .panoramic-page.view-fourier-xy #xy-plot { height: clamp(280px, calc(100vh - 340px), 670px); }
+  .panoramic-page.view-fourier-xy #xy-signals { height: clamp(180px, calc(100vh - 460px), 450px); }
+}
+@media (min-width: 1000px) and (max-height: 849px) {
+  .panoramic-page.view-fourier-xy .fourier-xy-controls { gap: 4px; }
+  .panoramic-page.view-fourier-xy #xy-plot { height: 340px; }
+}
+@media (min-width: 1000px) {
+  .panoramic-page.view-fourier-xy .panoramic-stage {
+    grid-template-columns: minmax(290px, .9fr) minmax(0, 1.3fr) minmax(350px, 1.25fr);
+  }
+  .panoramic-page.view-fourier-xy .fourier-xy-layout {
+    display: grid;
+    grid-column: 2;
+    grid-row: 1;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0;
+  }
+  .panoramic-page.view-fourier-xy .fourier-xy-plots {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--demo-gap);
+  }
+  .view-fourier-xy .fourier-xy-plots > article:first-child,
+  .view-fourier-xy .fourier-xy-plots > article:last-child { grid-column: 1; }
+  .view-fourier-xy .xy-coeff-card { grid-column: 3; grid-row: 1; min-width: 0; }
+  .view-fourier-xy #xy-coefficients {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-height: calc(100vh - 420px);
+    overflow-y: auto;
+  }
+  .panoramic-page.view-fourier-xy #xy-plot { height: clamp(180px, calc((100vh - 360px) * .6), 400px); }
+  .panoramic-page.view-fourier-xy #xy-signals { height: clamp(80px, calc((100vh - 500px) * .35), 160px); }
+  .view-fourier-xy .fourier-xy-table :is(th, td) { padding: 2px; }
+  .view-fourier-xy #xy-coefficients input { padding: 4px; }
+}
+
+.view-fourier-xy :is(#xy-plot, #xy-signals) .plot-tick-label { font-size: 19px; }
+.view-fourier-xy :is(#xy-plot, #xy-signals) .plot-axis-label { font-size: 21px; }
+
+@media (min-width: 1000px) {
+  .panoramic-page.view-juego-fourier .fourier-game-layout { align-items: stretch; }
+  .view-juego-fourier .fourier-game-plot-card {
+    display: flex;
+    flex-direction: column;
+    contain: size;
+    min-height: 0;
+  }
+  .panoramic-page.view-juego-fourier #challenge-plot { flex: 1; height: 0; min-height: 0; }
+}

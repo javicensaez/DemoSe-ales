@@ -33,9 +33,11 @@ function fft(samples, imaginary = null) {
   return { real, imag };
 }
 
-const fftFs=1024;
+const fftFs=1000;
 const fftFields=Object.fromEntries(['f1','a1','f2','a2'].map(name=>[name,document.querySelector(`#fft-${name}`)]));
 const fftCount=document.querySelector('#fft-count'),fftWindow=document.querySelector('#fft-window'),fftScale=document.querySelector('#fft-scale');
+const fftLockAxes=document.querySelector('#fft-lock-axes');
+const fftAxisRanges={};
 const fftFormat=new Intl.NumberFormat('es',{maximumFractionDigits:3});
 function windowWeights(kind,count){
  return Array.from({length:count},(_,n)=>{
@@ -58,10 +60,15 @@ function fftTicks(min,max){
  for(let v=Math.ceil(min/step)*step;v<=max+step*1e-9;v+=step)values.push(Math.abs(v)<1e-10?0:v);return values;
 }
 function fftChart(curves,xmax,yrange,xlabel,ylabel,markers=[]){
- const left=75,right=770,top=45,bottom=245,x=v=>left+v/xmax*(right-left),y=v=>bottom-(v-yrange[0])/(yrange[1]-yrange[0])*(bottom-top);let markup='';
+ const plot=document.getElementById('fft-spectrum-plot'),bounds=plot.getBoundingClientRect();
+ const width=bounds.height>0?Math.max(320,310*bounds.width/bounds.height):800;
+ plot.setAttribute('viewBox',`0 0 ${width} 310`);
+ const left=75,right=width-30,top=45,bottom=245,x=v=>left+v/xmax*(right-left),y=v=>bottom-(v-yrange[0])/(yrange[1]-yrange[0])*(bottom-top);let markup='';
  for(const v of fftTicks(0,xmax))markup+=`<line class="plot-grid-line" x1="${x(v)}" x2="${x(v)}" y1="${top}" y2="${bottom}"/><text class="plot-tick-label" x="${x(v)}" y="269" text-anchor="middle">${fftFormat.format(v)}</text>`;
  for(const v of fftTicks(...yrange))markup+=`<line class="${v===0?'plot-axis-line':'plot-grid-line'}" x1="${left}" x2="${right}" y1="${y(v)}" y2="${y(v)}"/><text class="plot-tick-label" x="${left-10}" y="${y(v)+4}" text-anchor="end">${fftFormat.format(v)}</text>`;
+ markup+=`<defs><clipPath id="fft-spectrum-clip"><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top}"/></clipPath></defs><g clip-path="url(#fft-spectrum-clip)">`;
  for(const c of curves){const path=c.points.map((p,n)=>`${n?'L':'M'}${x(p.x).toFixed(2)},${y(p.y).toFixed(2)}`).join(' ');markup+=`<path d="${path}" fill="none" stroke="${c.color}" stroke-width="2" ${c.dashed?'stroke-dasharray="7 4"':''}/>`;}
+ markup+='</g>';
  for(const [n,marker]of markers.entries())markup+=`<line x1="${x(marker.frequency)}" x2="${x(marker.frequency)}" y1="${top}" y2="${bottom}" stroke="var(--muted)" stroke-dasharray="3 5"/><text class="plot-annotation" x="${Math.max(left+35,Math.min(right-35,x(marker.frequency)))}" y="${20+n*16}" text-anchor="middle">f${n+1} = ${fftFormat.format(marker.frequency)} Hz</text>`;
  markup+=`<text class="plot-axis-label" x="${right}" y="298" text-anchor="end">${xlabel}</text><text class="plot-axis-label" x="12" y="14">${ylabel}</text>`;return markup;
 }
@@ -70,15 +77,17 @@ function renderFFT(){
  if(!p){error.textContent='Revisa las frecuencias (1–500 Hz), amplitudes (0–2), tamaño y tipo de ventana.';return;}
  for(const name of Object.keys(fftFields)){const label=`${fftFormat.format(p[name])} ${name.startsWith('f')?'Hz':'u.a.'}`;document.querySelector(`#fft-${name}-value`).textContent=label;fftFields[name].setAttribute('aria-valuetext',label);}
  const result=analyzeTones(p),df=fftFs/p.count;
- document.querySelector('#fft-time-plot').innerHTML=fftChart([{points:result.samples.map((v,n)=>({x:n/fftFs,y:v})),color:'var(--wave)'},{points:result.weighted.map((v,n)=>({x:n/fftFs,y:v})),color:'#d97706',dashed:true}],p.count/fftFs,[-4.5,4.5],'Tiempo (s)','Amplitud (u.a.)');
- document.querySelector('#fft-window-plot').innerHTML=fftChart([{points:result.weights.map((v,n)=>({x:n,y:v})),color:'var(--wave)'}],p.count-1,[-.1,1.2],'Índice de muestra n','Ventana (sin unidades)');
- const db=p.scale==='db',points=result.spectrum.map(bin=>({x:bin.frequency,y:db?Math.max(-140,20*Math.log10(Math.max(1e-15,bin.amplitude))):bin.amplitude}));
- document.querySelector('#fft-spectrum-plot').innerHTML=fftChart([{points,color:'var(--wave)'}],fftFs/2,db?[-140,24]:[0,12],'Frecuencia (Hz)',db?'Amplitud (dB re 1 u.a.)':'Amplitud (u.a.)',[{frequency:p.f1},{frequency:p.f2}]);
+ const db=p.scale==='db',points=result.spectrum.map(bin=>({x:bin.frequency,y:db?20*Math.log10(Math.max(1e-30,bin.amplitude)):bin.amplitude}));
+ const floor=-150-10*Math.log2(p.count/64);
+ if(!fftLockAxes.checked||!fftAxisRanges[p.scale])fftAxisRanges[p.scale]=db?[floor,24]:[0,12];
+ const axisRange=fftAxisRanges[p.scale];
+ document.querySelector('#fft-spectrum-plot').innerHTML=fftChart([{points,color:'var(--wave)'}],fftFs/2,axisRange,'Frecuencia (Hz)',db?'Amplitud (dB re 1 u.a.)':'Amplitud (u.a.)',[{frequency:p.f1},{frequency:p.f2}]);
  const rows=[['Muestreo / Nyquist',`${fftFs} / ${fftFs/2} Hz`],['Número de muestras',String(p.count)],['Duración N/fₛ',`${fftFormat.format(p.count/fftFs)} s`],['Separación entre bins Δf',`${fftFormat.format(df)} Hz`],['Ganancia coherente',fftFormat.format(result.gain)],['ENBW',`${fftFormat.format(result.enbw)} Hz · ${fftFormat.format(result.enbw/df)} bins`],['Bin teórico de f₁',fftFormat.format(p.f1/df)],['Bin teórico de f₂',fftFormat.format(p.f2/df)]];
  document.querySelector('#fft-readouts').innerHTML=rows.map(([term,value])=>`<div><dt>${term}</dt><dd>${value}</dd></div>`).join('');
  const coherent=[1,2].filter(i=>p[`a${i}`]>0).every(i=>Math.abs(p[`f${i}`]/df-Math.round(p[`f${i}`]/df))<1e-9);
  document.querySelector('#fft-note').textContent=p.a1===0&&p.a2===0?'Ambas amplitudes son cero: la señal y su FFT son nulas.':`${coherent?'Los tonos activos coinciden con bins.':'Algún tono activo cae entre bins: observa la fuga y el error en el pico de amplitud.'} Las líneas verticales marcan las frecuencias introducidas, no los picos estimados.`;
 }
+fftLockAxes.addEventListener('change',renderFFT);
 Object.values(fftFields).forEach(input=>input.addEventListener('input',renderFFT));for(const input of [fftCount,fftWindow,fftScale])input.addEventListener('change',renderFFT);
 document.querySelector('#fft-coherent').addEventListener('click',()=>{
  const p=fftParameters();if(!p)return;
@@ -88,3 +97,12 @@ document.querySelector('#fft-coherent').addEventListener('click',()=>{
 });
 document.querySelector('#fft-reset').addEventListener('click',()=>{for(const [name,value]of Object.entries({f1:64,f2:80,a1:1,a2:.5}))fftFields[name].value=value;fftCount.value=256;fftWindow.value='hann';fftScale.value='db';renderFFT();});
 renderFFT();
+
+let fftPlotSize='';
+new ResizeObserver(()=>{
+ const bounds=document.getElementById('fft-spectrum-plot').getBoundingClientRect();
+ const size=`${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+ if(size===fftPlotSize)return;
+ fftPlotSize=size;
+ renderFFT();
+}).observe(document.getElementById('fft-spectrum-plot'));

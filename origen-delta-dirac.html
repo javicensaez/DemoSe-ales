@@ -10,7 +10,7 @@
   <script src="origen-delta-dirac.js" defer></script>
   <script src="projector-mode.js" defer></script>
 </head>
-<body class="demo-page calculus-page dirac-origin-page">
+<body class="demo-page calculus-page dirac-origin-page panoramic-page view-origen-delta-dirac">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -33,7 +33,8 @@
         <p>La señal vale 0 antes de t = 0, sube en línea recta hasta alcanzar 1 en t = T y permanece en 1 desde ese instante. Mueve T hacia cero y observa debajo cómo cambia su derivada.</p>
         <p>Al acortar la rampa, la derivada se hace más estrecha y más alta, pero conserva su área: 1. Las dos gráficas comparten el eje temporal y la escala vertical de la derivada permanece fija para ver ese crecimiento.</p>
       </section>
-      <section class="calculus-workspace" aria-label="De una rampa al impulso de Dirac">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 calculus-workspace" aria-label="De una rampa al impulso de Dirac">
         <section class="calculus-row" aria-label="Señal que pasa de cero a uno">
           <div class="plot-card calculus-controls">
             <h2>Señal de origen</h2>
@@ -67,7 +68,8 @@
           </article>
         </section>
       </section>
-      <section class="plot-card" aria-labelledby="dirac-limit-title">
+</div>
+      <section class="panoramic-information plot-card" aria-labelledby="dirac-limit-title">
         <h2 id="dirac-limit-title">¿Qué ocurre cuando T tiende a cero?</h2>
         <p>La señal original se aproxima al escalón unitario. Su derivada concentra un área de 1 en un intervalo cada vez menor: en el límite, se obtiene la delta de Dirac, entendida como una distribución.</p>
         <div id="dirac-limit-equation" class="rc-formulas">\[x_T(t)\longrightarrow u(t),\qquad x_T'(t)\xrightarrow[T\to0^+]{}\delta(t)\]\[\int_{-\infty}^{\infty}\delta(t)\,dt=1\]</div>

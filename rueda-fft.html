@@ -10,7 +10,7 @@
     <script src="rueda-fft.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page wheel-page">
+  <body class="demo-page wheel-page panoramic-page view-rueda-fft">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -37,7 +37,8 @@
         <p>Explora una cadena motor DC → reductora 1000:1 → carga Unbalanced Load → encoder Hall. El motor arranca desde el reposo; la inercia de la carga depende del ángulo. Cambia la masa, el desplazamiento del eje y la alimentación, elige cuándo capturar una ventana y compara los canales seno/coseno y su FFT compleja.</p>
         <p>Las RPM son el resultado de la dinámica: al cambiar la tensión varía su valor límite. Con 12 V, la rueda tiende a 166,7 RPM. Compara una captura durante el arranque con otra tardía y distingue la variación de frecuencia, la fuga espectral y posibles componentes adicionales.</p>
       </section>
-      <section class="plot-card wheel-scene-card" aria-labelledby="wheel-scene-title">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card wheel-scene-card" aria-labelledby="wheel-scene-title">
         <div class="plot-heading"><div><p class="eyebrow">Rotor y sensores</p><h2 id="wheel-scene-title">Rueda centrada y masa excéntrica</h2></div></div>
         <svg class="wheel-scene" viewBox="0 0 800 340" role="img" aria-label="Rueda giratoria con centro de gravedad desplazado y dos sensores perpendiculares">
           <line x1="70" y1="170" x2="410" y2="170" class="plot-axis-line" /><line x1="240" y1="20" x2="240" y2="320" class="plot-axis-line" />
@@ -51,8 +52,8 @@
           <circle cx="240" cy="170" r="5" fill="var(--foreground)" />
           <text class="plot-axis-label" x="220" y="191">O</text>
           <text class="plot-axis-label" id="wheel-gravity-label" x="285" y="170">G</text>
-          <rect x="407" y="149" width="112" height="42" rx="7" class="wheel-sensor" /><text class="plot-axis-label" x="463" y="175" text-anchor="middle">Sensor cos</text>
-          <rect x="194" y="302" width="94" height="28" rx="7" class="wheel-sensor" /><text class="plot-axis-label" x="241" y="322" text-anchor="middle">Sensor sen</text>
+          <rect x="393" y="149" width="140" height="42" rx="7" class="wheel-sensor" /><text class="plot-axis-label" x="463" y="175" text-anchor="middle">Sensor cos</text>
+          <rect x="171" y="302" width="140" height="28" rx="7" class="wheel-sensor" /><text class="plot-axis-label" x="241" y="322" text-anchor="middle">Sensor sen</text>
           <g transform="translate(570 65)">
             <text class="plot-axis-label" x="0" y="0">Lectura instantánea</text>
             <text class="plot-annotation" x="0" y="35">Encoder · coseno</text><text class="plot-axis-label" id="wheel-live-cos" x="0" y="60"></text>
@@ -60,9 +61,9 @@
           </g>
         </svg>
         <p class="discrete-plot-note" id="wheel-animation-time"></p>
-        <p class="discrete-plot-note">La rueda permanece centrada en O. El punto naranja representa la masa excéntrica: se desplaza dentro de la rueda y gira con ella. Cuando el desplazamiento es cero, G coincide con O y el encoder sigue funcionando. El dibujo es esquemático y amplía el desplazamiento; para los cálculos, el control corresponde a rA del modelo Unbalanced Load. En modo continuo la rueda gira a la velocidad calculada y la ventana avanza en tiempo real. Al desactivar este modo, la animación repite la captura a 1/4 de velocidad.</p>
+
       </section>
-      <section class="plot-card rc-form" aria-label="Configuración del motor y captura">
+      <section class="panoramic-part-2 plot-card rc-form" aria-label="Configuración del motor y captura">
         <div class="rc-form-grid">
           <label class="sampling-range" for="wheel-mass">Masa de la carga <output id="wheel-mass-value" for="wheel-mass"></output><input id="wheel-mass" type="range" min="0.5" max="10" step="0.1" value="1" /></label>
           <label class="sampling-range" for="wheel-voltage">Alimentación del motor <output id="wheel-voltage-value" for="wheel-voltage"></output><input id="wheel-voltage" type="range" min="0" max="24" step="0.1" value="12" /></label>
@@ -98,44 +99,54 @@
             <label class="convolution-signal-select" for="wheel-encoder-offset-y">Offset Y (V)<input id="wheel-encoder-offset-y" type="number" step="any" min="-5" max="5" value="0" /></label>
             <label class="convolution-signal-select" for="wheel-encoder-error">Error de cuadratura β (°)<input id="wheel-encoder-error" type="number" step="any" min="-15" max="15" value="0" /></label>
           </div>
-          <p class="discrete-plot-note">I₀ = 1 kg·m² y rC = 0,1 m proceden de la captura de Unbalanced Load. Los parámetros eléctricos del encoder no se proporcionaron: se usan los valores predeterminados de MathWorks (Ax = Ay = 2,5 V, offsets y error cero), que puedes cambiar aquí.</p>
+
         </details>
         <div class="wheel-actions"><button class="game-button secondary-game-button" id="wheel-slide-example" type="button">Ejemplo: 10 V · 1 kg · 100 mm</button><button class="game-button secondary-game-button" id="wheel-slide-small-example" type="button">Ejemplo: 10 V · 1 kg · 10 mm</button><button class="game-button primary-game-button" id="wheel-capture" type="button">Reiniciar y calcular FFT</button><button class="game-button secondary-game-button" id="wheel-pause" type="button" aria-pressed="false">Pausar simulación</button></div>
-        <p class="discrete-sequence-help">Muestreo a 256 Hz. En modo continuo se calculan nuevas muestras y se actualiza la FFT cinco veces por segundo; pausar congela el tiempo y los resultados. Cada cambio reinicia la simulación desde reposo y calcula la ventana elegida. El espectro complejo utiliza ambos canales como partes real e imaginaria; el retardo usa la muestra anterior a la ventana cuando está disponible.</p>
+
         <p class="rc-validation" id="wheel-error" role="alert" hidden></p>
       </section>
-      <section class="plot-card wheel-complex-card" aria-labelledby="wheel-complex-title">
+      <section class="panoramic-part-3 plot-card wheel-complex-card" aria-labelledby="wheel-complex-title">
           <div class="plot-heading"><div><p class="eyebrow">Real + imaginaria → z⁻¹ → FFT</p><h2 id="wheel-complex-title">Espectro de la señal compleja</h2></div></div>
           <svg class="time-plot wheel-plot" id="wheel-complex-plot" viewBox="0 0 800 300" role="img" aria-label="FFT compleja con frecuencias positivas y negativas"></svg>
-          <p class="discrete-plot-note">Re = coseno e Im = seno forma eʲθ y sitúa la fundamental en frecuencia positiva. Al intercambiar las entradas, seno + j coseno = j e⁻ʲθ, el pico principal aparece en frecuencia negativa. Las líneas 1×, 2×… son múltiplos de la frecuencia media durante la ventana, no una garantía de armónicos presentes.</p>
-          <p class="discrete-plot-note">Los dos ejemplos usan 10 V y 1 kg, con captura entre 60 y 76 s; solo cambia rA entre 100 y 10 mm. Al reducir el desplazamiento, los armónicos se debilitan y la fundamental se conserva. Los parámetros proporcionados dan una frecuencia media límite de 2,315 Hz a 10 V; los 2,63 Hz de las diapositivas no coinciden exactamente con esa configuración. No se ha ajustado artificialmente la frecuencia para igualarla.</p>
-          <p class="discrete-plot-note">La FFT compleja es bilateral y no duplica amplitudes. El retardo de una muestra cambia la fase; sus condiciones iniciales y los bordes de una ventana finita pueden afectar el espectro. Hann reduce la fuga y ensancha los picos. La opción dBm reproduce una escala de potencia con una carga de referencia, inicialmente 1 Ω. Para la FFT compleja se usa Pₖ = |Z[k]/Σw|²/R y dBm = 10 log₁₀(Pₖ/1 mW). Los canales reales unilaterales usan Aₖ²/(2R), excepto continua y Nyquist. Se presenta la potencia de cada ventana, sin el promedio Welch de cinco registros de la captura de Simulink.</p>
+
+
+
       </section>
 
 
 
-      <section class="rc-workspace" aria-label="Dinámica, encoder y FFT">
-        <article class="plot-card">
-          <div class="plot-heading"><div><p class="eyebrow">Dinámica calculada</p><h2>RPM durante la ventana</h2></div></div>
-          <svg class="time-plot wheel-plot" id="wheel-speed-plot" viewBox="0 0 800 300" role="img" aria-label="Velocidad calculada de la rueda"></svg>
-        </article>
+      <section class="panoramic-part-4 rc-workspace" aria-label="Dinámica, encoder y FFT">
+
         <article class="plot-card">
           <div class="plot-heading"><div><p class="eyebrow">Scope · dos canales</p><h2>Encoder seno y coseno</h2></div><span class="plot-badge" id="wheel-capture-status"></span></div>
           <div class="convolution-legend convolution-overlay-legend"><span><span class="rc-swatch wheel-cos-swatch"></span>X · coseno</span><span><span class="rc-swatch wheel-sin-swatch"></span>Y · seno (discontinua)</span></div>
           <svg class="time-plot wheel-plot" id="wheel-time-plot" viewBox="0 0 800 300" role="img" aria-label="Tensiones del encoder Hall"></svg>
         </article>
-        <article class="plot-card">
+
+
+
+
+      </section>
+
+</div>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<article class="plot-card">
+          <div class="plot-heading"><div><p class="eyebrow">Dinámica calculada</p><h2>RPM durante la ventana</h2></div></div>
+          <svg class="time-plot wheel-plot" id="wheel-speed-plot" viewBox="0 0 800 300" role="img" aria-label="Velocidad calculada de la rueda"></svg>
+        </article>
+<article class="plot-card">
           <div class="plot-heading"><div><p class="eyebrow">FFT de señales reales</p><h2>Espectros de cada canal</h2></div></div>
           <div class="convolution-legend convolution-overlay-legend"><span><span class="rc-swatch wheel-cos-swatch"></span>FFT de X</span><span><span class="rc-swatch wheel-sin-swatch"></span>FFT de Y (discontinua)</span></div>
           <svg class="time-plot wheel-plot" id="wheel-spectrum-plot" viewBox="0 0 800 300" role="img" aria-label="FFT unilaterales de los canales del encoder"></svg>
         </article>
-
-        <article class="plot-card" aria-labelledby="wheel-harmonics-title">
+</details>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<article class="plot-card" aria-labelledby="wheel-harmonics-title">
           <div class="plot-heading"><div><p class="eyebrow">Referencias espectrales</p><h2 id="wheel-harmonics-title">Múltiplos de la frecuencia media</h2></div></div>
           <div class="wheel-harmonics-table"><table><thead><tr><th scope="col">Orden</th><th scope="col">Frecuencia</th><th scope="col">Canal X</th><th scope="col">Canal Y</th></tr></thead><tbody id="wheel-harmonics"></tbody></table></div>
           <p class="discrete-plot-note">Amplitudes de los bins más cercanos. En una ventana no estacionaria o no coherente, estos valores incluyen fuga de otras frecuencias y no deben interpretarse directamente como amplitudes de armónicos físicos.</p>
         </article>
-        <article class="plot-card" aria-labelledby="wheel-formulas-title">
+<article class="plot-card" aria-labelledby="wheel-formulas-title">
           <div class="plot-heading"><div><p class="eyebrow">Parámetros de tus capturas</p><h2 id="wheel-formulas-title">Motor DC + Gear Box + Unbalanced Load</h2></div></div>
           <div class="rc-equations">
             <p>\(R=3{,}9\,\Omega,\quad L=12\,\mu\mathrm H,\quad k_e=k_t=0{,}072\cdot10^{-3}\dfrac{60}{2\pi}\approx6{,}8755\cdot10^{-4}\;\mathrm{SI}\)</p>
@@ -151,12 +162,18 @@
           <p class="discrete-plot-note">La implementación de Unbalanced Load integra el momento angular: T = d[I(θ)·ω]/dt. Por tanto, se incluye el término adicional (dI/dθ)·ω², que faltaba en la ecuación simplificada de la versión anterior. Se elimina el par gravitatorio de la versión anterior. Los estados de arranque se fijan en θ = 0, ω = 0 e i = 0; no se añadieron paredes, resonancias, fricción ni pares externos. El integrador resuelve el subsistema eléctrico de forma analítica por pasos y evalúa la inercia en el ángulo medio.</p>
           <p class="discrete-plot-note">Referencias del modelo: <a href="https://www.mathworks.com/help/simscape-electrical/ref/dcmotor.html" target="_blank" rel="noopener noreferrer">DC Motor</a> · <a href="https://www.mathworks.com/help/simscape/ref/gearbox.html" target="_blank" rel="noopener noreferrer">Gear Box</a> · <a href="https://www.mathworks.com/help/sdl/ref/unbalancedload.html" target="_blank" rel="noopener noreferrer">Unbalanced Load</a> · <a href="https://www.mathworks.com/help/simscape-electrical/ref/halleffectrotaryencoder.html" target="_blank" rel="noopener noreferrer">Hall-Effect Rotary Encoder</a>.</p>
         </article>
-      </section>
-      <section class="plot-card wheel-measurements" aria-labelledby="wheel-measures-title">
+<section class="panoramic-part-5 plot-card wheel-measurements" aria-labelledby="wheel-measures-title">
         <div class="plot-heading"><div><p class="eyebrow">Medidas</p><h2 id="wheel-measures-title">Motor, carga y ventana de análisis</h2></div></div>
         <dl class="rc-readouts" id="wheel-readouts" aria-live="off"></dl>
         <p class="discrete-plot-note" id="wheel-result-note"></p>
       </section>
+<p class="discrete-plot-note">La rueda permanece centrada en O. El punto naranja representa la masa excéntrica: se desplaza dentro de la rueda y gira con ella. Cuando el desplazamiento es cero, G coincide con O y el encoder sigue funcionando. El dibujo es esquemático y amplía el desplazamiento; para los cálculos, el control corresponde a rA del modelo Unbalanced Load. En modo continuo la rueda gira a la velocidad calculada y la ventana avanza en tiempo real. Al desactivar este modo, la animación repite la captura a 1/4 de velocidad.</p>
+<p class="discrete-plot-note">I₀ = 1 kg·m² y rC = 0,1 m proceden de la captura de Unbalanced Load. Los parámetros eléctricos del encoder no se proporcionaron: se usan los valores predeterminados de MathWorks (Ax = Ay = 2,5 V, offsets y error cero), que puedes cambiar aquí.</p>
+<p class="discrete-sequence-help">Muestreo a 256 Hz. En modo continuo se calculan nuevas muestras y se actualiza la FFT cinco veces por segundo; pausar congela el tiempo y los resultados. Cada cambio reinicia la simulación desde reposo y calcula la ventana elegida. El espectro complejo utiliza ambos canales como partes real e imaginaria; el retardo usa la muestra anterior a la ventana cuando está disponible.</p>
+<p class="discrete-plot-note">Re = coseno e Im = seno forma eʲθ y sitúa la fundamental en frecuencia positiva. Al intercambiar las entradas, seno + j coseno = j e⁻ʲθ, el pico principal aparece en frecuencia negativa. Las líneas 1×, 2×… son múltiplos de la frecuencia media durante la ventana, no una garantía de armónicos presentes.</p>
+<p class="discrete-plot-note">Los dos ejemplos usan 10 V y 1 kg, con captura entre 60 y 76 s; solo cambia rA entre 100 y 10 mm. Al reducir el desplazamiento, los armónicos se debilitan y la fundamental se conserva. Los parámetros proporcionados dan una frecuencia media límite de 2,315 Hz a 10 V; los 2,63 Hz de las diapositivas no coinciden exactamente con esa configuración. No se ha ajustado artificialmente la frecuencia para igualarla.</p>
+<p class="discrete-plot-note">La FFT compleja es bilateral y no duplica amplitudes. El retardo de una muestra cambia la fase; sus condiciones iniciales y los bordes de una ventana finita pueden afectar el espectro. Hann reduce la fuga y ensancha los picos. La opción dBm reproduce una escala de potencia con una carga de referencia, inicialmente 1 Ω. Para la FFT compleja se usa Pₖ = |Z[k]/Σw|²/R y dBm = 10 log₁₀(Pₖ/1 mW). Los canales reales unilaterales usan Aₖ²/(2R), excepto continua y Nyquist. Se presenta la potencia de cada ventana, sin el promedio Welch de cinco registros de la captura de Simulink.</p>
+</details>
     </main>
     <footer class="site-footer demo-footer">
       <a class="brand footer-brand" href="index.html#inicio">

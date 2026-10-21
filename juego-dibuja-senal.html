@@ -38,7 +38,8 @@
           Avanza de izquierda a derecha, desde t = −4 s hasta t = 8 s. Para un salto, marca dos amplitudes en el mismo instante.
           Después pulsa «Comparar». Se evalúan todos los tramos, incluidos los de amplitud cero.</p>
       </section>
-      <section class="plot-card" aria-label="Reto de dibujo">
+      <section class="plot-card drawing-workspace" aria-label="Reto de dibujo">
+        <div class="drawing-challenge">
         <div class="challenge-navigation" aria-label="Navegación entre retos">
           <button class="challenge-nav-button" id="previous-challenge" aria-label="Reto anterior">←</button>
           <p class="eyebrow" id="challenge-progress" aria-live="polite"></p>
@@ -48,9 +49,13 @@
         <p>Dibuja la siguiente señal en todo el intervalo mostrado:</p>
         <div id="challenge-formula" class="draw-formula" aria-label="Expresión de la señal"></div>
         <p>u(t) es el escalón unitario: vale 0 antes de t = 0 y 1 después. Representa los saltos mediante rectas verticales; no se evalúa el valor aislado en la discontinuidad.</p>
+        </div>
+        <div class="drawing-canvas">
         <p id="drawing-help">Pulsa sobre los cruces para añadir puntos. Con teclado: enfoca la cuadrícula, mueve el cursor con las flechas y pulsa Intro o Espacio para añadir. Escape oculta la solución.</p>
-        <svg id="drawing-plot" viewBox="0 0 800 460" role="group" tabindex="0" aria-label="Cuadrícula para dibujar la señal" aria-describedby="drawing-help cursor-status"></svg>
+        <svg id="drawing-plot" viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet" role="group" tabindex="0" aria-label="Cuadrícula para dibujar la señal" aria-describedby="drawing-help cursor-status"></svg>
         <p id="cursor-status" role="status"></p>
+        </div>
+        <div class="drawing-controls">
         <form id="point-form" class="draw-point-form">
           <label for="point-time">Tiempo (s)<input id="point-time" type="number" min="-4" max="8" step="1" value="-4" required></label>
           <label for="point-amplitude">Amplitud (V)<input id="point-amplitude" type="number" min="-4" max="4" step="1" value="0" required></label>
@@ -65,6 +70,7 @@
         <p id="drawing-feedback" role="status" aria-live="polite"></p>
         <p id="drawing-points">Todavía no has añadido puntos.</p>
         <p id="drawing-legend" hidden>Tu dibujo: línea continua y puntos. Solución: línea discontinua.</p>
+        </div>
       </section>
     </main>
 

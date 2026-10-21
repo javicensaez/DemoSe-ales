@@ -29,8 +29,11 @@ function spectrumGeometry(B,fs,antialias=false){
  }
  return {replicas,frequencies,overlaps};
 }
-function ssFrame(max,label){
- const left=70,right=770,top=40,bottom=260,x=f=>left+(f+20)/40*(right-left),y=v=>bottom-v/max*(bottom-top);let markup='';
+function ssFrame(max,label,id){
+ const svg=document.getElementById(id),bounds=svg.getBoundingClientRect();
+ const width=bounds.height>0?Math.max(320,330*bounds.width/bounds.height):800;
+ svg.setAttribute('viewBox',`0 0 ${width} 330`);
+ const left=70,right=width-30,top=40,bottom=260,x=f=>left+(f+20)/40*(right-left),y=v=>bottom-v/max*(bottom-top);let markup='';
  for(let f=-20;f<=20;f+=5)markup+=`<line class="${f===0?'plot-axis-line':'plot-grid-line'}" x1="${x(f)}" x2="${x(f)}" y1="${top}" y2="${bottom}"/><text class="plot-tick-label" x="${x(f)}" y="284" text-anchor="middle">${f}</text>`;
  const raw=max/5,power=10**Math.floor(Math.log10(raw)),ratio=raw/power,step=(ratio<=1?1:ratio<=2?2:ratio<=5?5:10)*power;
  for(let i=0;i*step<=max+1e-10;i++){const value=i*step;markup+=`<line class="${i===0?'plot-axis-line':'plot-grid-line'}" x1="${left}" x2="${right}" y1="${y(value)}" y2="${y(value)}"/><text class="plot-tick-label" x="60" y="${y(value)+4}" text-anchor="end">${ssFormat.format(value)}</text>`;}
@@ -58,7 +61,7 @@ function renderSamplingSpectrum(){
  for(const [input,id,value]of [[ssBandwidth,'ss-bandwidth-value',B],[ssRate,'ss-rate-value',fs]]){const label=`${ssFormat.format(value)} Hz`;document.getElementById(id).textContent=label;input.setAttribute('aria-valuetext',label);}
  const {replicas,frequencies,overlaps}=spectrumGeometry(B,fs,antialias),sum=frequencies.map(f=>({f,value:sampledSpectrum(f,B,fs,normalized,antialias)}));
  // Ambas gráficas comparten escala vertical y horizontal; todos los vértices son exactos.
- const ymax=Math.max(1,...sum.map(p=>p.value))*1.25,original=ssFrame(ymax,'X(f) (u.a.·s)'),sampled=ssFrame(ymax,normalized?'TₛXₛ(f) (u.a.·s)':'Xₛ(f) (u.a.)');
+ const ymax=Math.max(1,...sum.map(p=>p.value))*1.25,original=ssFrame(ymax,'X(f) (u.a.·s)','ss-original'),sampled=ssFrame(ymax,normalized?'TₛXₛ(f) (u.a.·s)':'Xₛ(f) (u.a.)','ss-sampled');
  document.querySelector('#ss-original').innerHTML=original.markup+ssPath([{f:-20,value:0},{f:-B,value:0},{f:0,value:1},{f:B,value:0},{f:20,value:0}],original,'var(--wave)',3)+[-B,B].map(f=>`<line x1="${original.x(f)}" x2="${original.x(f)}" y1="40" y2="260" stroke="var(--muted)" stroke-dasharray="3 5"/><text class="plot-annotation" x="${original.x(f)+(f<0?-4:4)}" y="34" text-anchor="${f<0?'end':'start'}">${f<0?'−B':'+B'}</text>`).join('');
  if(antialias)document.querySelector('#ss-original').innerHTML+=ssPath(replicaPoints(0,B,fs,true,true),original,'#15803d',3,true);
  let markup=overlaps.map(([a,b])=>`<rect x="${sampled.x(a)}" y="40" width="${sampled.x(b)-sampled.x(a)}" height="220" fill="#e11d48" opacity=".12"/>`).join('')+sampled.markup;
@@ -80,3 +83,15 @@ ssAntialias.addEventListener('change',renderSamplingSpectrum);
 ssBandwidth.addEventListener('input',renderSamplingSpectrum);ssRate.addEventListener('input',renderSamplingSpectrum);ssNormalize.addEventListener('change',renderSamplingSpectrum);
 for(const [id,factor] of [['ss-separated',3],['ss-limit',2],['ss-overlap',1.5]])document.getElementById(id).addEventListener('click',()=>{ssRate.value=Number(ssBandwidth.value)*factor;renderSamplingSpectrum();});
 renderSamplingSpectrum();
+
+let ssPlotSizes='';
+const ssResizeObserver=new ResizeObserver(()=>{
+ const sizes=['ss-original','ss-sampled'].map(id=>{
+  const box=document.getElementById(id).getBoundingClientRect();
+  return `${box.width.toFixed(1)}:${box.height.toFixed(1)}`;
+ }).join('|');
+ if(sizes===ssPlotSizes)return;
+ ssPlotSizes=sizes;
+ renderSamplingSpectrum();
+});
+for(const id of ['ss-original','ss-sampled'])ssResizeObserver.observe(document.getElementById(id));

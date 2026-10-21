@@ -16,7 +16,7 @@
     <script src="adc-enob.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page adc-page">
+  <body class="demo-page adc-page panoramic-page view-adc-enob">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -39,11 +39,12 @@
         <p>Descubre cómo los bits y el rango de entrada determinan el paso mínimo de un convertidor analógico-digital (ADC). Compara su límite ideal con los bits efectivos obtenidos de una medida de SINAD: relación señal a ruido y distorsión.</p>
         <p>Elige un modo, ajusta la resolución y la referencia y observa los resultados. En el modo medido, introduce el SINAD de una prueba con una señal senoidal a escala completa.</p>
       </section>
-      <div class="adc-modes" role="group" aria-label="Modo de cálculo">
+      <div class="panoramic-stage">
+<div class="panoramic-part-1 adc-modes" role="group" aria-label="Modo de cálculo">
         <button class="game-button secondary-game-button" type="button" data-mode="ideal" aria-pressed="true">Ideal (teórico)</button>
         <button class="game-button secondary-game-button" type="button" data-mode="measured" aria-pressed="false">Medido (SINAD → ENOB)</button>
       </div>
-      <section class="power-workspace" aria-label="Calculadora de resolución ADC">
+      <section class="panoramic-part-2 power-workspace" aria-label="Calculadora de resolución ADC">
         <article class="plot-card">
           <h2>Parámetros</h2>
           <form id="adc-form" novalidate>
@@ -62,7 +63,7 @@
               <label for="adc-range">Rango de entrada ideal
                 <select id="adc-range"><option value="1">Unipolar: de 0 a Vref</option><option value="2">Bipolar: de −Vref a +Vref</option></select>
               </label>
-              <p id="adc-range-help">Se usa la anchura total del rango (FSR): Vref en unipolar y 2·Vref en bipolar. En un ADC real, consulta el rango especificado en su ficha técnica.</p>
+
               <label for="adc-sinad" id="adc-sinad-field" hidden>SINAD medido (dB)
                 <input id="adc-sinad" type="number" min="-20" max="200" step="any" value="50" aria-describedby="adc-error adc-sinad-help" disabled />
                 <small id="adc-sinad-help">Medido con una senoide a escala completa, a una frecuencia y tasa de muestreo concretas.</small>
@@ -84,18 +85,24 @@
           <div class="power-metrics" id="adc-results" aria-live="polite"></div>
         </article>
       </section>
-      <section class="plot-card adc-spectrum" aria-labelledby="adc-spectrum-title">
+      <section class="panoramic-part-3 plot-card adc-spectrum" aria-labelledby="adc-spectrum-title">
         <h3 id="adc-spectrum-title">Espectro de potencia</h3>
-        <p>Compara una senoide analógica con su versión cuantificada. En el modo medido, la entrada analógica incorpora ruido ajustado al SINAD indicado. Cambia los bits para observar los componentes introducidos por la cuantificación.</p>
+
         <div class="plot-legend" aria-label="Leyenda del espectro">
           <span class="legend-item"><span class="legend-swatch adc-analog-swatch"></span>Analógica (trazo discontinuo)</span>
           <span class="legend-item"><span class="legend-swatch adc-digital-swatch"></span>Cuantificada (trazo continuo)</span>
         </div>
         <svg id="adc-spectrum-plot" class="time-plot" viewBox="0 0 800 380" role="img" aria-label="Espectros de potencia de la señal analógica y cuantificada" aria-describedby="adc-spectrum-note"></svg>
         <p id="adc-spectrum-note" role="status"></p>
-        <p>Simulación: senoide de 148 Hz (a escala completa en modo ideal), muestreo a 8192 muestras/s, 2048 muestras y FFT unilateral sin ventana (37 periodos completos). Se elimina la continua. 0 dBFS corresponde a la potencia de una senoide a escala completa; se representa la potencia por bin de 4 Hz, con un suelo visual de −240 dBFS. No se supone una carga resistiva.</p>
+
       </section>
-      <aside class="power-note">
+</div>
+<details class="panoramic-information panoramic-details"><summary>Notas de la demostración</summary>
+<p id="adc-range-help">Se usa la anchura total del rango (FSR): Vref en unipolar y 2·Vref en bipolar. En un ADC real, consulta el rango especificado en su ficha técnica.</p>
+<p>Compara una senoide analógica con su versión cuantificada. En el modo medido, la entrada analógica incorpora ruido ajustado al SINAD indicado. Cambia los bits para observar los componentes introducidos por la cuantificación.</p>
+<p>Simulación: senoide de 148 Hz (a escala completa en modo ideal), muestreo a 8192 muestras/s, 2048 muestras y FFT unilateral sin ventana (37 periodos completos). Se elimina la continua. 0 dBFS corresponde a la potencia de una senoide a escala completa; se representa la potencia por bin de 4 Hz, con un suelo visual de −240 dBFS. No se supone una carga resistiva.</p>
+</details>
+      <aside class="panoramic-information power-note">
         <strong>Cómo se calcula</strong>
         <span>\(L=2^N,\qquad \Delta=\mathrm{LSB}=\frac{\mathrm{FSR}}{2^N}\)</span>
         <span>\(v_{n,\mathrm{RMS}}=\frac{\Delta}{\sqrt{12}},\qquad \mathrm{SNR}_{\mathrm{ideal}}\approx6{,}02N+1{,}76\;\mathrm{dB}\)</span>

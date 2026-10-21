@@ -100,18 +100,23 @@ function drawSpTime(){
  markup+=`<path d="${envelope}" stroke="var(--wave)" stroke-width="1"/><g id="sp-time-selection"></g><line id="sp-time-cursor" x1="70" x2="70" y1="25" y2="165" stroke="#d97706" stroke-width="2"/><text class="plot-axis-label" x="790" y="222" text-anchor="end">Tiempo (s)</text><text class="plot-axis-label" x="12" y="15">Amplitud</text>`;
  document.querySelector('#sp-time').innerHTML=markup;updatePlaybackCursor();
 }
+let spPlotGeometry={top:50,bottom:340,height:450};
 function drawSpectrogram(){
  const fmax=Number(spFields.fmax.value),analysis=spAnalysis;if(!analysis||!spSignal)return;
- const image=spectrogramImage(analysis,fmax),duration=spSignal.duration,x=t=>70+t/duration*720,y=f=>340-f/fmax*290,dx=analysis.hop/spFs/duration*720,dy=(spFs/analysis.count)/fmax*290;
- let markup=`<defs><clipPath id="sp-image-clip"><rect x="70" y="50" width="720" height="290"/></clipPath><linearGradient id="sp-color-scale">${spPalette.filter((_,i)=>i%51===0).map((c,i)=>`<stop offset="${i*20}%" stop-color="rgb(${c.join(',')})"/>`).join('')}</linearGradient></defs><g clip-path="url(#sp-image-clip)"><image href="${image.url}" x="${70-dx/2}" y="${340-(image.height-.5)*dy}" width="${analysis.frames*dx}" height="${image.height*dy}" preserveAspectRatio="none" style="image-rendering:pixelated"/></g>`;
+ const plot=document.getElementById('sp-plot'),bounds=plot.getBoundingClientRect();
+ const height=bounds.width>0?Math.max(320,900*bounds.height/bounds.width):450;
+ const top=45,bottom=height-55,plotHeight=bottom-top;
+ spPlotGeometry={top,bottom,height};plot.setAttribute('viewBox',`0 0 900 ${height}`);
+ const image=spectrogramImage(analysis,fmax),duration=spSignal.duration,x=t=>70+t/duration*720,y=f=>bottom-f/fmax*plotHeight,dx=analysis.hop/spFs/duration*720,dy=(spFs/analysis.count)/fmax*plotHeight;
+ let markup=`<defs><clipPath id="sp-image-clip"><rect x="70" y="${top}" width="720" height="${plotHeight}"/></clipPath><linearGradient id="sp-color-scale" x1="0" y1="1" x2="0" y2="0">${spPalette.filter((_,i)=>i%51===0).map((c,i)=>`<stop offset="${i*20}%" stop-color="rgb(${c.join(',')})"/>`).join('')}</linearGradient></defs><g clip-path="url(#sp-image-clip)"><image href="${image.url}" x="${70-dx/2}" y="${bottom-(image.height-.5)*dy}" width="${analysis.frames*dx}" height="${image.height*dy}" preserveAspectRatio="none" style="image-rendering:pixelated"/></g>`;
  for(let i=0;i<=4;i++){
   const t=i*duration/4,f=i*fmax/4;
-  markup+=`<text class="plot-tick-label" x="${x(t)}" y="365" text-anchor="middle">${spFormat.format(t)}</text><text class="plot-tick-label" x="58" y="${y(f)+4}" text-anchor="end">${f}</text>`;
+  markup+=`<text class="plot-tick-label" x="${x(t)}" y="${bottom+25}" text-anchor="middle">${spFormat.format(t)}</text><text class="plot-tick-label" x="58" y="${y(f)+4}" text-anchor="end">${f}</text>`;
  }
- markup+='<text class="plot-axis-label" x="12" y="18">Frecuencia (Hz)</text><text class="plot-axis-label" x="790" y="390" text-anchor="end">Tiempo (s)</text><rect x="170" y="410" width="500" height="12" fill="url(#sp-color-scale)"/>';
- for(let i=0;i<=5;i++)markup+=`<text class="plot-tick-label" x="${170+i*100}" y="442" text-anchor="middle">${-100+i*20} dB</text>`;
- if(spSignal.kind==='dtmf')for(let i=0;i<spSignal.sequence.length;i++)markup+=`<text class="plot-annotation" x="${x(i*.35+.125)}" y="38" text-anchor="middle">${spSignal.sequence[i]}</text>`;
- markup+='<g id="sp-selection-overlay"></g><line id="sp-spectrum-cursor" x1="70" x2="70" y1="50" y2="340" stroke="white" stroke-width="2" stroke-dasharray="5 4"/>';
+ markup+=`<text class="plot-axis-label" x="12" y="18">Frecuencia (Hz)</text><text class="plot-axis-label" x="790" y="${height-5}" text-anchor="end">Tiempo (s)</text><rect x="810" y="${top}" width="14" height="${plotHeight}" fill="url(#sp-color-scale)"/>`;
+ for(let i=0;i<=5;i++)markup+=`<text class="plot-tick-label" x="833" y="${bottom-i*plotHeight/5+4}">${-100+i*20} dB</text>`;
+ if(spSignal.kind==='dtmf')for(let i=0;i<spSignal.sequence.length;i++)markup+=`<text class="plot-annotation" x="${x(i*.35+.125)}" y="35" text-anchor="middle">${spSignal.sequence[i]}</text>`;
+ markup+=`<g id="sp-selection-overlay"></g><line id="sp-spectrum-cursor" x1="70" x2="70" y1="${top}" y2="${bottom}" stroke="white" stroke-width="2" stroke-dasharray="5 4"/>`;
  document.querySelector('#sp-plot').innerHTML=markup;
  document.querySelector('#sp-plot').setAttribute('aria-label',`Espectrograma de ${spFields.signal.selectedOptions[0].textContent}, ${spFormat.format(duration)} segundos, 0 a ${fmax} Hz, amplitud de −100 a 0 dB`);
  updatePlaybackCursor();drawSelectedSpectrum();
@@ -129,7 +134,8 @@ function drawSelectedSpectrum(){
  const temporal=document.querySelector('#sp-time-selection');
  if(temporal)temporal.innerHTML=`<rect x="${xTime(Math.max(0,start))}" y="25" width="${xTime(Math.min(spSignal.duration,end))-xTime(Math.max(0,start))}" height="140" fill="#e879f9" fill-opacity=".16" stroke="#e879f9" stroke-width="1.5"/><line x1="${xTime(center)}" x2="${xTime(center)}" y1="25" y2="165" stroke="#e879f9" stroke-width="2" stroke-dasharray="2 4"/>`;
 
- if(overlay)overlay.innerHTML=`<rect x="${xTime(Math.max(0,start))}" y="50" width="${xTime(Math.min(spSignal.duration,end))-xTime(Math.max(0,start))}" height="290" fill="#e879f9" fill-opacity=".12" stroke="#e879f9"/><line x1="${xTime(center)}" x2="${xTime(center)}" y1="50" y2="340" stroke="#e879f9" stroke-width="2" stroke-dasharray="2 4"/>`;
+ const {top,bottom}=spPlotGeometry;
+ if(overlay)overlay.innerHTML=`<rect x="${xTime(Math.max(0,start))}" y="${top}" width="${xTime(Math.min(spSignal.duration,end))-xTime(Math.max(0,start))}" height="${bottom-top}" fill="#e879f9" fill-opacity=".12" stroke="#e879f9"/><line x1="${xTime(center)}" x2="${xTime(center)}" y1="${top}" y2="${bottom}" stroke="#e879f9" stroke-width="2" stroke-dasharray="2 4"/>`;
  const fmax=Number(spFields.fmax.value),x=f=>70+f/fmax*720,y=db=>245-(db+100)/100*205;let markup='';
  for(let i=0;i<=4;i++){const f=i*fmax/4;markup+=`<line class="plot-grid-line" x1="${x(f)}" x2="${x(f)}" y1="40" y2="245"/><text class="plot-tick-label" x="${x(f)}" y="270" text-anchor="middle">${f}</text>`;}
  for(let db=-100;db<=0;db+=20)markup+=`<line class="plot-grid-line" x1="70" x2="790" y1="${y(db)}" y2="${y(db)}"/><text class="plot-tick-label" x="58" y="${y(db)+4}" text-anchor="end">${db}</text>`;
@@ -142,7 +148,7 @@ document.querySelector('#sp-plot').addEventListener('click',event=>{
  if(!spAnalysis||!spSignal)return;
  const svg=event.currentTarget,matrix=svg.getScreenCTM();if(!matrix)return;
  const point=svg.createSVGPoint();point.x=event.clientX;point.y=event.clientY;const local=point.matrixTransform(matrix.inverse());
- if(local.x<70||local.x>790||local.y<50||local.y>395)return;
+ if(local.x<70||local.x>790||local.y<spPlotGeometry.top||local.y>spPlotGeometry.bottom)return;
  spSelectedTime=(local.x-70)/720*spSignal.duration;drawSelectedSpectrum();
 });
 function updateSpReadouts(){
@@ -162,7 +168,7 @@ function scheduleSpectrogram(newSignal=false){
  document.querySelector('#sp-analysis-status').textContent='Calculando espectrograma…';
  spTimer=setTimeout(()=>{
   if(generation!==spGeneration)return;
-  try{spAnalysis=analyzeSpectrogram(spSignal.samples,Number(spFields.count.value),spFields.window.value,Number(spFields.overlap.value));drawSpectrogram();updateSpReadouts();document.querySelector('#sp-analysis-status').textContent=`${spAnalysis.frames} ventanas · ${spFields.window.selectedOptions[0].textContent} · N = ${spAnalysis.count}`;}catch(e){error.textContent=e.message;error.hidden=false;document.querySelector('#sp-analysis-status').textContent='No se pudo completar el análisis.';}
+  try{spAnalysis=analyzeSpectrogram(spSignal.samples,Number(spFields.count.value),spFields.window.value,Number(spFields.overlap.value));drawSpectrogram();updateSpReadouts();document.querySelector('#sp-analysis-status').textContent='';document.querySelector('#sp-analysis-status').hidden=true;}catch(e){error.textContent=e.message;error.hidden=false;document.querySelector('#sp-analysis-status').hidden=false;document.querySelector('#sp-analysis-status').textContent='No se pudo completar el análisis.';}
  },40);
 }
 function playbackPosition(){return spSource?Math.min(spSignal.duration,spOffset+spAudio.currentTime-spStarted):spOffset;}
@@ -199,3 +205,12 @@ spFields.fmax.addEventListener('change',()=>{if(![2000,4000].includes(Number(spF
 spFields.volume.addEventListener('input',()=>{document.querySelector('#sp-volume-value').textContent=`${spFields.volume.value} %`;spFields.volume.setAttribute('aria-valuetext',`${spFields.volume.value} por ciento`);if(spGain)spGain.gain.setTargetAtTime(Number(spFields.volume.value)/100,spAudio.currentTime,.015);});
 function spAnimate(){if(spSource&&!document.hidden)updatePlaybackCursor();requestAnimationFrame(spAnimate);}
 window.addEventListener('pagehide',()=>stopPlayback(true));scheduleSpectrogram(true);requestAnimationFrame(spAnimate);
+
+let spPlotSize='';
+new ResizeObserver(()=>{
+ const bounds=document.getElementById('sp-plot').getBoundingClientRect();
+ const size=`${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+ if(size===spPlotSize)return;
+ spPlotSize=size;
+ drawSpectrogram();
+}).observe(document.getElementById('sp-plot'));

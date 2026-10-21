@@ -16,7 +16,7 @@
     <script src="circuito-rlc.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-circuito-rlc">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -44,10 +44,15 @@
         </p>
       </section>
 
-      <section class="plot-card rc-model" aria-label="Circuito y ecuaciones del sistema">
-        <svg class="rc-schematic" viewBox="0 0 360 150" role="img" aria-label="Esquema de un circuito RLC serie: resistencia, bobina y condensador, con la salida en el condensador">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card rc-model" aria-label="Circuito y ecuaciones del sistema">
+        <label class="rc-axis-lock" for="rlc-source-resistance">
+          <input id="rlc-source-resistance" type="checkbox" aria-describedby="rlc-source-status" />
+          Incluir Rs del generador · 50 Ω
+        </label>
+        <svg id="rlc-schematic" class="rc-schematic" viewBox="0 0 360 150" role="img" aria-label="Esquema de un circuito RLC serie: resistencia, bobina y condensador, con la salida en el condensador">
           <g class="rc-wire">
-            <line x1="26" y1="40" x2="70" y2="40" /><rect x="70" y="31" width="50" height="18" rx="2" />
+            <line id="rlc-source-wire" x1="26" y1="40" x2="70" y2="40" /><rect x="70" y="31" width="50" height="18" rx="2" />
             <line x1="120" y1="40" x2="140" y2="40" />
             <path d="M140,40 a8,8 0 0 1 16,0 a8,8 0 0 1 16,0 a8,8 0 0 1 16,0 a8,8 0 0 1 16,0" />
             <line x1="204" y1="40" x2="300" y2="40" />
@@ -56,21 +61,23 @@
             <line x1="260" y1="84" x2="260" y2="120" />
             <line x1="26" y1="120" x2="300" y2="120" />
           </g>
+          <g id="rlc-source-symbol" hidden>
+            <g class="rc-wire">
+              <rect x="36" y="31" width="24" height="18" rx="2" />
+              <line x1="60" y1="40" x2="70" y2="40" />
+            </g>
+            <text x="48" y="17" text-anchor="middle">Rs = 50 Ω</text>
+          </g>
           <circle class="rc-terminal" cx="26" cy="40" r="4" /><circle class="rc-terminal" cx="26" cy="120" r="4" />
           <circle class="rc-terminal" cx="300" cy="40" r="4" /><circle class="rc-terminal" cx="300" cy="120" r="4" />
           <text x="40" y="82">x(t)</text><text x="95" y="24" text-anchor="middle">R</text>
           <text x="172" y="24" text-anchor="middle">L</text><text x="280" y="80">C</text>
           <text x="314" y="82">y(t)</text>
         </svg>
-        <div class="rc-equations">
-          <p>\(LC\,\dfrac{\mathrm{d}^2y}{\mathrm{d}t^2}+RC\,\dfrac{\mathrm{d}y}{\mathrm{d}t}+y(t)=x(t)\)</p>
-          <p>\(H(s)=\dfrac{1}{LC\,s^2+RC\,s+1}=\dfrac{\omega_0^2}{s^2+2\zeta\omega_0 s+\omega_0^2}\)</p>
-          <p>\(\omega_0=\dfrac{1}{\sqrt{LC}},\qquad \zeta=\dfrac{R}{2}\sqrt{\dfrac{C}{L}}\)</p>
-          <p>\(s_{1,2}=-\zeta\omega_0\pm\omega_0\sqrt{\zeta^2-1}\)</p>
-        </div>
+        <p class="discrete-plot-note" id="rlc-source-status" role="status" aria-live="polite">Rs desactivada: generador ideal.</p>
       </section>
 
-      <form class="plot-card rc-form" id="rlc-form" novalidate>
+      <form class="panoramic-part-2 plot-card rc-form" id="rlc-form" novalidate>
         <div class="rc-form-grid">
           <label class="convolution-signal-select" for="rlc-resistance">
             Resistencia R (Ω)
@@ -92,17 +99,23 @@
         <p class="discrete-sequence-help">
           Rangos: R entre 0,01 y 10000 Ω · L entre 0,01 y 1000 mH · C entre 0,01 y 1000 µF · A entre 0,1 y 50 V. El resultado se actualiza al cambiar cualquier valor.
         </p>
+        <label class="rc-axis-lock" for="rlc-lock-axes">
+          <input id="rlc-lock-axes" type="checkbox" aria-describedby="rlc-lock-help" />
+          Bloquear ejes
+        </label>
+        <p class="discrete-plot-note" id="rlc-lock-help">Conserva los rangos actuales de la respuesta temporal y del diagrama de polos, incluidas sus unidades.</p>
         <p class="rc-validation" id="rlc-error" role="alert" hidden></p>
       </form>
 
-      <section class="rc-workspace" aria-label="Respuesta al escalón y diagrama de polos y ceros">
+      <section class="panoramic-part-3 rc-workspace" aria-label="Respuesta al escalón y diagrama de polos y ceros">
         <article class="plot-card">
           <div class="plot-heading">
             <div><p class="eyebrow">Salida</p><h2>Respuesta al escalón y(t)</h2></div>
             <span class="plot-badge" id="rlc-damping-badge">Subamortiguado</span>
           </div>
           <div class="convolution-legend convolution-overlay-legend">
-            <span><span class="rc-swatch rc-swatch-output"></span>y(t) tensión en el condensador</span>
+            <span><span class="rc-swatch rc-swatch-output"></span><span id="rlc-output-legend">y(t) tensión en el condensador</span></span>
+            <span id="rlc-source-legend" hidden><span class="rc-swatch rlc-source-swatch"></span>Con Rs = 50 Ω (puntos y rayas)</span>
             <span><span class="rc-swatch rc-swatch-input"></span>x(t) escalón de entrada (discontinua)</span>
           </div>
           <svg class="time-plot rc-plot rlc-step-plot" id="rlc-step-plot" viewBox="0 0 800 480" role="img"></svg>
@@ -121,14 +134,28 @@
           <p class="discrete-plot-note" id="rlc-polezero-note"></p>
         </article>
 
-        <article class="plot-card rlc-readouts-card">
+
+
+
+      </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<div class="rc-equations">
+          <p>La resistencia total es \(R_{\mathrm T}=R+R_s\): \(R_s=50\,\Omega\) al activar la casilla y 0 al desactivarla.</p>
+          <p>\(LC\,\dfrac{\mathrm{d}^2y}{\mathrm{d}t^2}+R_{\mathrm T}C\,\dfrac{\mathrm{d}y}{\mathrm{d}t}+y(t)=x(t)\)</p>
+          <p>\(H(s)=\dfrac{1}{LC\,s^2+R_{\mathrm T}C\,s+1}=\dfrac{\omega_0^2}{s^2+2\zeta\omega_0 s+\omega_0^2}\)</p>
+          <p>\(\omega_0=\dfrac{1}{\sqrt{LC}},\qquad \zeta=\dfrac{R_{\mathrm T}}{2}\sqrt{\dfrac{C}{L}}\)</p>
+          <p>\(s_{1,2}=-\zeta\omega_0\pm\omega_0\sqrt{\zeta^2-1}\)</p>
+        </div>
+</details>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<article class="plot-card rlc-readouts-card">
           <div class="plot-heading">
             <div><p class="eyebrow">Medidas</p><h2>Parámetros de la respuesta</h2></div>
           </div>
           <dl class="rc-readouts" aria-live="polite" id="rlc-readouts"></dl>
         </article>
-
-        <article class="plot-card rlc-readouts-card" aria-labelledby="rlc-identify-title">
+<article class="plot-card rlc-readouts-card" aria-labelledby="rlc-identify-title">
           <div class="plot-heading">
             <div><p class="eyebrow">Identificación</p><h2 id="rlc-identify-title">De la respuesta medida a H(s)</h2></div>
           </div>
@@ -154,7 +181,7 @@
           <dl class="rc-readouts" aria-live="polite" id="rlc-identify-values"></dl>
           <p class="discrete-plot-note" id="rlc-identify-note"></p>
         </article>
-      </section>
+</details>
     </main>
 
     <footer class="site-footer demo-footer">

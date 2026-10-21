@@ -10,7 +10,7 @@
   <script src="derivada-integral.js" defer></script>
   <script src="projector-mode.js" defer></script>
 </head>
-<body class="demo-page calculus-page">
+<body class="demo-page calculus-page panoramic-page view-derivada-integral">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -33,7 +33,8 @@
         <p>Elige una señal y calcula su derivada o su integral desde −∞ hasta t. Mueve el deslizador de tiempo para explorar el resultado: al integrar, el sombreado de la señal original muestra el área acumulada hasta ese instante. Las áreas bajo el eje se restan.</p>
         <p>Todas las señales del selector valen cero antes de su inicio, por lo que la integral desde −∞ está bien definida. El tiempo está en segundos; cada gráfica ajusta su escala vertical a las unidades de la operación.</p>
       </section>
-      <section class="calculus-workspace" aria-label="Derivada e integral de una señal">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 calculus-workspace" aria-label="Derivada e integral de una señal">
         <section class="calculus-row" aria-label="Señal de origen">
           <div class="plot-card calculus-controls">
             <h2>Señal de origen</h2>
@@ -69,7 +70,8 @@
           </article>
         </section>
       </section>
-      <section class="plot-card calculus-definitions" aria-labelledby="calculus-definitions-title">
+</div>
+      <section class="panoramic-information plot-card calculus-definitions" aria-labelledby="calculus-definitions-title">
         <h2 id="calculus-definitions-title">Cómo interpretar las gráficas</h2>
         <p>La integral es el área con signo: suma las zonas sobre el eje y resta las zonas bajo el eje. El punto del resultado indica esa acumulación hasta el tiempo elegido. El sombreado empieza donde la señal deja de ser cero; antes de ese inicio, la contribución desde −∞ es nula.</p>
         <p>La derivada mide la pendiente. En los saltos, la derivada generalizada contiene impulsos de Dirac: las flechas indican su posición, signo y peso, y su altura gráfica no representa una amplitud finita. En las esquinas, la derivada clásica puede no existir.</p>

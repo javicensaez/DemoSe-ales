@@ -16,7 +16,7 @@
     <script src="potencia-senales-periodicas.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-potencia-senales-periodicas">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -42,7 +42,8 @@
         </p>
       </section>
 
-      <section class="power-workspace" aria-label="Calculadora de señales periódicas">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 power-workspace" aria-label="Calculadora de señales periódicas">
         <article class="plot-card">
           <div class="plot-heading">
             <div>
@@ -129,8 +130,9 @@
           </div>
         </aside>
       </section>
+</div>
 
-      <aside class="power-note">
+      <aside class="panoramic-information power-note">
         <strong>Definiciones:</strong>
         <span>\(V_{\mathrm{medio}}=\frac{1}{T}\int_0^T v(t)\,\mathrm{d}t\)</span>
         <span>\(\langle v^2\rangle=\frac{1}{T}\int_0^T v^2(t)\,\mathrm{d}t\)</span>

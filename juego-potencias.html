@@ -16,7 +16,7 @@
     <script src="juego-potencias.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page power-game-page">
+  <body class="demo-page power-game-page panoramic-page view-juego-potencias">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -40,7 +40,8 @@
         <p>Usa voltios (V) y vatios (W), con al menos dos decimales cuando sea necesario. Se admite coma o punto decimal y un error de hasta el mayor de 0,01 unidades o el 1 % del resultado.</p>
         <a href="potencia-senales-periodicas.html">Repasar la demo de cálculos de potencias →</a>
       </section>
-      <section class="plot-card power-game-navigation" aria-label="Navegación entre retos">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 plot-card power-game-navigation" aria-label="Navegación entre retos">
         <div class="challenge-navigation">
           <button class="challenge-nav-button" id="previous-challenge" type="button" aria-label="Reto anterior">←</button>
           <p class="eyebrow" id="challenge-progress" aria-live="polite"></p>
@@ -48,7 +49,7 @@
         </div>
         <p id="game-score" role="status"></p>
       </section>
-      <section class="power-workspace" aria-label="Reto de cálculo">
+      <section class="panoramic-part-2 power-workspace" aria-label="Reto de cálculo">
         <article class="plot-card">
           <h2 id="challenge-title"></h2>
           <p id="challenge-description"></p>
@@ -69,11 +70,12 @@
           <p id="game-feedback" role="status"></p>
         </article>
       </section>
-      <section class="plot-card power-game-solution" id="game-solution" aria-label="Solución razonada" hidden>
+      <section class="panoramic-part-3 plot-card power-game-solution" id="game-solution" aria-label="Solución razonada" hidden>
         <h2>Solución paso a paso</h2>
         <div id="solution-content"></div>
       </section>
-      <aside class="power-note">
+</div>
+      <aside class="panoramic-information power-note">
         <strong>Relaciones útiles</strong>
         <span>\(V_{\mathrm{medio}}=\langle v\rangle=\frac{1}{T}\int_0^T v(t)\,dt\)</span>
         <span>\(V_{\mathrm{RMS}}=\sqrt{\langle v^2\rangle},\quad \overline P=\langle v^2\rangle/R\)</span>

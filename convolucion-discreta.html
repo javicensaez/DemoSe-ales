@@ -16,7 +16,7 @@
     <script src="convolucion-discreta.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-convolucion-discreta">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -43,12 +43,10 @@
         </p>
       </section>
 
-      <section class="discrete-formula plot-card" aria-label="Definición de la convolución discreta">
-        <span>\(y[n]=(x*h)[n]=\displaystyle\sum_{k=-\infty}^{\infty}x[k]\,h[n-k]\)</span>
-        <p>Se asume que ambas secuencias empiezan en el índice 0; fuera de los valores introducidos, sus muestras valen 0.</p>
-      </section>
+      <div class="panoramic-stage">
 
-      <form class="discrete-sequence-form plot-card" id="sequence-form" novalidate>
+
+      <form class="panoramic-part-2 discrete-sequence-form plot-card" id="sequence-form" novalidate>
         <div class="discrete-sequence-fields">
           <label class="convolution-signal-select" for="x-sequence">
             Secuencia x[k]
@@ -69,14 +67,14 @@
         </div>
       </form>
 
-      <section class="plot-card discrete-final-result" id="final-result-card" aria-live="polite" hidden>
+      <section class="panoramic-part-3 plot-card discrete-final-result" id="final-result-card" aria-live="polite" hidden>
         <div class="plot-heading">
           <div><p class="eyebrow">Convolución completa</p><h2>Secuencia resultante y[n]</h2></div>
         </div>
         <p class="discrete-final-sequence" id="final-sequence"></p>
       </section>
 
-      <section class="discrete-workspace" aria-label="Pasos de la convolución">
+      <section class="panoramic-part-4 discrete-workspace" aria-label="Pasos de la convolución">
         <article class="plot-card discrete-overlap-card">
           <div class="plot-heading">
             <div><p class="eyebrow">Desplazamiento y alineación</p><h2>Secuencias y resultado parcial</h2></div>
@@ -87,8 +85,8 @@
             <span><span class="convolution-swatch h-swatch"></span>h[n − k] (invertida y desplazada)</span>
             <span><span class="convolution-swatch result-swatch"></span>y[n] calculada hasta el paso actual</span>
           </div>
-          <svg class="time-plot discrete-sequence-plot" id="discrete-overlap-plot" viewBox="0 0 800 430" role="img" aria-label="Gráfica de las secuencias alineadas para el paso n igual a 0"></svg>
-          <p class="discrete-plot-note">Las filas comparten un eje de índices fijo; la tercera muestra las salidas calculadas hasta el paso actual.</p>
+          <svg class="time-plot discrete-sequence-plot" id="discrete-overlap-plot" viewBox="0 0 800 460" role="img" aria-label="Gráfica de las secuencias alineadas para el paso n igual a 0"></svg>
+          <p class="discrete-plot-note">Las filas comparten un eje de índices fijo; la tercera muestra los productos x[k] · h[n − k] y la cuarta, las salidas calculadas hasta el paso actual.</p>
         </article>
 
         <section class="plot-card discrete-step-controls" aria-label="Controles de avance">
@@ -97,10 +95,7 @@
             <p class="discrete-current-step" aria-live="polite">Paso <strong id="step-number">1</strong> de <strong id="step-count">5</strong></p>
             <button class="discrete-step-button" id="next-step" type="button">Siguiente →</button>
           </div>
-          <label class="convolution-slider discrete-step-slider" for="step-slider">
-            <span>Índice de salida n <output id="step-value" for="step-slider">0</output></span>
-            <input id="step-slider" type="range" min="0" max="4" step="1" value="0" />
-          </label>
+
         </section>
 
         <article class="plot-card discrete-products-card">
@@ -121,6 +116,13 @@
           <p class="discrete-result" id="discrete-result" aria-live="polite"></p>
         </article>
       </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>Información y medidas complementarias</summary>
+<section class="panoramic-part-1 discrete-formula plot-card" aria-label="Definición de la convolución discreta">
+        <span>\(y[n]=(x*h)[n]=\displaystyle\sum_{k=-\infty}^{\infty}x[k]\,h[n-k]\)</span>
+        <p>Se asume que ambas secuencias empiezan en el índice 0; fuera de los valores introducidos, sus muestras valen 0.</p>
+      </section>
+</details>
     </main>
 
     <footer class="site-footer demo-footer">

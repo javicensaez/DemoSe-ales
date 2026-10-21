@@ -16,7 +16,7 @@
     <script src="muestreo.js" defer></script>
     <script src="projector-mode.js" defer></script>
   </head>
-  <body class="demo-page">
+  <body class="demo-page panoramic-page view-muestreo">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -42,7 +42,8 @@
         </p>
       </section>
 
-      <section class="sampling-controls plot-card" aria-label="Controles de muestreo">
+      <div class="panoramic-stage">
+<section class="panoramic-part-1 sampling-controls plot-card" aria-label="Controles de muestreo">
         <label for="sampling-signal">
           Señal analógica
           <select id="sampling-signal">
@@ -63,42 +64,37 @@
         </label>
       </section>
 
-      <section class="sampling-status plot-card" id="sampling-status" aria-live="polite">
+      <section class="panoramic-part-2 sampling-status plot-card" id="sampling-status" aria-live="polite">
         <p id="sampling-status-title"></p>
         <p id="sampling-status-detail"></p>
       </section>
 
-      <section class="sampling-formula plot-card" aria-label="Muestreo y reconstrucción ideal">
-        <span>\(T_s=\dfrac{1}{f_s},\qquad x_r(t)=\displaystyle\sum_{n=-\infty}^{\infty}x(nT_s)\,\mathrm{sinc}\!\left(\dfrac{t-nT_s}{T_s}\right)\)</span>
-        <p>La reconstrucción se aproxima con una suma finita de funciones sinc. La línea discontinua es la señal original de referencia.</p>
-      </section>
 
-      <section class="sampling-plots" aria-label="Señal muestreada y reconstruida">
+
+      <section class="panoramic-part-4 sampling-plots" aria-label="Señal muestreada y reconstruida">
         <article class="plot-card sampling-plot-card">
           <div class="plot-heading">
-            <div><p class="eyebrow">Muestreo</p><h2>Señal analógica y muestras</h2></div>
+            <div><p class="eyebrow">Muestreo</p><h2>Señal original, muestras y reconstrucción</h2></div>
             <span class="plot-badge" id="sampling-period"></span>
           </div>
           <div class="sampling-legend">
             <span><i class="sampling-swatch sampling-original-swatch"></i>Señal original x(t)</span>
             <span><i class="sampling-swatch sampling-samples-swatch"></i>Muestras x(nTₛ)</span>
+            <span><i class="sampling-swatch sampling-reconstruction-swatch"></i>Reconstrucción xᵣ(t) (discontinua)</span>
           </div>
-          <svg class="time-plot sampling-plot" id="sampled-plot" viewBox="0 0 800 320" role="img" aria-label="Señal original con sus muestras"></svg>
-        </article>
-
-        <article class="plot-card sampling-plot-card">
-          <div class="plot-heading">
-            <div><p class="eyebrow">Reconstrucción</p><h2>Señal analógica reconstruida</h2></div>
-            <span class="plot-badge">Interpolación sinc ideal</span>
-          </div>
-          <div class="sampling-legend">
-            <span><i class="sampling-swatch sampling-reconstruction-swatch"></i>Reconstrucción xᵣ(t)</span>
-            <span><i class="sampling-swatch sampling-reference-swatch"></i>Señal original x(t)</span>
-          </div>
-          <svg class="time-plot sampling-plot" id="reconstructed-plot" viewBox="0 0 800 320" role="img" aria-label="Comparación entre la señal original y la reconstruida"></svg>
+          <svg class="time-plot sampling-plot" id="sampled-plot" viewBox="0 0 800 320" role="img" aria-label="Señal original, muestras y reconstrucción"></svg>
           <p class="sampling-explanation" id="reconstruction-description"></p>
         </article>
+
+
       </section>
+</div>
+<details class="panoramic-information panoramic-details"><summary>Fórmulas del muestreo y la reconstrucción</summary>
+<section class="panoramic-part-3 sampling-formula plot-card" aria-label="Muestreo y reconstrucción ideal">
+        <span>\(T_s=\dfrac{1}{f_s},\qquad x_r(t)=\displaystyle\sum_{n=-\infty}^{\infty}x(nT_s)\,\mathrm{sinc}\!\left(\dfrac{t-nT_s}{T_s}\right)\)</span>
+        <p>La reconstrucción se aproxima con una suma finita de funciones sinc. La línea verde discontinua representa la señal reconstruida.</p>
+      </section>
+</details>
     </main>
 
     <footer class="site-footer demo-footer">

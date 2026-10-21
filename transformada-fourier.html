@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora señales típicas y las propiedades de retraso, escalado e inversión de la transformada de Fourier."/><title>Transformada de Fourier — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="transformada-fourier.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page tf-page">
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="description" content="Explora señales típicas y las propiedades de retraso, escalado e inversión de la transformada de Fourier."/><title>Transformada de Fourier — Sistemas y señales</title><link rel="stylesheet" href="styles.css"/><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script src="transformada-fourier.js" defer></script><script src="projector-mode.js" defer></script></head><body class="demo-page tf-page panoramic-page view-transformada-fourier">
     <header class="site-header">
       <a class="brand" href="index.html#inicio" aria-label="Sistemas y señales, Universidad de Deusto">
         <img class="logo" src="assets/logo.svg" alt="Logotipo temporal azul de la Universidad de Deusto" />
@@ -23,7 +23,9 @@
         <p>Selecciona una señal y observa su forma temporal, el módulo y la fase de su transformada de Fourier. Aplica un retraso, cambia la amplitud o comprime el tiempo y compara las propiedades.</p>
         <p>La señal transformada es y(t) = A·x(a(t − τ)). Un retraso positivo desplaza la señal a la derecha; a &gt; 1 la comprime. La inversión temporal cambia el signo de a. La fase se representa entre −π y π y se omite donde el módulo es prácticamente cero.</p>
       </section>
-      <div class="tf-workspace">
+      <div class="panoramic-stage">
+<div class="panoramic-part-1 tf-workspace">
+      <div class="tf-sidebar">
       <section class="plot-card tf-control-card" aria-labelledby="tf-controls-title"><h2 id="tf-controls-title">Señal y transformaciones</h2>
         <div class="tf-controls">
           <label for="tf-signal">Señal<select id="tf-signal"><option value="rect">Pulso rectangular</option><option value="tri">Pulso triangular</option><option value="gauss">Gaussiana</option><option value="exp">Exponencial causal</option><option value="bilateral">Exponencial bilateral</option><option value="sinc">Sinc</option><option value="complex">Exponencial compleja de 1 Hz</option><option value="cos">Coseno de 1 Hz</option><option value="sin">Seno de 1 Hz</option><option value="constant">Constante</option><option value="delta">Impulso de Dirac</option></select></label>
@@ -31,17 +33,24 @@
           <label for="tf-amplitude">Amplitud A <output id="tf-amplitude-value" for="tf-amplitude">1</output><input id="tf-amplitude" type="range" min="-2" max="2" step="0.01" value="1" /></label>
           <label for="tf-scale">Escala temporal |a| <output id="tf-scale-value" for="tf-scale">1</output><input id="tf-scale" type="range" min="0.25" max="4" step="0.01" value="1" /></label>
           <label for="tf-invert"><input id="tf-invert" type="checkbox" />Invertir en el tiempo (a negativo)</label>
+          <label for="tf-combine"><input id="tf-combine" type="checkbox" aria-controls="tf-magnitude tf-phase-card" />Unir módulo y fase</label>
           <button id="tf-reset" class="game-button secondary-game-button" type="button">Restablecer transformaciones</button>
         </div>
         <p id="tf-summary" role="status"></p><p id="tf-error" role="alert" hidden></p>
       </section>
+<article class="plot-card"><h2>Señal en el tiempo</h2><svg id="tf-time" viewBox="0 0 800 310" role="img" aria-label="Señal temporal entre −6 y 6 segundos"></svg><p id="tf-complex-legend" class="discrete-plot-note" hidden>Parte real: azul continuo · Parte imaginaria: naranja discontinuo. Ambas se muestran con la misma escala.</p></article>
+      </div>
       <section class="tf-plots" aria-label="Señal temporal y transformada">
-        <article class="plot-card"><h2>Señal en el tiempo</h2><svg id="tf-time" viewBox="0 0 800 310" role="img" aria-label="Señal temporal entre −6 y 6 segundos"></svg><p id="tf-complex-legend" class="discrete-plot-note" hidden>Parte real: azul continuo · Parte imaginaria: naranja discontinuo. Ambas se muestran con la misma escala.</p></article>
-        <article class="plot-card"><h2>Módulo de Fourier</h2><svg id="tf-magnitude" viewBox="0 0 800 310" role="img" aria-label="Módulo de Fourier entre −6 y 6 hercios"></svg><p id="tf-impulse-note" class="discrete-plot-note"></p></article>
-        <article class="plot-card"><h2>Fase de Fourier</h2><svg id="tf-phase" viewBox="0 0 800 310" role="img" aria-label="Fase de Fourier en radianes entre −6 y 6 hercios"></svg><p class="discrete-plot-note">Los saltos de +π a −π son cambios de representación de una misma fase. No se unen los saltos ni se asigna fase a los ceros; en espectros de impulsos solo se marca la fase de cada peso.</p></article>
+
+        <article class="plot-card" id="tf-magnitude-card"><h2 id="tf-spectrum-title">Módulo de Fourier</h2><div class="plot-legend" id="tf-combined-legend" hidden><span>Módulo: azul · eje izquierdo</span><span>Fase: naranja discontinua · eje derecho</span></div><svg id="tf-magnitude" viewBox="0 0 800 310" role="img" aria-label="Módulo de Fourier entre −6 y 6 hercios"></svg><p id="tf-impulse-note" class="discrete-plot-note"></p></article>
+        <article class="plot-card" id="tf-phase-card"><h2>Fase de Fourier</h2><svg id="tf-phase" viewBox="0 0 800 310" role="img" aria-label="Fase de Fourier en radianes entre −6 y 6 hercios"></svg></article>
       </section>
       </div>
-      <section class="plot-card"><h2>Definición y propiedades</h2><div class="rc-formulas">
+</div>
+<details class="panoramic-information panoramic-details"><summary>Notas de la demostración</summary>
+<p class="discrete-plot-note">Los saltos de +π a −π son cambios de representación de una misma fase. No se unen los saltos ni se asigna fase a los ceros; en espectros de impulsos solo se marca la fase de cada peso.</p>
+</details>
+      <section class="panoramic-information plot-card"><h2>Definición y propiedades</h2><div class="rc-formulas">
         <p>\[X(f)=\int_{-\infty}^{\infty}x(t)e^{-j2\pi ft}\,dt\]</p>
         <p>\[y(t)=A\,x\bigl(a(t-\tau)\bigr)\quad\Longleftrightarrow\quad Y(f)=\frac{A}{|a|}X\!\left(\frac{f}{a}\right)e^{-j2\pi f\tau}\]</p>
         <div id="tf-pair"></div></div>
