@@ -5459,3 +5459,24 @@ html:has(.panoramic-page)::-webkit-scrollbar { display: none; }
   }
   .panoramic-page.view-juego-fourier #challenge-plot { flex: 1; height: 0; min-height: 0; }
 }
+
+.truncation-page .truncation-spectrum { margin-top: 24px; }
+.truncation-page .dither-check { display: flex; align-items: center; gap: 10px; }
+.truncation-page .dither-check input { width: auto; }
+.truncation-page .time-plot { width: 100%; height: auto; min-height: 0; }
+.truncation-page .original { fill: none; stroke: var(--wave); stroke-width: 1.6; stroke-dasharray: 6 4; }
+.truncation-page .destination { fill: none; stroke: var(--answer); stroke-width: 1.5; }
+.truncation-page #truncation-error { font-weight: 600; }
+.truncation-page .truncation-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.truncation-page .truncation-audio-controls label { display: grid; gap: 8px; }
+.truncation-page .truncation-audio-controls button:disabled { opacity: .5; cursor: default; }
+
+.truncation-page .truncation-workspace { grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); align-items: stretch; margin-top: 24px; }
+.truncation-page .truncation-workspace > .plot-card { margin: 0; }
+.truncation-page .truncation-workspace > .truncation-spectrum { display: flex; flex-direction: column; }
+.truncation-page .truncation-workspace .time-plot { flex: 1 1 300px; height: 300px; aspect-ratio: auto; }
+.truncation-page .truncation-results-card { margin-top: 24px; }
+@media (max-width: 760px) {
+  .truncation-page .truncation-workspace { grid-template-columns: 1fr; }
+  .truncation-page .truncation-workspace .time-plot { flex: none; height: auto; aspect-ratio: 800 / 380; }
+}
