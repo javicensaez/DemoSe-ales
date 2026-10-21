@@ -1,12 +1,5 @@
 const demos = [
   {
-    category: "Demo · Conversión digital",
-    title: "Truncado y dithering",
-    description: "Reduce los bits de una señal y compara sus espectros con dither rectangular, triangular o gaussiano.",
-    href: "truncado-dithering.html",
-    topics: ["senales", "fourier"],
-  },
-  {
     category: "Juego · Dibujo de señales",
     title: "Dibuja la señal",
     description: "Traza pulsos, rampas y saltos sobre una cuadrícula de coordenadas enteras y compara tu dibujo con el reto.",
@@ -195,6 +188,13 @@ const demos = [
       "Calcula el LSB, el ruido de cuantificación y el SNR ideal, o estima los bits efectivos a partir del SINAD medido.",
     href: "adc-enob.html",
     topics: ["senales", "sistemas", "fourier"],
+  },
+  {
+    category: "Demo · Conversión digital",
+    title: "Truncado y dithering",
+    description: "Reduce los bits de una señal y compara sus espectros con dither rectangular, triangular o gaussiano.",
+    href: "truncado-dithering.html",
+    topics: ["senales", "fourier"],
   },
   {
     category: "Demo · Detección de señales",

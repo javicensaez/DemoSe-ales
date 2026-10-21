@@ -71,16 +71,20 @@ function measures(samples, toneBin = 37) {
   return { power, ratio: 10 * Math.log10(power[toneBin] / rest), dc: samples.reduce((a, b) => a + b, 0) / N };
 }
 function drawSpectrum(source, target) {
-  const x = k => 72 + k / (N / 2) * 700;
+  const plot = $('truncation-spectrum'), bounds = plot.getBoundingClientRect();
+  const width = bounds.height > 0 ? Math.max(320, 380 * bounds.width / bounds.height) : 800;
+  const right = width - 28;
+  plot.setAttribute('viewBox', `0 0 ${width} 380`);
+  const x = k => 72 + k / (N / 2) * (right - 72);
   const y = db => 32 + (0 - Math.max(-180, Math.min(0, db))) / 180 * 284;
   let svg = '<title>Espectros de origen (discontinuo) y destino (continuo)</title>';
-  for (let db = -180; db <= 0; db += 30) svg += `<line class="plot-grid-line" x1="72" x2="772" y1="${y(db)}" y2="${y(db)}"/><text class="plot-tick-label" x="62" y="${y(db) + 4}" text-anchor="end">${db}</text>`;
+  for (let db = -180; db <= 0; db += 30) svg += `<line class="plot-grid-line" x1="72" x2="${right}" y1="${y(db)}" y2="${y(db)}"/><text class="plot-tick-label" x="62" y="${y(db) + 4}" text-anchor="end">${db}</text>`;
   for (const hz of [0, 1024, 2048, 3072, 4096]) svg += `<line class="plot-grid-line" x1="${x(hz / 4)}" x2="${x(hz / 4)}" y1="32" y2="316"/><text class="plot-tick-label" x="${x(hz / 4)}" y="340" text-anchor="middle">${hz}</text>`;
   for (const [power, style] of [[target, 'destination'], [source, 'original']]) {
     const path = power.map((p, k) => `${k ? 'L' : 'M'}${x(k).toFixed(2)},${y(10 * Math.log10(Math.max(p, 1e-18))).toFixed(2)}`).join(' ');
     svg += `<path class="${style}" d="${path}" vector-effect="non-scaling-stroke"/>`;
   }
-  svg += '<text class="plot-axis-label" x="72" y="18">Potencia por bin (dBFS)</text><text class="plot-axis-label" x="772" y="370" text-anchor="end">Frecuencia (Hz)</text>';
+  svg += `<text class="plot-axis-label" x="72" y="18">Potencia por bin (dBFS)</text><text class="plot-axis-label" x="${right}" y="370" text-anchor="end">Frecuencia (Hz)</text>`;
   $('truncation-spectrum').innerHTML = svg;
 }
 let audioContext = null;
@@ -262,3 +266,12 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) stopA
 $('truncation-form').addEventListener('submit' , event => event.preventDefault());
 $('truncation-form').addEventListener('input', render);
 render();
+
+let truncationPlotSize = '';
+new ResizeObserver(() => {
+  const bounds = $('truncation-spectrum').getBoundingClientRect();
+  const size = `${bounds.width.toFixed(1)}:${bounds.height.toFixed(1)}`;
+  if (size === truncationPlotSize) return;
+  truncationPlotSize = size;
+  render();
+}).observe($('truncation-spectrum'));
