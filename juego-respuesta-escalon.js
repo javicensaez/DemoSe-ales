@@ -1,4 +1,5 @@
 const orderSelect = document.querySelector("#step-game-order");
+const freeToggle = document.querySelector("#step-game-free");
 const plot = document.querySelector("#step-game-plot");
 const form = document.querySelector("#step-game-form");
 const feedback = document.querySelector("#step-game-feedback");
@@ -97,8 +98,11 @@ function niceTicks(min, max, count = 6) {
 }
 
 function renderPlot(answer = null) {
-  const target = history[challengeIndex];
-  const targetSamples = sampleResponse(target, target.duration);
+  const free = freeToggle.checked;
+  const model = free && answer ? answer : history[challengeIndex];
+  const duration = free ? (answer ? answer.order === 1 ? 6 * answer.tau : 8 / (answer.zeta > 1 ? answer.omega0 / (answer.zeta + Math.sqrt(answer.zeta ** 2 - 1)) : answer.zeta * answer.omega0) : 6) : model.duration;
+  const target = { ...model, duration };
+  const targetSamples = free ? [] : sampleResponse(target, target.duration);
   const answerSamples = answer ? sampleResponse(answer, target.duration) : [];
   const minimum = Math.min(0, ...targetSamples, ...answerSamples);
   const maximum = Math.max(1, ...targetSamples, ...answerSamples);
@@ -125,16 +129,17 @@ function renderPlot(answer = null) {
   }
   parts.push(`<text class="plot-axis-label" x="${right}" y="478" text-anchor="end">t (s)</text><text class="plot-axis-label" x="14" y="22">y(t) (adimensional)</text>`);
   parts.push('<g id="step-game-cursor" visibility="hidden" pointer-events="none"><line id="step-game-cursor-line" y1="22" y2="438" stroke="var(--muted)" stroke-dasharray="4 4"/><circle id="step-game-target-dot" r="5" fill="var(--answer)" stroke="var(--surface)" stroke-width="2"/><circle id="step-game-answer-dot" r="5" fill="#d97706" stroke="var(--surface)" stroke-width="2"/></g>');
-  plotInspection = { target, answer, x, y, right };
+  plotInspection = { target, answer, x, y, right, free };
   inspectedTime = 0;
   cursorValues.textContent = 'Sitúa el cursor sobre la gráfica para consultar los valores.';
   plot.innerHTML = parts.join("");
-  plot.setAttribute("aria-label", `Respuesta al escalón unitario de ${target.order === 1 ? "primer" : "segundo"} orden, entre 0 y ${formatNumber(target.duration)} segundos${answer ? ", comparada con tu respuesta discontinua" : ""}`);
+  plot.setAttribute("aria-label", `Respuesta al escalón unitario de ${target.order === 1 ? "primer" : "segundo"} orden, entre 0 y ${formatNumber(target.duration)} segundos${free ? ", modo libre: solo la respuesta introducida" : answer ? ", comparada con tu respuesta discontinua" : ""}`);
 }
 
 function inspectPlot(time) {
   if (!plotInspection) return;
-  const { target, answer, x, y } = plotInspection;
+  const { target, answer, x, y, free } = plotInspection;
+  if (free && !answer) return;
   inspectedTime = Math.max(0, Math.min(target.duration, time));
   const amplitude = response(target, inspectedTime);
   const cursorX = x(inspectedTime);
@@ -142,10 +147,11 @@ function inspectPlot(time) {
   const line = document.querySelector('#step-game-cursor-line');
   line.setAttribute('x1', cursorX); line.setAttribute('x2', cursorX);
   const targetDot = document.querySelector('#step-game-target-dot');
+  targetDot.setAttribute('visibility', free ? 'hidden' : 'visible');
   targetDot.setAttribute('cx', cursorX); targetDot.setAttribute('cy', y(amplitude));
   const answerDot = document.querySelector('#step-game-answer-dot');
   answerDot.setAttribute('visibility', answer ? 'visible' : 'hidden');
-  let text = `t = ${formatNumber(inspectedTime)} s · Amplitud objetivo: ${formatNumber(amplitude)}`;
+  let text = `t = ${formatNumber(inspectedTime)} s${free ? "" : ` · Amplitud objetivo: ${formatNumber(amplitude)}`}`;
   if (answer) {
     const value = response(answer, inspectedTime);
     answerDot.setAttribute('cx', cursorX); answerDot.setAttribute('cy', y(value));
@@ -183,7 +189,9 @@ function evaluateAnswer(grade = false) {
     const answer = readAnswer();
     inputError.hidden = true;
     renderPlot(answer);
-    if (grade) {
+    if (freeToggle.checked) {
+      feedback.textContent = "Respuesta al escalón de tu modelo. Modifica los parámetros para explorar su comportamiento.";
+    } else if (grade) {
       const score = scoreAnswer(history[challengeIndex], answer);
       feedback.classList.add(score >= 99.5 ? "is-success" : "is-error");
       feedback.textContent = `${solutionShown ? "Tras consultar la solución · " : ""}Coincidencia: ${formatNumber(score)} %. ${score >= 99.5 ? "¡Correcto! Tu modelo reproduce la respuesta." : "Compara el valor final y la forma de la curva; ajusta los coeficientes y vuelve a probar."}`;
@@ -230,7 +238,25 @@ Object.values(fields).forEach(input => input.addEventListener("input", () => {
   solution.hidden = true;
   evaluateAnswer();
 }));
-orderSelect.addEventListener("change", () => { history = []; challengeIndex = -1; nextChallenge(); });
+function updateMode() {
+  const free = freeToggle.checked;
+  document.querySelector(".step-game-navigation").hidden = free;
+  document.querySelector(".convolution-overlay-legend span:first-child").hidden = free;
+  document.querySelector("#step-game-hint-button").hidden = free;
+  document.querySelector("#step-game-solution-button").hidden = free;
+  document.querySelector("#step-game-hint").hidden = true;
+  document.querySelector("#step-game-hint-button").textContent = "Ver pista";
+  solution.hidden = true;
+  document.querySelector("#step-game-score-note").closest("details").hidden = free;
+  form.querySelector('[type="submit"]').textContent = free ? "Visualizar" : "Comprobar";
+  document.querySelector("#step-game-plot-title").previousElementSibling.textContent = free ? "Explora tu modelo" : "Observa e identifica";
+  document.querySelector("#step-game-scale-note").textContent = free
+    ? "El escalón se aplica en t = 0. La escala se adapta a los parámetros introducidos."
+    : "El escalón se aplica en t = 0. Ambas curvas usan los mismos ejes. La escala temporal se conserva mientras resuelves el reto.";
+  evaluateAnswer();
+}
+freeToggle.addEventListener("change", updateMode);
+orderSelect.addEventListener("change", () => { history = []; challengeIndex = -1; nextChallenge(); updateMode(); });
 document.querySelector("#step-game-next").addEventListener("click", nextChallenge);
 document.querySelector("#step-game-previous").addEventListener("click", () => {
   if (challengeIndex === 0) return;

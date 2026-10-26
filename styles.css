@@ -5515,3 +5515,14 @@ html:has(.panoramic-page)::-webkit-scrollbar { display: none; }
   .view-truncado-dithering .truncation-stage .plot-card { padding-block: 10px; }
   .view-truncado-dithering #truncation-form :is(input[type="number"], select) { padding-block: 5px; }
 }
+
+/* Modo libre de Adivina H(s). */
+.step-game-page .step-game-free-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.step-game-free-toggle input { width: auto; accent-color: var(--accent); }
+.step-game-page .step-game-navigation[hidden],
+.step-game-page .convolution-overlay-legend span[hidden] { display: none; }

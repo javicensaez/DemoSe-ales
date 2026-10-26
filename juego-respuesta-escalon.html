@@ -32,13 +32,14 @@
       <section class="demo-intro">
         <p class="eyebrow"><span class="eyebrow-dot"></span> Juego · Sistemas</p>
         <h1>Adivina <span>H(s)</span></h1>
-        <p>Identifica la función de transferencia de un sistema a partir de su respuesta al escalón unitario. Elige primer o segundo orden, observa la curva objetivo y rellena las casillas de H(s). Tu respuesta se dibuja sobre la original; pulsa «Comprobar» para conocer el porcentaje de coincidencia. Todos los sistemas parten en reposo.</p>
+        <p>Identifica la función de transferencia de un sistema a partir de su respuesta al escalón unitario. Elige primer o segundo orden, observa la curva objetivo y rellena las casillas de H(s). Tu respuesta se dibuja sobre la original; pulsa «Comprobar» para conocer el porcentaje de coincidencia. Activa «Modo libre» para introducir tus propios parámetros y visualizar únicamente su respuesta al escalón, sin reto. Todos los sistemas parten en reposo.</p>
       </section>
       <div class="panoramic-stage">
 <section class="panoramic-part-1 plot-card step-game-settings" aria-label="Selección y navegación de retos">
         <label class="convolution-signal-select" for="step-game-order">Tipo de sistema
           <select id="step-game-order"><option value="1">Primer orden</option><option value="2">Segundo orden</option></select>
         </label>
+        <label class="step-game-free-toggle" for="step-game-free"><input id="step-game-free" type="checkbox" /> Modo libre</label>
         <div class="step-game-navigation" role="group" aria-label="Navegación entre retos">
           <button class="game-button secondary-game-button" id="step-game-previous" type="button" disabled>← Reto anterior</button>
           <span class="plot-badge" id="step-game-progress"></span>
@@ -54,7 +55,7 @@
         <svg class="time-plot rc-plot rlc-step-plot" id="step-game-plot" tabindex="0" aria-describedby="step-game-cursor-help step-game-cursor-values" viewBox="0 0 800 480" role="img" aria-label="Respuesta objetivo al escalón unitario"></svg>
         <p class="discrete-plot-note" id="step-game-cursor-help">Mueve el ratón o toca la gráfica para leer el tiempo y la amplitud. Con teclado: enfoca la gráfica y usa ← y →; Inicio y Fin llevan a los extremos.</p>
         <p class="step-game-cursor-values" id="step-game-cursor-values">Sitúa el cursor sobre la gráfica para consultar los valores.</p>
-        <p class="discrete-plot-note">El escalón se aplica en t = 0. Ambas curvas usan los mismos ejes. La escala temporal se conserva mientras resuelves el reto.</p>
+        <p class="discrete-plot-note" id="step-game-scale-note">El escalón se aplica en t = 0. Ambas curvas usan los mismos ejes. La escala temporal se conserva mientras resuelves el reto.</p>
       </section>
       <form class="panoramic-part-3 plot-card rc-form step-game-answer" id="step-game-form" novalidate aria-labelledby="step-game-answer-title">
         <div class="plot-heading"><div><p class="eyebrow">Construye tu modelo</p><h2 id="step-game-answer-title">Rellena H(s)</h2></div></div>
